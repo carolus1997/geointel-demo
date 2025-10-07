@@ -1,5 +1,6 @@
-// === ACTIVAR MAPLIBRE DRAW ===
-const Draw = new MapboxDraw({
+// === HERRAMIENTAS DE DIBUJO ===
+map.on('load', () => {
+  const Draw = new MapboxDraw({
     displayControlsDefault: false,
     controls: {
       point: true,
@@ -39,8 +40,10 @@ const Draw = new MapboxDraw({
       }
     ]
   });
+
+  // === Añadir el control de dibujo una vez cargado el mapa ===
   map.addControl(Draw, 'top-left');
-  
+
   // === CONTROL DE NOTAS ===
   map.on('draw.create', e => {
     const feature = e.features[0];
@@ -49,17 +52,20 @@ const Draw = new MapboxDraw({
       if (note) feature.properties.note = note;
     }
   });
-  
+
   // Mostrar nota en popup al hacer clic
   map.on('click', e => {
     const features = map.queryRenderedFeatures(e.point, { layers: ['gl-draw-point-point'] });
     if (!features.length) return;
     const note = features[0].properties.note;
     if (note) {
-      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<strong>Nota:</strong> ${note}`).addTo(map);
+      new maplibregl.Popup()
+        .setLngLat(e.lngLat)
+        .setHTML(`<strong>Nota:</strong> ${note}`)
+        .addTo(map);
     }
   });
-  
+
   // === EXPORTAR MAPA A IMAGEN ===
   function exportarMapa() {
     const mapContainer = document.getElementById('map');
@@ -70,7 +76,7 @@ const Draw = new MapboxDraw({
       enlace.click();
     });
   }
-  
+
   // === CONTROLES PERSONALIZADOS ===
   const toolbar = document.createElement('div');
   toolbar.className = 'map-toolbar';
@@ -79,8 +85,8 @@ const Draw = new MapboxDraw({
     <button id="btn-limpiar"><i class="fa-solid fa-eraser"></i> Limpiar</button>
   `;
   document.getElementById('map-container').appendChild(toolbar);
-  
+
   // === EVENTOS ===
   document.getElementById('btn-exportar').addEventListener('click', exportarMapa);
   document.getElementById('btn-limpiar').addEventListener('click', () => Draw.deleteAll());
-  
+});
