@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Misión 2 — Análisis Periurbano de Trípoli</title>
+
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <div id="app-container">
+
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <img src="img/logos/logo_indra.png" class="logo" alt="Indra">
+        <img src="img/logos/logo_upct.png" class="logo" alt="UPCT">
+      </div>
+
+      <div class="header-center">
+        <h1>Misión 2 : Análisis Periurbano de Trípoli</h1>
+        <p class="subtitle">Detección de actividad constructiva periurbana</p>
+      </div>
+
+      <button id="btn-back" class="btn-back">
+        <i class="fa-solid fa-arrow-left"></i> Centro de Operaciones
+      </button>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main id="main-content">
+      <!-- PANEL DE INFORMACIÓN -->
+      <aside id="side-panel">
+        <h2>Resumen de misión</h2>
+        <p class="typewriter">
+          Informes OSINT indican ampliación de áreas logísticas y movimiento de materiales en la periferia
+          noreste de Trípoli, cerca de Mitiga. Se evaluarán imágenes Sentinel-2 y Sentinel-1 para detectar
+          cambios estructurales o constructivos recientes.
+        </p>
+
+        <h3>Capas disponibles</h3>
+        <label class="layer-item"><input type="checkbox" id="chk-cambios" /> Cambios multiespectrales</label>
+        <label class="layer-item"><input type="checkbox" id="chk-sar" /> Incremento de backscatter SAR</label>
+        <label class="layer-item"><input type="checkbox" id="chk-sensores" /> Sensores y puntos de observación</label>
+
+        <h3>Documentos</h3>
+        <ul class="doc-links">
+          <li><a href="pdf/briefing.pdf" target="_blank">📄 Briefing</a></li>
+          <li><a href="pdf/intel.pdf" target="_blank">📊 Informe Intel</a></li>
+          <li><a href="pdf/debrief.pdf" target="_blank">🧾 Debrief</a></li>
+        </ul>
+      </aside>
+
+      <!-- MAPA -->
+      <section id="map-container">
+        <div id="map"></div>
+      </section>
+    </main>
+     
+    
+  </div>
+
+  <script src="js/loadFooter.js"></script>
+  <script src="js/reloj.js"></script>
+  <script src="js/typewriter.js"></script>
+  <script src="js/mision2.js"></script>
+  <script src="js/transition.js"></script>
+</body>
+</html>

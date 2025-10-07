@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Misión 3 — H2O en guerra híbrida (Argelia–Marruecos)</title>
+
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <img src="img/logos/logo_indra.png" class="logo" alt="Indra">
+        <img src="img/logos/logo_upct.png" class="logo" alt="UPCT">
+      </div>
+
+      <div class="header-center">
+        <h1>MISIÓN 3: Pozos de agua en guerra híbrida</h1>
+        <p class="subtitle">Corredor fronterizo semiárido · OP-H2O-ALG-MAR-003</p>
+      </div>
+
+      <div class="header-right">
+        <button id="btn-back" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Centro de Operaciones</button>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main id="main-content">
+      <!-- LATERAL -->
+      <aside id="side-panel">
+        <h2>Resumen de la misión</h2>
+        <p class="typewriter">
+          Informes locales señalan pozos comunitarios secos y picos de desinformación. Se evaluará riesgo compuesto
+          combinando ΔNDVI/ΔSAR, proximidad a conducciones/instalaciones y población dependiente para diseñar EWI
+          y contramedidas tácticas/estratégicas.
+        </p>
+
+        <h3>Capas</h3>
+        <label class="layer-item"><input type="checkbox" id="chk-aoi" checked> AOI</label>
+        <label class="layer-item"><input type="checkbox" id="chk-cambios" checked> ΔNDVI / ΔSAR (zonas)</label>
+        <label class="layer-item"><input type="checkbox" id="chk-conducciones" checked> Conducciones</label>
+        <label class="layer-item"><input type="checkbox" id="chk-instalaciones" checked> Instalaciones</label>
+        <label class="layer-item"><input type="checkbox" id="chk-poblados" checked> Poblados</label>
+        <label class="layer-item"><input type="checkbox" id="chk-pozos" checked> Pozos (riesgo)</label>
+
+        <h3>Documentos</h3>
+        <ul class="doc-links">
+          <li><a href="pdf/briefing.pdf" target="_blank">📄 Briefing</a></li>
+          <li><a href="pdf/intel.pdf" target="_blank">📊 Informe Intel</a></li>
+          <li><a href="pdf/debrief.pdf" target="_blank">🧾 Debrief</a></li>
+        </ul>
+
+        <h3>Leyenda</h3>
+        <div style="font-size:.85rem;color:#B3B8BD;line-height:1.3">
+          <div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#00E5FF;border:2px solid #fff;box-shadow:0 0 6px rgba(0,229,255,.7);margin-right:6px;"></span>Pozos · Riesgo bajo</div>
+          <div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#FFA500;border:2px solid #fff;box-shadow:0 0 6px rgba(255,165,0,.7);margin-right:6px;"></span>Pozos · Riesgo medio</div>
+          <div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#FF2B2B;border:2px solid #fff;box-shadow:0 0 6px rgba(255,0,0,.7);margin-right:6px;"></span>Pozos · Riesgo alto</div>
+        </div>
+      </aside>
+
+      <!-- MAPA -->
+      <section id="map-container">
+        <div id="map"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Scripts comunes -->
+  <script src="/js/typewriter.js" defer></script>
+  <script src="/js/transition.js" defer></script>
+  <script src="js/loadFooter.js"></script>
+  <script src="js/reloj.js"></script>
+
+  <!-- Script misión -->
+  <script src="js/mision3.js" defer></script>
+</body>
+</html>

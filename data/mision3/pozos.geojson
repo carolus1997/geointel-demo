@@ -1,0 +1,12 @@
+{
+    "type":"FeatureCollection",
+    "features":[
+      { "type":"Feature","geometry":{"type":"Point","coordinates":[-2.62,32.54]},
+        "properties":{"id":"W001","nombre":"Pozo Ih","delta_ndvi":-0.16,"delta_sar_db":1.8,"pobl_dep":350,"riesgo":0.78} },
+      { "type":"Feature","geometry":{"type":"Point","coordinates":[-2.28,32.46]},
+        "properties":{"id":"W002","nombre":"Pozo Jb","delta_ndvi":-0.07,"delta_sar_db":0.6,"pobl_dep":210,"riesgo":0.42} },
+      { "type":"Feature","geometry":{"type":"Point","coordinates":[-2.42,32.40]},
+        "properties":{"id":"W003","nombre":"Pozo Kc","delta_ndvi":-0.02,"delta_sar_db":0.1,"pobl_dep":120,"riesgo":0.18} }
+    ]
+  }
+  

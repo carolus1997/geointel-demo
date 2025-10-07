@@ -1,0 +1,428 @@
+/* =============================
+   🔹 BASE GLOBAL
+============================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #0D1117;
+  color: #D9E0E6;
+  font-family: 'Inter', sans-serif;
+}
+
+#app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* =============================
+   🔹 INTRO ANIMADA
+============================= */
+
+#intro-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #050505 40%, #000 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: #00C896;
+  font-family: 'Orbitron', monospace;
+  overflow: hidden;
+  animation: introFadeOut 1.5s ease-in-out 3.5s forwards;
+}
+
+.intro-content {
+  text-align: center;
+  animation: introTextFade 3s ease-in-out;
+}
+
+.intro-logo {
+  width: 90px;
+  opacity: 0.9;
+  margin-bottom: 1rem;
+}
+
+.intro-title {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.intro-text {
+  font-size: 0.9rem;
+  margin-top: 0.8rem;
+  color: #00E5FF;
+  text-shadow: 0 0 6px rgba(0,229,255,0.8);
+  letter-spacing: 1px;
+}
+
+
+/* Efecto scanlines */
+#intro-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 255, 150, 0.04) 0px,
+    rgba(0, 255, 150, 0.04) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  pointer-events: none;
+}
+
+/* Animaciones */
+@keyframes introFadeOut {
+  to { opacity: 0; visibility: hidden; }
+}
+@keyframes introTextFade {
+  0% { opacity: 0; transform: scale(0.95); }
+  30% { opacity: 1; transform: scale(1); }
+  100% { opacity: 1; }
+}
+/* =============================
+   🔹 CURSOR DE ESCRITURA
+============================= */
+.intro-text::after {
+  content: '▌';
+  display: inline-block;
+  margin-left: 4px;
+  color: #00E5FF;
+  animation: blinkCursor 0.9s infinite;
+}
+
+@keyframes blinkCursor {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* =============================
+   🔹 EFECTO TYPEWRITER TÁCTICO
+============================= */
+.typewriter {
+  color: #B3B8BD;
+  font-family: 'Roboto Mono', monospace;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  text-shadow: 0 0 4px rgba(0,229,255,0.3);
+  position: relative;
+}
+
+.typewriter::after {
+  content: '▌';
+  display: inline-block;
+  margin-left: 3px;
+  color: #00E5FF;
+  animation: blinkCursor 0.9s infinite;
+}
+
+@keyframes blinkCursor {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+
+/* =============================
+   🔹 HEADER
+============================= */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  background: #151B22;
+  border-bottom: 1px solid #1F262E;
+  padding: 0.5rem 1rem;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  height: 34px;
+  filter: brightness(0.85);
+}
+
+.header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.header-center h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #00C896;
+  letter-spacing: 0.5px;
+}
+
+.header-center .subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #A0A8B0;
+}
+
+.header-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Botón volver al Centro de Operaciones */
+.btn-back {
+  background: none;
+  border: 1px solid #00C896;
+  color: #00C896;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.btn-back:hover {
+  background: #00C896;
+  color: #0D1117;
+  box-shadow: 0 0 10px rgba(0,200,150,0.5);
+}
+
+/* =============================
+   🔹 LAYOUT PRINCIPAL
+============================= */
+#main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+#side-panel {
+  width: 380px;
+  background: rgba(25, 30, 40, 0.95);
+  border-right: 1px solid #1F262E;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.panel-title {
+  color: #00C896;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #1F262E;
+  padding-bottom: 0.5rem;
+}
+
+#map-container {
+  flex: 1;
+  position: relative;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+/* =============================
+   🔹 TARJETAS DE MISIONES
+============================= */
+.mission-card {
+  background: rgba(15, 20, 25, 0.9);
+  border: 1px solid #00C89633;
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 0 6px rgba(0,200,150,0.2);
+}
+
+.mission-card:hover {
+  border-color: #00C896;
+  box-shadow: 0 0 12px rgba(0,200,150,0.4);
+  transform: scale(1.02);
+}
+
+.mission-card h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #00E5FF;
+}
+
+.mission-card p {
+  font-size: 0.85rem;
+  color: #B3B8BD;
+  margin: 0.4rem 0 0.8rem 0;
+}
+
+.mission-card button {
+  background: none;
+  border: 1px solid #00C896;
+  color: #00C896;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.mission-card button:hover {
+  background: #00C896;
+  color: #0D1117;
+}
+
+/* =============================
+   🔹 MARCADORES EN MAPA
+============================= */
+/* Círculo táctico azul (por defecto) */
+.circle-marker {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #00E5FF;
+  border: 2px solid #fff;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.7);
+  animation: radarPulse 2.5s infinite;
+  cursor: pointer;
+}
+
+/* Estado crítico / alerta */
+.circle-marker.alert {
+  background-color: #FF6B00;
+  box-shadow: 0 0 10px rgba(255,107,0,0.8);
+  animation: radarPulseOrange 2.5s infinite;
+}
+
+/* =============================
+   🔹 POPUPS
+============================= */
+.maplibregl-popup {
+  max-width: 240px;
+  font-family: 'Roboto Mono', monospace;
+  color: #D9E0E6;
+}
+
+.maplibregl-popup-content {
+  background: rgba(15, 20, 25, 0.95);
+  border: 1px solid #00C896;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 200, 150, 0.3);
+  padding: 0.8rem 1rem;
+}
+
+.maplibregl-popup-tip {
+  border-top-color: #00C896 !important;
+}
+
+.popup-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #00E5FF;
+  margin-bottom: 0.4rem;
+}
+
+.popup-meta {
+  font-size: 0.8rem;
+  color: #A0A8B0;
+  line-height: 1.3;
+}
+
+.popup-meta span {
+  color: #00C896;
+}
+
+
+/* =============================
+   🔹 RELOJ DIGITAL ESTILO LED ROJO
+============================= */
+#hud-clock {
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid #400000;
+  border-radius: 6px;
+  padding: 0.3rem 0.8rem;
+  color: #FF2B2B;
+  font-family: 'DS-Digital', 'Orbitron', 'Courier New', monospace;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+}
+#clock-time {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+  line-height: 1;
+}
+#clock-date {
+  font-size: 0.7rem;
+  color: #FF4D4D;
+  text-shadow: 0 0 6px rgba(255, 0, 0, 0.6);
+  margin-top: 2px;
+}
+
+/* Fuente digital alternativa */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+/* =============================
+   🔹 EFECTO DE TRANSICIÓN
+============================= */
+#transition-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #0D1117 0%, #000 100%);
+  animation: screenFade 0.8s ease-in-out forwards;
+  z-index: 9999;
+}
+
+@keyframes screenFade {
+  0% { opacity: 0; }
+  50% { opacity: 0.9; }
+  100% { opacity: 1; }
+}
+
+
+/* =============================
+   🔹 FOOTER
+============================= */
+.app-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #151B22;
+  color: #7C848C;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  border-top: 1px solid #1F262E;
+  position: relative;
+}
+
+.footer-left { flex: 1; text-align: left; }
+.footer-right { flex-shrink: 0; }
+
+/* =============================
+   🔹 ANIMACIONES
+============================= */
+@keyframes radarPulse {
+  0%   { transform: scale(0.9); box-shadow: 0 0 6px rgba(0, 229, 255, 0.5); }
+  50%  { transform: scale(1.2); box-shadow: 0 0 18px rgba(0, 229, 255, 1); }
+  100% { transform: scale(0.9); box-shadow: 0 0 6px rgba(0, 229, 255, 0.5); }
+}
+
+@keyframes radarPulseOrange {
+  0%   { transform: scale(0.9); box-shadow: 0 0 6px rgba(255,107,0,0.4); }
+  50%  { transform: scale(1.2); box-shadow: 0 0 18px rgba(255,107,0,0.9); }
+  100% { transform: scale(0.9); box-shadow: 0 0 6px rgba(255,107,0,0.4); }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-1.7, 37.6] },
+      "properties": {
+        "nombre": "Sensor Alfa",
+        "tipo": "SIGINT",
+        "estado": "Operativo"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-1.5, 37.7] },
+      "properties": {
+        "nombre": "Sensor Bravo",
+        "tipo": "ELINT",
+        "estado": "En mantenimiento"
+      }
+    }
+  ]
+}

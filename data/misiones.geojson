@@ -1,0 +1,50 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.65,
+          37.6
+        ]
+      },
+      "properties": {
+        "nombre": "Misión 1: Vigilancia Costera",
+        "enlace": "mision1.html"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nombre": "Misión 2 — Trípoli",
+        "descripcion": "Detección de actividad constructiva periurbana en Trípoli, Libia.",
+        "enlace": "mision2.html"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.191,
+          32.887
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nombre": "Misión 3 — H2O (Argelia–Marruecos)",
+        "descripcion": "Pozos críticos, riesgo compuesto y EWI de guerra de recursos.",
+        "enlace": "mision3.html",
+        "estado": "Alerta"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.5,
+          32.5
+        ]
+      }
+    }
+  ]
+}

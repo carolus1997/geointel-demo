@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Misión 1 — Vigilancia Costera</title>
+
+  <!-- MapLibre -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <div id="app-container">
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="header-left">
+          <img src="img/logos/logo_indra.png" class="logo" alt="Indra">
+          <img src="img/logos/logo_upct.png" class="logo" alt="UPCT">
+        </div>
+      
+        <div class="header-center">
+          <h1>Misión 1: Vigilancia Costera</h1>
+          <p class="subtitle" class="typewriter">Análisis SIGINT y observación marítima</p>
+        </div>
+      
+        <div class="header-right">
+          <button id="btn-back" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Centro de Operaciones
+          </button>
+        </div>
+      </header>
+      
+
+    <!-- CUERPO -->
+    <main id="main-content">
+
+      <!-- SIDEBAR -->
+      <aside id="side-panel">
+        <h2>Resumen de misión</h2>
+        <p class="typewriter">
+          Esta operación tiene como objetivo la vigilancia costera mediante sensores y análisis geoespacial.
+          Se monitorizan rutas marítimas y patrones de tráfico sospechoso.
+        </p>
+
+        <h3>Capas disponibles</h3>
+        <label class="layer-item">
+          <input type="checkbox" id="chk-rutas" />
+          <span>Rutas marítimas</span>
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" id="chk-sensores" />
+          <span>Sensores activos</span>
+        </label>
+      </aside>
+
+      <!-- MAPA -->
+      <section id="map-container">
+        <div id="map"></div>
+        <div id="hud">
+          <div class="hud-item"><i class="fa-solid fa-location-crosshairs"></i> <span id="coords">--</span></div>
+          <div class="hud-item"><i class="fa-solid fa-clock"></i> <span id="time">--</span></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script src="js/mision1.js"></script>
+  <script src="js/loadFooter.js"></script>
+  <script src="js/reloj.js"></script>
+  <script src="js/typewriter.js"></script>
+
+</body>
+</html>

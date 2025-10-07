@@ -1,0 +1,10 @@
+{
+    "type":"FeatureCollection",
+    "features":[
+      { "type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-2.7,32.6],[-2.5,32.6],[-2.5,32.5],[-2.7,32.5],[-2.7,32.6]]]},
+        "properties":{"delta":-0.18,"desc":"Pérdida vigor vegetal (ΔNDVI<0)"} },
+      { "type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-2.35,32.48],[-2.22,32.48],[-2.22,32.42],[-2.35,32.42],[-2.35,32.48]]]},
+        "properties":{"delta":0.12,"desc":"Posible recuperación o riego localizado"} }
+    ]
+  }
+  
