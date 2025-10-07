@@ -52,5 +52,5 @@ map.on('load', () => {
 // === BOTÓN DE REGRESO ===
 // === BOTÓN "CENTRO DE OPERACIONES" ===
 document.getElementById('btn-back').addEventListener('click', () => {
-    window.location.href = 'index.html';
+    window.location.href = '../../index.html';
 });

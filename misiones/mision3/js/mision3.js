@@ -22,7 +22,7 @@ map.on('load', () => {
   // AOI (polígono)
   addGeoLayer({
     id: 'aoi',
-    path: 'data/AOI.geojson',
+    path: 'data/mision3/AOI.geojson',
     type: 'fill',
     paint: {
       'fill-color': '#00C896',
@@ -34,7 +34,7 @@ map.on('load', () => {
   // Zonas con ΔNDVI/ΔSAR (polígonos)
   addGeoLayer({
     id: 'cambios',
-    path: 'data/cambios_derivados.geojson',
+    path: 'data/mision3/cambios_derivados.geojson',
     type: 'fill',
     paint: {
       'fill-color': [
@@ -54,7 +54,7 @@ map.on('load', () => {
   // Conducciones (líneas)
   addGeoLayer({
     id: 'conducciones',
-    path: 'data/conducciones_osm.geojson',
+    path: 'data/mision3/conducciones_osm.geojson',
     type: 'line',
     paint: {
       'line-color': '#9AA4AE',
@@ -66,7 +66,7 @@ map.on('load', () => {
   // Instalaciones (puntos como circles “neutros”)
   addGeoLayer({
     id: 'instalaciones',
-    path: 'data/instalaciones.geojson',
+    path: 'data/mision3/instalaciones.geojson',
     type: 'circle',
     paint: {
       'circle-radius': 4,
@@ -79,7 +79,7 @@ map.on('load', () => {
   // Poblados (puntos)
   addGeoLayer({
     id: 'poblados',
-    path: 'data/poblados.geojson',
+    path: 'data/mision3/poblados.geojson',
     type: 'circle',
     paint: {
       'circle-radius': 3.5,
@@ -90,7 +90,7 @@ map.on('load', () => {
   });
 
   // Pozos (marcadores circulares con riesgo: bajo/medio/alto)
-  fetch('data/pozos.geojson')
+  fetch('data/mision3/pozos.geojson')
     .then(r => r.json())
     .then(fc => {
       fc.features.forEach(f => {
@@ -157,5 +157,5 @@ function bindToggles() {
 document.getElementById('btn-back').addEventListener('click', () => {
   // marcamos intro vista para no repetir al volver
   sessionStorage.setItem('introSeen', 'true');
-  transitionTo('index.html');
+  transitionTo('../../index.html');
 });

@@ -1,0 +1,8 @@
+{
+    "type":"FeatureCollection",
+    "features":[
+      { "type":"Feature","geometry":{"type":"LineString","coordinates":[[-2.8,32.65],[-2.2,32.55]]},"properties":{"nombre":"Conducción principal A"} },
+      { "type":"Feature","geometry":{"type":"LineString","coordinates":[[-2.7,32.35],[-2.2,32.45]]},"properties":{"nombre":"Conducción principal B"} }
+    ]
+  }
+  

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Briefing — Misión 3: OP-H2O-ALG-MAR-003</title>
+
+  <!-- Estilos globales -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    body {
+      background: radial-gradient(circle at center, #0d1117 30%, #050708 100%);
+      color: #D8E2EB;
+      font-family: 'Orbitron', 'Roboto Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .briefing-container {
+      max-width: 800px;
+      padding: 40px;
+      text-align: center;
+      border: 1px solid #00C896;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,200,150,0.4);
+      background: rgba(15,18,22,0.75);
+      backdrop-filter: blur(8px);
+    }
+
+    h1 {
+      color: #00C896;
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #00E5FF;
+      font-size: 1rem;
+      margin-bottom: 25px;
+    }
+
+    .typewriter {
+      font-family: 'Roboto Mono', monospace;
+      color: #B3B8BD;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 35px;
+      min-height: 180px;
+    }
+
+    .btn-enter {
+      background: #00C896;
+      border: none;
+      padding: 14px 26px;
+      color: #0d1117;
+      font-weight: bold;
+      letter-spacing: 1px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-enter:hover {
+      background: #00E5FF;
+      box-shadow: 0 0 12px rgba(0,229,255,0.7);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 15px;
+      color: #7f8c8d;
+      font-size: 0.75rem;
+    }
+
+    /* efecto fade al entrar */
+    #fadeOverlay {
+      position: fixed;
+      inset: 0;
+      background: #0d1117;
+      z-index: 999;
+      opacity: 1;
+      transition: opacity 1.2s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="fadeOverlay"></div>
+
+  <div class="briefing-container">
+    <h1>🛰️ Misión 3 — OP-H2O-ALG-MAR-003</h1>
+    <div class="subtitle">Corredor fronterizo Argelia–Marruecos</div>
+
+    <div class="typewriter" id="briefingText"></div>
+
+    <button class="btn-enter" id="btnEnter">
+      Entrar en Zona de Operaciones →
+    </button>
+  </div>
+
+  <footer>
+    <span>© 2025 Carlos Mira Perceval — Plataforma GEOINT</span>
+  </footer>
+
+  <script src="../../js/typewriter.js"></script>
+  <script>
+    // --- efecto fade inicial ---
+    const overlay = document.getElementById("fadeOverlay");
+    window.addEventListener("load", () => {
+      setTimeout(() => overlay.style.opacity = 0, 400);
+      setTimeout(() => overlay.remove(), 1600);
+    });
+
+    // --- texto del briefing con efecto escritura ---
+    const briefingText = document.getElementById("briefingText");
+    const text = `
+    📡 Informe de inteligencia recibido...
+
+    Informes locales indican el agotamiento de pozos comunitarios y la propagación
+    de mensajes que culpan al otro lado de la frontera. Los análisis iniciales
+    sugieren una combinación de sabotaje físico, contaminación selectiva y
+    campañas de desinformación coordinadas.
+
+    Tu objetivo es evaluar los pozos críticos, identificar patrones en los
+    indicadores NDVI y SAR, y diseñar medidas de respuesta y alerta temprana
+    (EWI) frente a una posible guerra híbrida de recursos.
+    `;
+
+    function typeWriter(element, text, speed = 28) {
+      let i = 0;
+      function write() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(write, speed);
+        }
+      }
+      write();
+    }
+    typeWriter(briefingText, text);
+
+    // --- botón de acceso ---
+    document.getElementById("btnEnter").addEventListener("click", () => {
+      const overlay = document.createElement("div");
+      overlay.style.position = "fixed";
+      overlay.style.inset = "0";
+      overlay.style.background = "#0d1117";
+      overlay.style.zIndex = "999";
+      overlay.style.transition = "opacity 1s ease";
+      document.body.appendChild(overlay);
+      requestAnimationFrame(() => overlay.style.opacity = 1);
+      setTimeout(() => {
+        sessionStorage.setItem("introSeen", "true");
+        window.location.href = "mision3.html";
+      }, 1000);
+    });
+  </script>
+
+</body>
+</html>

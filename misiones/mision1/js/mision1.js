@@ -35,7 +35,7 @@ map.on('load', () => {
     // Sensores (puntos)
     map.addSource('sensores', {
         type: 'geojson',
-        data: 'data/mision1/sensores.geojson'
+        data: 'data/sensores.geojson'
     });
 
     map.addLayer({
@@ -54,7 +54,7 @@ map.on('load', () => {
     // Rutas (líneas)
     map.addSource('rutas', {
         type: 'geojson',
-        data: 'data/mision1/rutas.geojson'
+        data: 'data/rutas.geojson'
     });
 
     map.addLayer({
@@ -70,7 +70,7 @@ map.on('load', () => {
 
     // Crear marcadores animados y popups tácticos
     // Crear marcadores tácticos personalizados
-    fetch('data/mision1/sensores.geojson')
+    fetch('data/sensores.geojson')
         .then(res => res.json())
         .then(data => {
             data.features.forEach(f => {
@@ -116,7 +116,7 @@ document.getElementById('chk-rutas').addEventListener('change', e => {
 // === BOTÓN DE REGRESO ===
 // === BOTÓN "CENTRO DE OPERACIONES" ===
 document.getElementById('btn-back').addEventListener('click', () => {
-    window.location.href = 'index.html';
+    window.location.href = '../../index.html';
 });
 
 // === TRANSICIÓN ENTRE MISIONES ===

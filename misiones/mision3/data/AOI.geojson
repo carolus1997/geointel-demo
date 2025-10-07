@@ -1,0 +1,11 @@
+{
+    "type": "FeatureCollection",
+    "features": [{
+      "type": "Feature",
+      "geometry": { "type": "Polygon", "coordinates": [[
+        [-2.9, 32.7], [-2.1, 32.7], [-2.1, 32.3], [-2.9, 32.3], [-2.9, 32.7]
+      ]]},
+      "properties": { "nombre": "AOI fronterizo didáctico" }
+    }]
+  }
+  

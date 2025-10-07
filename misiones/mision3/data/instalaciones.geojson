@@ -1,0 +1,7 @@
+{
+    "type":"FeatureCollection",
+    "features":[
+      { "type":"Feature","geometry":{"type":"Point","coordinates":[-2.45,32.58]},"properties":{"nombre":"Planta de bombeo"} },
+      { "type":"Feature","geometry":{"type":"Point","coordinates":[-2.55,32.42]},"properties":{"nombre":"Depósito logístico"}}]
+  }
+  
