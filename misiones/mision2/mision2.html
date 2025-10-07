@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +9,14 @@
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
   <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
   <link rel="stylesheet" href="../../css/style.css" />
+
+  <!-- MapLibre Draw -->
+  <link rel="stylesheet" href="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css" />
+  <script src="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.js"></script>
+
+  <!-- html2canvas (para exportar imagen) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 </head>
 
 <body>
@@ -59,14 +68,16 @@
         <div id="map"></div>
       </section>
     </main>
-     
-    
+
+
   </div>
 
   <script src="../../js/loadFooter.js"></script>
   <script src="../../js/reloj.js"></script>
   <script src="../../js/typewriter.js"></script>
   <script src="js/mision2.js"></script>
+  <script src="js/mision2_tools.js"></script>
   <script src="../../js/transition.js"></script>
 </body>
+
 </html>
