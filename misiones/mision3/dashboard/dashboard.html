@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — OP-H2O-ALG-MAR-003</title>
+
+    <!-- MapLibre -->
+    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="Dashboard.css" />
+</head>
+
+<body>
+    <div id="app-container">
+
+        <!-- 🔹 HEADER SUPERIOR -->
+        <header class="dashboard-header">
+            <div class="mission-info">
+                <h1>OP-H2O-ALG-MAR-003</h1>
+                <p>“Pozos de agua como vector en guerra híbrida”</p>
+            </div>
+
+            <div class="kpi-strip">
+                <div class="kpi-card red">
+                    <span class="kpi-title">Pozos HIGH</span>
+                    <span id="kpi-high" class="kpi-value">—</span>
+                </div>
+                <div class="kpi-card amber">
+                    <span class="kpi-title">EWI Activas</span>
+                    <span id="kpi-ewi" class="kpi-value">—</span>
+                </div>
+                <div class="kpi-card cyan">
+                    <span class="kpi-title">Pob. afectada</span>
+                    <span id="kpi-pop" class="kpi-value">—</span>
+                </div>
+            </div>
+
+            <div class="mission-actions">
+                <button id="btn-back" class="btn">
+                    <i class="fa-solid fa-arrow-left"></i> Misión 3
+                </button>
+            </div>
+        </header>
+
+        <!-- 🔹 CUERPO PRINCIPAL -->
+        <main class="dashboard-main">
+            <!-- PANEL LATERAL -->
+            <aside class="intel-panel">
+                <h2>Indicadores Clave</h2>
+                <div class="intel-card green">
+                    <h3>ΔNDVI</h3>
+                    <p id="ndvi-summary">—</p>
+                </div>
+                <div class="intel-card amber">
+                    <h3>ΔSAR</h3>
+                    <p id="sar-summary">—</p>
+                </div>
+                <div class="intel-card red">
+                    <h3>InfoOps</h3>
+                    <p id="infoops-summary">—</p>
+                </div>
+
+                <h2>Detalle Pozo</h2>
+                <div class="well-detail">
+                    <div class="well-header">
+                        <span id="well-name">—</span>
+                        <span id="well-risk" class="badge">—</span>
+                    </div>
+                    <canvas id="sparkline" width="280" height="60"></canvas>
+                    <div id="well-meta" class="well-meta">Selecciona un pozo en el mapa.</div>
+                </div>
+            </aside>
+
+            <!-- MAPA CENTRAL -->
+            <section class="map-panel">
+                <div id="map"></div>
+                <div id="hud" class="map-hud">
+                    <span><i class="fa-solid fa-water"></i> Riesgo hídrico</span>
+                </div>
+            </section>
+
+            <!-- PANEL DE CAPAS -->
+            <div id="layer-controls" class="layer-panel">
+                <button class="layer-btn active" data-layer="ndvi">ΔNDVI</button>
+                <button class="layer-btn" data-layer="sar">ΔSAR</button>
+                <button class="layer-btn" data-layer="dem">DEM</button>
+                <button class="layer-btn" data-layer="thermal">THERMAL</button>
+            </div>
+
+        </main>
+
+        <!-- 🔹 FOOTER / PANEL DE DECISIÓN -->
+        <footer class="decision-panel">
+            <div class="decision-text">
+                <strong>Evaluación actual:</strong> Riesgo hídrico elevado en corredor NE — prioridad de verificación.
+            </div>
+            <div class="decision-buttons">
+                <button class="btn green" id="btn-verify">Verificar</button>
+                <button class="btn amber" id="btn-vhr">Solicitar VHR</button>
+                <button class="btn red" id="btn-humint">Notificar HUMINT</button>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- 🔹 SCRIPTS -->
+    <script src="Dashboard.js"></script>
+</body>
+
+</html>

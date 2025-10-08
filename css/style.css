@@ -476,6 +476,24 @@ html, body {
   color: #00FFC6;
 }
 
+/* =============================
+   🔹 DASHBOARD BLOBAL
+============================= */
+.btn-dash {
+  background: none;
+  border: 1px solid #00C896;
+  color: #00C896;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: .25s;
+}
+.btn-dash:hover {
+  background: #00C896;
+  color: #0D1117;
+}
+
 
 /* =============================
    🔹 RELOJ DIGITAL ESTILO LED ROJO
