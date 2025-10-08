@@ -14,16 +14,18 @@ function getBasePath() {
 function getMisionURL(relativePath) {
   const base = getBasePath();
 
-  // Eliminar todos los ../ o ./ del inicio, dejando la ruta limpia
+  // Normalizar separadores y limpiar posibles ./ o ../ iniciales
   let cleanPath = relativePath.replace(/^(\.\/|\.\.\/)+/, '');
 
-  // Si por algún motivo no empieza por "misiones/", lo añadimos
-  if (!cleanPath.startsWith('misiones/')) {
-    cleanPath = 'misiones/' + cleanPath;
+  // Si la ruta contiene "misiones/", la dejamos intacta
+  if (cleanPath.includes('misiones/')) {
+    return base + cleanPath;
   }
 
-  return base + cleanPath;
+  // Si por algún motivo no la incluye (caso extremo), la añadimos
+  return base + 'misiones/' + cleanPath;
 }
+
 
 
 // === MAPA PRINCIPAL (MAPLIBRE) ===
