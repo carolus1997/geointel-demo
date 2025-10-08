@@ -4,7 +4,7 @@
     {
       "type": "Feature",
       "properties": {
-        "nombre": "Misión 1 — Contraterrorismo Urbano",
+        "nombre": "Contraterrorismo Urbano",
         "descripcion": "Modelización Socioeconómica anti radicalización",
         "enlace": "mision1.html"
       },
@@ -16,7 +16,7 @@
     {
       "type": "Feature",
       "properties": {
-        "nombre": "Misión 2 — Trípoli (Libia)",
+        "nombre": "Trípoli (Libia)",
         "descripcion": "Detección constructiva periurbana.",
         "enlace": "mision2.html"
       },
@@ -28,7 +28,7 @@
     {
       "type": "Feature",
       "properties": {
-        "nombre": "Misión 3 — Argelia–Marruecos",
+        "nombre": "Argelia–Marruecos",
         "descripcion": "Pozos de agua como vector en guerra híbrida.",
         "enlace": "mision3.html"
       },
