@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Misión 1 — Vigilancia Costera</title>
+  <title>Misión 1 — Contraterrorismo Urbano</title>
 
   <!-- MapLibre -->
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
@@ -21,49 +22,53 @@
 
     <!-- HEADER -->
     <header class="app-header">
-        <div class="header-left">
-          <img src="../../img/logos/logo_indra.png" class="logo" alt="Indra">
-          <img src="../../img/logos/logo_upct.png" class="logo" alt="UPCT">
-        </div>
-      
-        <div class="header-center">
-          <h1>Misión 1: Vigilancia Costera</h1>
-          <p class="subtitle" class="typewriter">Análisis SIGINT y observación marítima</p>
-        </div>
-      
-        <div class="header-right">
-          <button id="btn-back" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i> Centro de Operaciones
-          </button>
-        </div>
-      </header>
-      
+      <div class="header-left">
+        <img src="../../img/logos/logo_indra.png" class="logo" alt="Indra">
+        <img src="../../img/logos/logo_upct.png" class="logo" alt="UPCT">
+      </div>
 
-    <!-- CUERPO -->
+      <div class="header-center">
+        <h1>Misión 1 : Contraterrorismo Urbano</h1>
+        <p class="subtitle typewriter">Modelización socioeconómica y análisis de riesgo de radicalización</p>
+      </div>
+
+      <div class="header-right">
+        <button id="btn-back" class="btn-back">
+          <i class="fa-solid fa-arrow-left"></i> Centro de Operaciones
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
     <main id="main-content">
 
-      <!-- SIDEBAR -->
+      <!-- PANEL LATERAL -->
       <aside id="side-panel">
         <h2>Resumen de misión</h2>
         <p class="typewriter">
-          Esta operación tiene como objetivo la vigilancia costera mediante sensores y análisis geoespacial.
-          Se monitorizan rutas marítimas y patrones de tráfico sospechoso.
+          La misión consiste en identificar patrones espaciales de radicalización en entornos urbanos mediante
+          indicadores socioeconómicos, localización de mezquitas y densidad de incidentes registrados.  
+          Se busca detectar áreas vulnerables para orientar intervenciones preventivas.
         </p>
 
         <h3>Capas disponibles</h3>
-        <label class="layer-item">
-          <input type="checkbox" id="chk-rutas" />
-          <span>Rutas marítimas</span>
-        </label>
-        <label class="layer-item">
-          <input type="checkbox" id="chk-sensores" />
-          <span>Sensores activos</span>
-        </label>
+        <label class="layer-item"><input type="checkbox" id="chk-zonas" /> Zonas de vulnerabilidad</label>
+        <label class="layer-item"><input type="checkbox" id="chk-incidentes" /> Incidentes registrados</label>
+        <label class="layer-item"><input type="checkbox" id="chk-mezquitas" /> Mezquitas y centros religiosos</label>
+
+        <h3>Documentos</h3>
+        <ul class="doc-links">
+          <li><a href="pdf/briefing.pdf" target="_blank">📄 Briefing</a></li>
+          <li><a href="pdf/intel.pdf" target="_blank">📊 Informe Intel</a></li>
+          <li><a href="pdf/debrief.pdf" target="_blank">🧾 Debrief</a></li>
+        </ul>
       </aside>
 
       <!-- MAPA -->
       <section id="map-container">
         <div id="map"></div>
+
+        <!-- HUD táctico -->
         <div id="hud">
           <div class="hud-item"><i class="fa-solid fa-location-crosshairs"></i> <span id="coords">--</span></div>
           <div class="hud-item"><i class="fa-solid fa-clock"></i> <span id="time">--</span></div>
