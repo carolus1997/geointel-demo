@@ -2,73 +2,73 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Centro de Operaciones - Geointeligencia Táctica</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Centro de Operaciones - Geointeligencia Táctica</title>
 
-    <!-- MapLibre -->
-    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <!-- MapLibre -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <!-- Estilos -->
-    <link rel="stylesheet" href="css/style.css" />
+  <!-- Fuentes y estilo táctico -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
 
-    <!-- Intro -->
-    <script src="js/intro.js" defer></script>
-
+  <!-- Intro animada -->
+  <script src="js/intro.js" defer></script>
 </head>
 
 <body class="calcite-mode-dark">
-    <!-- Intro animada -->
-    <div id="intro-screen">
-        <div class="intro-content">
-            <img src="img/logos/logo_indra.png" alt="Indra" class="intro-logo">
-            <h1 class="intro-title">Plataforma de Demostración Táctica</h1>
-            <p class="intro-text">Initializing Tactical Interface...</p>
+  <!-- Intro animada -->
+  <div id="intro-screen">
+    <div class="intro-content">
+      <img src="img/logos/logo_indra.png" alt="Indra" class="intro-logo">
+      <h1 class="intro-title">Plataforma de Demostración Táctica</h1>
+      <p class="intro-text">Initializing Tactical Interface...</p>
+    </div>
+  </div>
+
+  <div id="app-container">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <img src="img/logos/logo_indra.png" class="logo" alt="Indra" />
+        <img src="img/logos/logo_upct.png" class="logo" alt="UPCT" />
+      </div>
+      <div class="header-center">
+        <h1>Centro de Operaciones - Geointeligencia Aplicada</h1>
+        <p class="subtitle">Misiones activas en territorio nacional</p>
+      </div>
+    </header>
+
+    <!-- CUERPO PRINCIPAL -->
+    <main id="main-content">
+      <!-- PANEL LATERAL -->
+      <aside id="side-panel">
+        <h2 class="panel-title">Misiones Disponibles</h2>
+        <div id="missions-container">
+          <!-- Las tarjetas se generarán dinámicamente desde misiones.geojson -->
         </div>
-    </div>
-    <div id="app-container">
-        <!-- HEADER -->
-        <header class="app-header">
-            <div class="header-left">
-                <img src="img/logos/logo_indra.png" class="logo" alt="Indra" />
-                <img src="img/logos/logo_upct.png" class="logo" alt="UPCT" />
-            </div>
-            <div class="header-center">
-                <h1>Centro de Operaciones - Geointeligencia Aplicada</h1>
-                <p class="subtitle">Misiones activas en territorio nacional</p>
-            </div>
+      </aside>
 
-        </header>
+      <!-- MAPA -->
+      <section id="map-container">
+        <div id="map"></div>
+      </section>
+    </main>
 
-        <!-- CUERPO PRINCIPAL -->
-        <main id="main-content">
-            <!-- PANEL LATERAL -->
-            <aside id="side-panel">
-                <h2 class="panel-title">Misiones Disponibles</h2>
-                <div id="missions-container">
-                    <!-- Las tarjetas se generarán dinámicamente desde misiones.geojson -->
-                </div>
-            </aside>
+    <!-- FOOTER (se carga dinámicamente) -->
+  </div>
 
-            <!-- MAPA -->
-            <section id="map-container">
-                <div id="map"></div>
-            </section>
-        </main>
-
-    </div>
-
-    <!-- SCRIPT PRINCIPAL -->
-    <script src="js/main.js"></script>
-    <script src="js/loadFooter.js"></script>
-    <script src="js/reloj.js"></script>
-    <script src="js/transition.js"></script>
-    <script src="js/typewriter.js"></script>
+  <!-- JS PRINCIPALES -->
+  <script src="js/main.js"></script>
+  <script src="js/loadFooter.js"></script>
+  <script src="js/reloj.js"></script>
+  <script src="js/transition.js"></script>
+  <script src="js/typewriter.js"></script>
 
 </body>
-
 </html>

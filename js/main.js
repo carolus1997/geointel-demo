@@ -1,6 +1,6 @@
 const MAPTILER_KEY = 'rk78lPIZURCYo6I9QQdi';
 
-// === RUTAS COMPATIBLES LOCAL / GITHUB PAGES ===
+// === FUNCIONES DE ENTORNO ===
 function getBasePath() {
   const pathParts = window.location.pathname.split('/');
   const isGitHub = window.location.hostname.includes('github.io');
@@ -16,11 +16,11 @@ function getMisionURL(relativePath) {
   return base + relativePath.replace('../', '');
 }
 
-// === MAPA GLOBAL (MAPLIBRE) ===
+// === MAPA PRINCIPAL (MAPLIBRE) ===
 const map = new maplibregl.Map({
   container: 'map',
   style: `https://api.maptiler.com/maps/darkmatter/style.json?key=${MAPTILER_KEY}`,
-  center: [-3.7038, 40.4168],
+  center: [-3.7038, 40.4168], // Madrid
   zoom: 5.5,
   pitch: 0,
   bearing: 0,
@@ -29,52 +29,85 @@ const map = new maplibregl.Map({
 
 map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-// === CARGAR MISIONES Y GENERAR TARJETAS ===
-fetch('data/misiones.geojson')
-  .then(res => res.json())
-  .then(data => {
-    const missionsContainer = document.getElementById('missions-container');
+// === CARGAR MISIONES (HUDs tácticos) ===
+map.on('load', () => {
+  // Ruta dinámica del archivo según entorno
+  const dataPath = `${getBasePath()}data/misiones.geojson`;
 
-    data.features.forEach(feature => {
-      const { nombre, descripcion, enlace } = feature.properties;
-      const coords = feature.geometry.coordinates;
+  fetch(dataPath)
+    .then(res => {
+      if (!res.ok) throw new Error(`Error al cargar misiones.geojson (${res.status})`);
+      return res.json();
+    })
+    .then(data => {
+      const missionsContainer = document.getElementById('missions-container');
 
-      // Corrige enlace según entorno
-      const enlaceFinal = getMisionURL(enlace);
+      data.features.forEach(feature => {
+        const { nombre, descripcion, enlace, estado } = feature.properties;
+        const coords = feature.geometry.coordinates;
 
-      // === MARCADOR EN EL MAPA ===
-      const el = document.createElement('div');
-      el.className = 'marker';
-      new maplibregl.Marker(el)
-        .setLngLat(coords)
-        .setPopup(
-          new maplibregl.Popup({ offset: 25 }).setHTML(`
-            <strong>${nombre}</strong><br>
-            <a href="${enlaceFinal}" style="color:#00C896;">Ver misión →</a>
-          `)
-        )
-        .addTo(map);
+        // Validar coordenadas
+        if (!Array.isArray(coords) || coords.length !== 2) {
+          console.warn(`⚠️ Coordenadas no válidas para ${nombre}:`, coords);
+          return;
+        }
 
-      // === TARJETA LATERAL ===
-      const card = document.createElement('div');
-      card.className = 'mission-card';
-      card.innerHTML = `
-        <h3>${nombre}</h3>
-        <p>${descripcion}</p>
-        <button>Ver misión</button>
-      `;
+        const lon = parseFloat(coords[0]);
+        const lat = parseFloat(coords[1]);
+        if (isNaN(lon) || isNaN(lat)) return;
 
-      // Al hacer clic en botón, abrir misión
-      card.querySelector('button').addEventListener('click', () => {
-        window.location.href = enlaceFinal;
+        console.log(`✅ ${nombre}: [${lon}, ${lat}]`);
+
+        // === MARCADOR INVISIBLE (anclaje) ===
+        const anchor = document.createElement('div');
+        anchor.className = 'invisible-anchor';
+
+        // === HUD circular animado ===
+        const hud = document.createElement('div');
+        hud.className = 'hud-marker';
+        if (estado) hud.classList.add(estado.toLowerCase());
+
+        const label = document.createElement('span');
+        label.textContent = nombre;
+        hud.appendChild(label);
+
+        // HUD dentro del ancla
+        anchor.appendChild(hud);
+
+        // === Añadir marcador al mapa ===
+        new maplibregl.Marker({ element: anchor, anchor: 'center' })
+          .setLngLat([lon, lat])
+          .setPopup(
+            new maplibregl.Popup({ offset: 25 }).setHTML(`
+              <div class="popup-hud">
+                <strong>${nombre}</strong><br>
+                <a href="${getMisionURL(enlace)}" style="color:#00ffc6;">Iniciar misión →</a>
+              </div>
+            `)
+          )
+          .addTo(map);
+
+        // === TARJETA LATERAL ===
+        const card = document.createElement('div');
+        card.className = 'mission-card';
+        card.innerHTML = `
+          <h3>${nombre}</h3>
+          <p>${descripcion}</p>
+          <button>Ver misión</button>
+        `;
+
+        // Click en el botón → ir a misión
+        card.querySelector('button').addEventListener('click', () => {
+          window.location.href = getMisionURL(enlace);
+        });
+
+        // Click en la tarjeta → centrar mapa
+        card.addEventListener('click', () => {
+          map.flyTo({ center: [lon, lat], zoom: 7 });
+        });
+
+        missionsContainer.appendChild(card);
       });
-
-      // Al hacer clic en la tarjeta, centrar mapa
-      card.addEventListener('click', () => {
-        map.flyTo({ center: coords, zoom: 7 });
-      });
-
-      missionsContainer.appendChild(card);
-    });
-  })
-  .catch(err => console.error('Error cargando misiones:', err));
+    })
+    .catch(err => console.error('❌ Error cargando misiones:', err));
+});

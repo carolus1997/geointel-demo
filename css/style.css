@@ -1,3 +1,7 @@
+/* Fuente digital alternativa */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+
 /* =============================
    🔹 BASE GLOBAL
 ============================= */
@@ -233,6 +237,80 @@ html, body {
   left: 0;
 }
 
+
+/* =============================
+   🔹 HUD circular animado
+============================= */
+
+.hud-marker::before,
+.hud-marker::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 255, 198, 0.6);
+  animation: hudWave 2s infinite;
+}
+
+.hud-marker::after {
+  animation-delay: 1s;
+}
+
+
+.hud-marker {
+  position: absolute;
+  top: -14px;  /* centra el HUD sobre el punto */
+  left: -14px;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #00FFC6;
+  border-radius: 50%;
+  background: rgba(0, 255, 198, 0.1);
+  box-shadow: 0 0 10px #00ffc6, 0 0 20px rgba(0, 255, 198, 0.3);
+  animation: hudPulse 2s infinite;
+}
+
+
+
+@keyframes hudPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+@keyframes hudWave {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* Opcional: tooltip con nombre de misión */
+.hud-marker span {
+  position: absolute;
+  top: 110%;                /* 🔽 lo coloca justo debajo del círculo */
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;      /* evita que el texto se parta en varias líneas */
+  color: #00ffc6;
+  font-size: 11px;
+  font-family: 'Orbitron', monospace;
+  text-shadow: 0 0 3px #00ffc6;
+  letter-spacing: 0.5px;
+  pointer-events: none;     /* evita que interfiera con clics en el HUD */
+  user-select: none;
+}
+
+
 /* =============================
    🔹 TARJETAS DE MISIONES
 ============================= */
@@ -373,8 +451,6 @@ html, body {
   margin-top: 2px;
 }
 
-/* Fuente digital alternativa */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
 /* =============================
    🔹 EFECTO DE TRANSICIÓN

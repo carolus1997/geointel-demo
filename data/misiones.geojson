@@ -3,50 +3,38 @@
   "features": [
     {
       "type": "Feature",
+      "properties": {
+        "nombre": "Misión 1 — Contraterrorismo Urbano",
+        "descripcion": "Modelización Socioeconómica anti radicalización",
+        "enlace": "mision1.html"
+      },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -3.7038,
-          40.4168
-        ]
-      },
-      "properties": {
-        "nombre": "Misión 1 — Vigilancia Costera",
-        "descripcion": "Monitorización SIGINT e IMINT marítima.",
-        "enlace": "../misiones/mision1/mision1.html",
-        "codigo": "OP-SEA-001"
+        "coordinates": [-3.7038, 40.4168]
       }
     },
     {
       "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          13.191,
-          32.887
-        ]
-      },
       "properties": {
         "nombre": "Misión 2 — Trípoli (Libia)",
         "descripcion": "Detección constructiva periurbana.",
-        "enlace": "../misiones/mision2/mision2.html",
-        "codigo": "OP-TRI-001"
+        "enlace": "mision2.html"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [13.191, 32.887]
       }
     },
     {
       "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -2.25,
-          32.2
-        ]
-      },
       "properties": {
         "nombre": "Misión 3 — Argelia–Marruecos",
         "descripcion": "Pozos de agua como vector en guerra híbrida.",
-        "enlace": "../misiones/mision3/mision3.html",
-        "codigo": "OP-H2O-ALG-MAR-003"
+        "enlace": "mision3.html"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-1.95, 32.12]
       }
     }
   ]
