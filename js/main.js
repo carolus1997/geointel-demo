@@ -14,17 +14,23 @@ function getBasePath() {
 function getMisionURL(relativePath) {
   const base = getBasePath();
 
-  // Normalizar separadores y limpiar posibles ./ o ../ iniciales
+  // Limpia los ../ o ./ iniciales
   let cleanPath = relativePath.replace(/^(\.\/|\.\.\/)+/, '');
 
-  // Si la ruta contiene "misiones/", la dejamos intacta
-  if (cleanPath.includes('misiones/')) {
-    return base + cleanPath;
+  // Si no empieza por "misiones/", se la añadimos
+  if (!cleanPath.startsWith('misiones/')) {
+    cleanPath = 'misiones/' + cleanPath;
   }
 
-  // Si por algún motivo no la incluye (caso extremo), la añadimos
-  return base + 'misiones/' + cleanPath;
+  // Asegurarnos de no duplicar "misiones/mision1.html" (solo concatena si no hay ya base al final)
+  const finalURL = base.endsWith('/')
+    ? `${base}${cleanPath}`
+    : `${base}/${cleanPath}`;
+
+  // Normalizar posibles dobles barras
+  return finalURL.replace(/([^:]\/)\/+/g, '$1');
 }
+
 
 
 
