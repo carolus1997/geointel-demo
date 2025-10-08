@@ -31,98 +31,49 @@ setInterval(updateTime, 1000);
 
 // === CAPAS GEOJSON ===
 map.on('load', () => {
-  // 🔹 Zonas de vulnerabilidad (polígonos)
-  map.addSource('zonas', {
-    type: 'geojson',
-    data: 'data/zonas_vulnerabilidad.geojson'
-  });
 
-  map.addLayer({
-    id: 'zonas-layer',
-    type: 'fill',
-    source: 'zonas',
-    paint: {
-      'fill-color': '#FF2B2B',
-      'fill-opacity': 0.25,
-      'fill-outline-color': '#FF4D4D'
-    },
-    layout: { visibility: 'none' }
-  });
-
-  // 🔹 Incidentes registrados (puntos)
-  map.addSource('incidentes', {
-    type: 'geojson',
-    data: 'data/incidentes.geojson'
-  });
-
-  map.addLayer({
-    id: 'incidentes-layer',
-    type: 'circle',
-    source: 'incidentes',
-    paint: {
-      'circle-radius': 5,
-      'circle-color': '#FFA500',
-      'circle-stroke-width': 1,
-      'circle-stroke-color': '#fff'
-    },
-    layout: { visibility: 'none' }
-  });
-
-  // 🔹 Mezquitas y centros religiosos (puntos)
+  // === CAPA DE MEZQUITAS (desde GeoServer Docker) ===
   map.addSource('mezquitas', {
     type: 'geojson',
-    data: 'data/mezquitas.geojson'
+    data: 'http://172.29.48.1:8060/geoserver/geointel/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=geointel:Mezquitas&outputFormat=application/json'
   });
 
   map.addLayer({
     id: 'mezquitas-layer',
-    type: 'symbol',
+    type: 'circle',
     source: 'mezquitas',
-    layout: {
-      'icon-image': 'religious-muslim-15',
-      'icon-size': 1,
-      'visibility': 'none'
+    paint: {
+      'circle-radius': 5,
+      'circle-color': '#FF6B00',
+      'circle-stroke-color': '#FFF',
+      'circle-stroke-width': 1
     }
   });
 
-  // === POPUPS INTERACTIVOS ===
-  map.on('click', 'incidentes-layer', e => {
+
+  // === POPUP táctico ===
+  map.on('click', 'mezquitas-layer', e => {
     const f = e.features[0];
+    const props = f.properties;
     new maplibregl.Popup()
       .setLngLat(e.lngLat)
       .setHTML(`
-        <strong>Tipo:</strong> ${f.properties.tipo}<br>
-        <strong>Fecha:</strong> ${f.properties.fecha}<br>
-        <strong>Descripción:</strong> ${f.properties.descripcion || 'Sin datos'}
-      `)
+      <strong>${props.nombre || 'Mezquita sin nombre'}</strong><br>
+      <em>${props.distrito || 'Distrito no especificado'}</em><br>
+      <strong>Tipo:</strong> ${props.tipo || 'Centro religioso'}
+    `)
       .addTo(map);
   });
 
-  map.on('click', 'mezquitas-layer', e => {
-    const f = e.features[0];
-    new maplibregl.Popup()
-      .setLngLat(e.lngLat)
-      .setHTML(`
-        <strong>${f.properties.nombre}</strong><br>
-        <em>${f.properties.distrito || ''}</em><br>
-        Tipo: ${f.properties.tipo || 'Centro religioso'}
-      `)
-      .addTo(map);
-  });
+
 });
 
 // === CHECKBOX DE CAPAS ===
-document.getElementById('chk-zonas').addEventListener('change', e => {
-  map.setLayoutProperty('zonas-layer', 'visibility', e.target.checked ? 'visible' : 'none');
-});
-
-document.getElementById('chk-incidentes').addEventListener('change', e => {
-  map.setLayoutProperty('incidentes-layer', 'visibility', e.target.checked ? 'visible' : 'none');
-});
 
 document.getElementById('chk-mezquitas').addEventListener('change', e => {
   map.setLayoutProperty('mezquitas-layer', 'visibility', e.target.checked ? 'visible' : 'none');
 });
+
 
 // === BOTÓN DE REGRESO ===
 document.getElementById('btn-back').addEventListener('click', () => {

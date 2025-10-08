@@ -432,6 +432,50 @@ html, body {
   color: #00C896;
 }
 
+/* =============================
+   🔹 SECCION DE DOCUMENTOS
+============================= */
+
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+}
+
+.doc-card {
+  background: rgba(15, 20, 25, 0.9);
+  border: 1px solid #00C89633;
+  border-radius: 8px;
+  padding: 0.8rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  color: #00E5FF;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 0 6px rgba(0,200,150,0.2);
+}
+
+.doc-card i {
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+  color: #00C896;
+}
+
+.doc-card:hover {
+  border-color: #00C896;
+  box-shadow: 0 0 14px rgba(0,200,150,0.5);
+  transform: translateY(-2px);
+  background: rgba(0, 255, 198, 0.08);
+  color: #00FFC6;
+}
+
 
 /* =============================
    🔹 RELOJ DIGITAL ESTILO LED ROJO

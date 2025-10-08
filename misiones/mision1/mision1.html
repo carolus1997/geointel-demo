@@ -47,21 +47,33 @@
         <h2>Resumen de misión</h2>
         <p class="typewriter">
           La misión consiste en identificar patrones espaciales de radicalización en entornos urbanos mediante
-          indicadores socioeconómicos, localización de mezquitas y densidad de incidentes registrados.  
+          indicadores socioeconómicos, localización de mezquitas y densidad de incidentes registrados.
           Se busca detectar áreas vulnerables para orientar intervenciones preventivas.
         </p>
 
         <h3>Capas disponibles</h3>
-        <label class="layer-item"><input type="checkbox" id="chk-zonas" /> Zonas de vulnerabilidad</label>
-        <label class="layer-item"><input type="checkbox" id="chk-incidentes" /> Incidentes registrados</label>
-        <label class="layer-item"><input type="checkbox" id="chk-mezquitas" /> Mezquitas y centros religiosos</label>
+
+        <label class="layer-item">
+          <input type="checkbox" id="chk-mezquitas" />
+          <span>Mezquitas</span>
+        </label>
 
         <h3>Documentos</h3>
-        <ul class="doc-links">
-          <li><a href="pdf/briefing.pdf" target="_blank">📄 Briefing</a></li>
-          <li><a href="pdf/intel.pdf" target="_blank">📊 Informe Intel</a></li>
-          <li><a href="pdf/debrief.pdf" target="_blank">🧾 Debrief</a></li>
-        </ul>
+        <div class="docs-grid">
+          <a href="pdf/briefing.pdf" target="_blank" class="doc-card">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Briefing</span>
+          </a>
+          <a href="pdf/intel.pdf" target="_blank" class="doc-card">
+            <i class="fa-solid fa-chart-column"></i>
+            <span>Informe Intel</span>
+          </a>
+          <a href="pdf/debrief.pdf" target="_blank" class="doc-card">
+            <i class="fa-solid fa-clipboard-check"></i>
+            <span>Debrief</span>
+          </a>
+        </div>
+
       </aside>
 
       <!-- MAPA -->
@@ -84,4 +96,5 @@
   <script src="../../js/typewriter.js"></script>
 
 </body>
+
 </html>
