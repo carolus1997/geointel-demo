@@ -1,24 +1,38 @@
-// === EFECTO TYPEWRITER TÁCTICO ===
-// Selecciona todos los elementos que tengan la clase .typewriter
-document.addEventListener('DOMContentLoaded', () => {
-    const elements = document.querySelectorAll('.typewriter');
-    
-    elements.forEach(el => {
-      const text = el.textContent.trim();
+// typewriter.js — robusto y con cursor que desaparece al final
+(() => {
+  function initTypewriter() {
+    const els = document.querySelectorAll('.typewriter');
+
+    els.forEach(el => {
+      const fullText = (el.getAttribute('data-text') || el.textContent || '').trim();
       el.textContent = '';
-      let index = 0;
-  
-      function type() {
-        if (index < text.length) {
-          el.textContent += text[index];
-          index++;
-          const delay = Math.random() * 40 + 15; // velocidad variable para naturalidad
+
+      // cursor controlado por JS (no por ::after)
+      const cursor = document.createElement('span');
+      cursor.className = 'tw-cursor';
+      cursor.textContent = '▌';
+      el.appendChild(cursor);
+
+      let i = 0;
+      (function type() {
+        if (i < fullText.length) {
+          el.insertBefore(document.createTextNode(fullText.charAt(i)), cursor);
+          i++;
+          const delay = 15 + Math.random() * 40;
           setTimeout(type, delay);
+        } else {
+          // al terminar, desvanecer y quitar cursor
+          cursor.classList.add('fade-out');
+          setTimeout(() => cursor.remove(), 500);
         }
-      }
-  
-      // Pequeño retardo antes de comenzar
-      setTimeout(type, Math.random() * 800 + 200);
+      })();
     });
-  });
-  
+  }
+
+  // Ejecuta aunque el DOM ya esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTypewriter);
+  } else {
+    initTypewriter();
+  }
+})();

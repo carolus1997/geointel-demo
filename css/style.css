@@ -91,18 +91,31 @@ html, body {
 /* =============================
    🔹 CURSOR DE ESCRITURA
 ============================= */
-.intro-text::after {
-  content: '▌';
-  display: inline-block;
+/* Desactiva el cursor por pseudo-elemento si existía */
+.typewriter::after { content: none !important; }
+
+/* Cursor controlado por JS */
+.tw-cursor {
   margin-left: 4px;
   color: #00E5FF;
   animation: blinkCursor 0.9s infinite;
 }
 
+/* Al finalizar, desvanecer */
+.tw-cursor.fade-out {
+  animation: fadeOut 0.5s forwards;
+}
+
+/* Animaciones */
 @keyframes blinkCursor {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
 }
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
 
 /* =============================
    🔹 EFECTO TYPEWRITER TÁCTICO
