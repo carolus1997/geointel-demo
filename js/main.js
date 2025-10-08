@@ -14,22 +14,29 @@ function getBasePath() {
 function getMisionURL(relativePath) {
   const base = getBasePath();
 
-  // Limpia los ../ o ./ iniciales
+  // Limpia ../ o ./ iniciales
   let cleanPath = relativePath.replace(/^(\.\/|\.\.\/)+/, '');
 
-  // Si no empieza por "misiones/", se la añadimos
+  // Si no empieza por "misiones/", lo añadimos
   if (!cleanPath.startsWith('misiones/')) {
     cleanPath = 'misiones/' + cleanPath;
   }
 
-  // Asegurarnos de no duplicar "misiones/mision1.html" (solo concatena si no hay ya base al final)
-  const finalURL = base.endsWith('/')
-    ? `${base}${cleanPath}`
-    : `${base}/${cleanPath}`;
+  // Detectar nombre de archivo tipo misionX.html
+  const fileMatch = cleanPath.match(/(mision\d+)\.html$/i);
+  if (fileMatch) {
+    const folderName = fileMatch[1]; // ej: "mision1"
+    // Si no contiene ya "/mision1/", la insertamos antes del nombre del archivo
+    if (!cleanPath.includes(`/${folderName}/`)) {
+      cleanPath = cleanPath.replace(`${folderName}.html`, `${folderName}/${folderName}.html`);
+    }
+  }
 
-  // Normalizar posibles dobles barras
-  return finalURL.replace(/([^:]\/)\/+/g, '$1');
+  // Concatenar base y limpiar posibles barras dobles
+  const finalURL = `${base}${cleanPath}`.replace(/([^:]\/)\/+/g, '$1');
+  return finalURL;
 }
+
 
 
 
