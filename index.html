@@ -23,16 +23,16 @@
 
 <body class="calcite-mode-dark">
   <!-- Intro animada -->
-<div id="intro-screen">
-  <div class="intro-content">
-    <div class="intro-logos">
-      <img src="img/logos/logo_indra.png" alt="Indra" class="intro-logo indra">
-      <img src="img/logos/logo_upct.png" alt="UPCT" class="intro-logo upct">
+  <div id="intro-screen">
+    <div class="intro-content">
+      <div class="intro-logos">
+        <img src="img/logos/logo_indra.png" alt="Indra" class="intro-logo indra">
+        <img src="img/logos/logo_upct.png" alt="UPCT" class="intro-logo upct">
+      </div>
+      <h1 class="intro-title">Plataforma de Demostración Táctica</h1>
+      <p class="intro-text">Initializing Tactical Interface...</p>
     </div>
-    <h1 class="intro-title">Plataforma de Demostración Táctica</h1>
-    <p class="intro-text">Initializing Tactical Interface...</p>
   </div>
-</div>
 
 
   <div id="app-container">
@@ -61,6 +61,12 @@
       <!-- MAPA -->
       <section id="map-container">
         <div id="map"></div>
+        <!-- CONTROLES DE MAPA BASE -->
+        <div id="basemap-controls">
+          <button id="toggle-hillshade" class="active">Relieve</button>
+          <button id="toggle-sat">Satélite</button>
+        </div>
+
       </section>
     </main>
 
@@ -68,6 +74,7 @@
   </div>
 
   <!-- JS PRINCIPALES -->
+
   <script src="js/main.js"></script>
   <script src="js/loadFooter.js"></script>
   <script src="js/reloj.js"></script>
@@ -75,4 +82,5 @@
   <script src="js/typewriter.js"></script>
 
 </body>
+
 </html>

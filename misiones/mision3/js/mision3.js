@@ -1,144 +1,81 @@
-// === MAPA BASE ===
 const MAPTILER_KEY = 'rk78lPIZURCYo6I9QQdi';
+
+// === MAPA BASE (Dark Matter + controles) ===
 const map = new maplibregl.Map({
   container: 'map',
   style: `https://api.maptiler.com/maps/darkmatter/style.json?key=${MAPTILER_KEY}`,
-  center: [-2.5, 32.5], // centro aproximado didáctico (ajusta al AOI real que simules)
+  center: [-2.5, 32.5], // centro didáctico (ajusta al AOI)
   zoom: 8.2,
+  pitch: 0,
+  bearing: 0,
   attributionControl: false
 });
+
 map.addControl(new maplibregl.NavigationControl(), 'top-right');
 map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'metric' }));
 
-// === HELPER: Toggle capa vectorial (fill/line/circle) ===
+// === HELPER GENERAL ===
 function addGeoLayer({ id, path, type, paint = {}, layout = {}, promoteId }) {
   if (map.getSource(id)) return;
   map.addSource(id, { type: 'geojson', data: path, promoteId });
   map.addLayer({ id, type, source: id, paint, layout });
 }
 
-// === CARGA CAPAS ===
+// === EVENTO PRINCIPAL ===
 map.on('load', () => {
-  // AOI (polígono)
-  addGeoLayer({
-    id: 'aoi',
-    path: 'data/mision3/AOI.geojson',
-    type: 'fill',
-    paint: {
-      'fill-color': '#00C896',
-      'fill-opacity': 0.15,
-      'fill-outline-color': '#00C896'
-    }
+
+  // === 1️⃣ CAPA DE RELIEVE ===
+  map.addSource('hillshade', {
+    type: 'raster',
+    tiles: [
+      `https://api.maptiler.com/tiles/hillshade/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`
+    ],
+    tileSize: 256,
+    attribution: '&copy; MapTiler'
   });
 
-  // Zonas con ΔNDVI/ΔSAR (polígonos)
-  addGeoLayer({
-    id: 'cambios',
-    path: 'data/mision3/cambios_derivados.geojson',
-    type: 'fill',
+  const firstLayerId = map.getStyle().layers[0].id;
+
+  map.addLayer({
+    id: 'hillshade-layer',
+    type: 'raster',
+    source: 'hillshade',
     paint: {
-      'fill-color': [
-        'interpolate',
-        ['linear'], ['coalesce', ['get', 'delta'], 0],
-        -0.2, '#6B2A00',
-        -0.05, '#8A5B00',
-        0, '#444444',
-        0.1, '#1e6b4a',
-        0.2, '#00C896'
-      ],
-      'fill-opacity': 0.35,
-      'fill-outline-color': '#1F262E'
-    }
+      'raster-opacity': 0.45,
+      'raster-contrast': 0.25,
+      'raster-brightness-min': 0.7,
+      'raster-brightness-max': 1.0
+    },
+    layout: { visibility: 'none' }
+  }, firstLayerId);
+
+  // === 2️⃣ CAPA SATÉLITE ===
+  map.addSource('satellite', {
+    type: 'raster',
+    tiles: [
+      `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${MAPTILER_KEY}`
+    ],
+    tileSize: 256,
+    attribution: '&copy; MapTiler'
   });
 
-  // Conducciones (líneas)
-  addGeoLayer({
-    id: 'conducciones',
-    path: 'data/mision3/conducciones_osm.geojson',
-    type: 'line',
-    paint: {
-      'line-color': '#9AA4AE',
-      'line-width': 2,
-      'line-dasharray': [2, 2]
-    }
+  map.addLayer({
+    id: 'satellite-layer',
+    type: 'raster',
+    source: 'satellite',
+    paint: { 'raster-opacity': 1.0 },
+    layout: { visibility: 'none' }
   });
 
-  // Instalaciones (puntos como circles “neutros”)
-  addGeoLayer({
-    id: 'instalaciones',
-    path: 'data/mision3/instalaciones.geojson',
-    type: 'circle',
-    paint: {
-      'circle-radius': 4,
-      'circle-color': '#00E5FF',
-      'circle-stroke-width': 1,
-      'circle-stroke-color': '#FFFFFF'
-    }
-  });
-
-  // Poblados (puntos)
-  addGeoLayer({
-    id: 'poblados',
-    path: 'data/mision3/poblados.geojson',
-    type: 'circle',
-    paint: {
-      'circle-radius': 3.5,
-      'circle-color': '#B3B8BD',
-      'circle-stroke-width': 1,
-      'circle-stroke-color': '#1F262E'
-    }
-  });
-
-  // Pozos (marcadores circulares con riesgo: bajo/medio/alto)
-  fetch('data/mision3/pozos.geojson')
-    .then(r => r.json())
-    .then(fc => {
-      fc.features.forEach(f => {
-        const [lon, lat] = f.geometry.coordinates;
-        const props = f.properties || {};
-        const riesgo = props.riesgo || 0; // 0..1
-        const riesgoClas =
-          riesgo >= 0.66 ? 'alto' : (riesgo >= 0.33 ? 'medio' : 'bajo');
-
-        // elemento circular
-        const el = document.createElement('div');
-        el.className = 'circle-marker';
-        el.style.boxShadow = '0 0 8px rgba(0, 229, 255, 0.7)';
-        el.style.backgroundColor =
-          riesgoClas === 'alto' ? '#FF2B2B' :
-          riesgoClas === 'medio' ? '#FFA500' : '#00E5FF';
-
-        // popup táctico
-        const popupHTML = `
-          <div class="popup-title">${props.nombre || 'Pozo'}</div>
-          <div class="popup-meta">
-            <div><strong>Riesgo:</strong> <span>${riesgoClas.toUpperCase()}</span></div>
-            <div><strong>ΔNDVI:</strong> <span>${(props.delta_ndvi ?? 0).toFixed(2)}</span></div>
-            <div><strong>ΔSAR dB:</strong> <span>${(props.delta_sar_db ?? 0).toFixed(2)}</span></div>
-            <div><strong>Población dependiente:</strong> <span>${props.pobl_dep ?? '—'}</span></div>
-          </div>
-          <div class="popup-footer">
-            <button onclick="centrarM3(${lon},${lat})">Centrar</button>
-          </div>
-        `;
-
-        new maplibregl.Marker({ element: el, anchor: 'center' })
-          .setLngLat([lon, lat])
-          .setPopup(new maplibregl.Popup({ offset: 20 }).setHTML(popupHTML))
-          .addTo(map);
-      });
-    });
-
-  // Checkboxes
-  bindToggles();
+  
 });
 
-// === CENTRAR desde popup ===
+// === CENTRAR MAPA DESDE POPUP ===
 function centrarM3(lon, lat) {
   map.flyTo({ center: [lon, lat], zoom: 12.5 });
 }
 
-// === TOGGLES ===
+// === GESTIÓN DE TOGGLES ===
 function bindToggles() {
   const setVis = (id, on) => {
     if (!map.getLayer(id)) return;
@@ -150,12 +87,44 @@ function bindToggles() {
   document.getElementById('chk-conducciones').addEventListener('change', e => setVis('conducciones', e.target.checked));
   document.getElementById('chk-instalaciones').addEventListener('change', e => setVis('instalaciones', e.target.checked));
   document.getElementById('chk-poblados').addEventListener('change', e => setVis('poblados', e.target.checked));
-  // Pozos son Markers HTML, se controlan fácil ocultando/mostrando por clase si lo necesitas
+
+  // === TOGGLES DE CAPAS BASE ===
+  const toggleHillshade = document.getElementById('toggle-hillshade');
+  const toggleSat = document.getElementById('toggle-sat');
+
+  if (toggleHillshade) {
+    toggleHillshade.addEventListener('click', () => {
+      const vis = map.getLayoutProperty('hillshade-layer', 'visibility');
+      const newVis = vis === 'none' ? 'visible' : 'none';
+      map.setLayoutProperty('hillshade-layer', 'visibility', newVis);
+      toggleHillshade.classList.toggle('active', newVis === 'visible');
+
+      // si se activa relieve → apaga satélite
+      if (newVis === 'visible') {
+        map.setLayoutProperty('satellite-layer', 'visibility', 'none');
+        toggleSat?.classList.remove('active');
+      }
+    });
+  }
+
+  if (toggleSat) {
+    toggleSat.addEventListener('click', () => {
+      const vis = map.getLayoutProperty('satellite-layer', 'visibility');
+      const newVis = vis === 'none' ? 'visible' : 'none';
+      map.setLayoutProperty('satellite-layer', 'visibility', newVis);
+      toggleSat.classList.toggle('active', newVis === 'visible');
+
+      // si se activa satélite → apaga relieve
+      if (newVis === 'visible') {
+        map.setLayoutProperty('hillshade-layer', 'visibility', 'none');
+        toggleHillshade?.classList.remove('active');
+      }
+    });
+  }
 }
 
 // === BOTÓN REGRESO ===
 document.getElementById('btn-back').addEventListener('click', () => {
-  // marcamos intro vista para no repetir al volver
   sessionStorage.setItem('introSeen', 'true');
-  transitionTo('../../index.html');
+  window.location.href = '../../index.html';
 });

@@ -269,6 +269,40 @@ html, body {
   left: 0;
 }
 
+/* =============================
+   🔹 CONTROLES DE MAPA BASE (SAT / RELIEVE)
+============================= */
+
+#basemap-controls {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+#basemap-controls button {
+  background: rgba(40,40,40,0.85);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #eee;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#basemap-controls button.active {
+  background: #00c896;
+  color: #111;
+}
+
+
+#basemap-controls button:hover {
+  background-color: rgba(60, 60, 60, 0.95);
+  color: #fff;
+}
+
 
 /* =============================
    🔹 HUD circular animado
