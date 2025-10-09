@@ -24,6 +24,7 @@ map.on('load', () => {
     { id: 'sar', name: 'ΔSAR', path: 'tiles/dsar/{z}/{x}/{y}.png', opacity: 0.65 },
     { id: 'dem', name: 'DEM', path: 'tiles/dem/{z}/{x}/{y}.png', opacity: 0.55 },
     { id: 'thermal', name: 'THERMAL', path: 'tiles/thermal/{z}/{x}/{y}.png', opacity: 0.5 }
+
   ];
 
   const styleMap = {
@@ -107,6 +108,53 @@ map.on('load', () => {
           'circle-opacity': 0.85
         }
       });
+
+      // === CAPA GEOJSON: INFOOPS ===
+      fetch('../data/infoops.geojson')
+        .then(res => res.json())
+        .then(data => {
+          map.addSource('infoops', { type: 'geojson', data });
+
+          map.addLayer({
+            id: 'infoops-layer',
+            type: 'circle',
+            source: 'infoops',
+            paint: {
+              'circle-radius': ['interpolate', ['linear'], ['get', 'riesgo_info'], 0, 4, 1, 16],
+              'circle-color': [
+                'interpolate', ['linear'], ['get', 'riesgo_info'],
+                0.0, '#00C896',  // bajo → verde
+                0.5, '#FFB020',  // medio → ámbar
+                1.0, '#FF4D4D'   // alto → rojo
+              ],
+              'circle-stroke-color': '#FFF',
+              'circle-stroke-width': 1.5,
+              'circle-opacity': 0.85
+            }
+          });
+
+          // === POPUP ===
+          map.on('click', 'infoops-layer', e => {
+            const f = e.features[0];
+            const p = f.properties;
+            const html = `
+        <div class="popup-title">${p.tema}</div>
+        <div class="popup-meta">
+          <strong>Fuente:</strong> ${p.fuente}<br>
+          <strong>Menciones:</strong> ${p.menciones}<br>
+          <strong>Riesgo informativo:</strong> ${(p.riesgo_info * 100).toFixed(0)}%
+        </div>
+      `;
+            new maplibregl.Popup({ offset: 25 })
+              .setLngLat(f.geometry.coordinates)
+              .setHTML(html)
+              .addTo(map);
+          });
+
+          // === Actualiza el indicador InfoOps global ===
+          const avgRisk = average(data.features.map(f => f.properties.riesgo_info));
+          document.getElementById('infoops-summary').textContent = (avgRisk * 100).toFixed(1) + '%';
+        });
 
       // KPIs iniciales
       updateKPIs(data.features);

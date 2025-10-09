@@ -1,0 +1,38 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-2.55, 32.45] },
+      "properties": {
+        "id": "IOP01",
+        "tema": "Narrativa anti-argelina",
+        "menciones": 45,
+        "fuente": "Telegram",
+        "riesgo_info": 0.78
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-2.47, 32.38] },
+      "properties": {
+        "id": "IOP02",
+        "tema": "Privatización de pozos",
+        "menciones": 31,
+        "fuente": "Twitter",
+        "riesgo_info": 0.55
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-2.40, 32.25] },
+      "properties": {
+        "id": "IOP03",
+        "tema": "Contaminación intencionada",
+        "menciones": 68,
+        "fuente": "Facebook",
+        "riesgo_info": 0.91
+      }
+    }
+  ]
+}
