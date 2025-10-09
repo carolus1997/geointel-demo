@@ -50,18 +50,18 @@ map.on('load', () => {
       type: 'raster',
       source: r.id,
       paint: {
-      'raster-opacity': s.opacity ?? 0.6,
-      'raster-brightness-min': s.brightnessMin ?? 0,
-      'raster-brightness-max': s.brightnessMax ?? 1,
-      'raster-contrast': s.contrast ?? 0,
-      'raster-hue-rotate': s.hue ?? 0
-    },
+        'raster-opacity': s.opacity ?? 0.6,
+        'raster-brightness-min': s.brightnessMin ?? 0,
+        'raster-brightness-max': s.brightnessMax ?? 1,
+        'raster-contrast': s.contrast ?? 0,
+        'raster-hue-rotate': s.hue ?? 0
+      },
       layout: { visibility: r.id === 'ndvi' ? 'visible' : 'none' }
     });
   });
 
 
-  
+
 
   // === CONTROL DE CAPAS RASTER (inferior derecha) ===
   const controlBar = document.createElement('div');
@@ -111,6 +111,8 @@ map.on('load', () => {
       // KPIs iniciales
       updateKPIs(data.features);
 
+      updateIndicators(data.features);
+
       // POPUPS + panel lateral
       map.on('click', 'pozos-layer', e => {
         const f = e.features[0];
@@ -128,6 +130,8 @@ map.on('load', () => {
           .setHTML(html)
           .addTo(map);
         updateWellDetail(p);
+        updateIndicatorsForSelection(p);
+
       });
 
       map.on('mouseenter', 'pozos-layer', () => map.getCanvas().style.cursor = 'pointer');
@@ -136,11 +140,11 @@ map.on('load', () => {
 });
 
 
-// === KPI PRINCIPALES ===
+// === FUNCIONES KPI PRINCIPALES ===
 function updateKPIs(features) {
-  const highs = features.filter(f => f.properties.risk_score >= 0.67);
-  const ewicount = features.filter(f => f.properties.risk_score >= 0.34).length;
-  const totalPop = features.reduce((sum, f) => sum + Number(f.properties.dependencia_poblacional || 0), 0);
+  const highs = features.filter(f => f.properties.riesgo >= 0.67);
+  const ewicount = features.filter(f => f.properties.riesgo >= 0.34).length;
+  const totalPop = features.reduce((sum, f) => sum + Number(f.properties.pobl_dep || 0), 0);
 
   document.getElementById('kpi-high').textContent = highs.length;
   document.getElementById('kpi-ewi').textContent = ewicount;
@@ -149,19 +153,46 @@ function updateKPIs(features) {
   if (highs.length > 0) document.querySelector('.decision-panel').classList.add('alerting');
 }
 
+// === INDICADORES CLAVE (barra lateral) ===
+function updateIndicators(features) {
+  if (!features || features.length === 0) return;
+
+  // Promedios globales
+  const ndviAvg = average(features.map(f => Number(f.properties.delta_ndvi || 0)));
+  const sarAvg = average(features.map(f => Number(f.properties.delta_sar_db || 0)));
+
+  document.getElementById('ndvi-summary').textContent = ndviAvg.toFixed(2);
+  document.getElementById('sar-summary').textContent = sarAvg.toFixed(2);
+  document.getElementById('infoops-summary').textContent = '—';
+}
+
+// === Actualiza los indicadores al seleccionar un pozo ===
+function updateIndicatorsForSelection(props) {
+  document.getElementById('ndvi-summary').textContent =
+    props.delta_ndvi !== undefined ? props.delta_ndvi.toFixed(2) : '—';
+  document.getElementById('sar-summary').textContent =
+    props.delta_sar_db !== undefined ? props.delta_sar_db.toFixed(2) : '—';
+  document.getElementById('infoops-summary').textContent = '—';
+}
+
+// === Función auxiliar ===
+function average(arr) {
+  return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+}
+
 
 // === PANEL LATERAL: DETALLE DE POZO ===
 function updateWellDetail(p) {
-  const risk = p.risk_score;
+  const risk = p.riesgo;
   const badge = document.getElementById('well-risk');
   const name = document.getElementById('well-name');
   const meta = document.getElementById('well-meta');
 
   name.textContent = p.nombre;
   meta.innerHTML = `
-    <strong>Acuífero:</strong> ${p.acuifero_id}<br>
-    <strong>Último nivel:</strong> ${p.ult_nivel_m} m<br>
-    <strong>Población dependiente:</strong> ${p.dependencia_poblacional}
+    <strong>Último ΔNDVI:</strong> ${p.delta_ndvi?.toFixed(2)}<br>
+    <strong>ΔSAR (dB):</strong> ${p.delta_sar_db?.toFixed(2)}<br>
+    <strong>Población dependiente:</strong> ${p.pobl_dep}
   `;
 
   if (risk >= 0.67) { badge.textContent = 'HIGH'; badge.className = 'badge high'; }
@@ -170,6 +201,7 @@ function updateWellDetail(p) {
 
   drawSparkline();
 }
+
 
 
 // === SPARKLINE (mini gráfico) ===
