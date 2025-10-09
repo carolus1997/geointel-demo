@@ -35,11 +35,11 @@ for %%R in (%RASTERS%) do (
     echo 🗺️  Reproyectando %%R a EPSG:3857...
     "%GDAL_BIN%\gdalwarp.exe" -t_srs EPSG:3857 "!INPUT!" "!OUTPUT3857!" -overwrite
 
-    echo 🌈  Convirtiendo %%R a 8-bit (VRT temporal)...
+    echo 🌈  Convirtiendo %%R a 8-bit...
     "%GDAL_BIN%\gdal_translate.exe" -of VRT -ot Byte -scale "!OUTPUT3857!" "!VRT_OUT!"
 
     echo 🧭  Generando tiles para %%R...
-    "%PYTHON_EXE%" "%GDAL2TILES%" -z %ZOOM% -w none -r bilinear "!VRT_OUT!" "!TILE_OUT!"
+    "%PYTHON_EXE%" "%GDAL2TILES%" -z %ZOOM% -w none "!VRT_OUT!" "!TILE_OUT!"
 
     echo ✅  %%R completado.
 )
