@@ -44,13 +44,6 @@
           y contramedidas tácticas/estratégicas.
         </p>
 
-        <h3>Capas</h3>
-        <label class="layer-item"><input type="checkbox" id="chk-aoi" checked> AOI</label>
-        <label class="layer-item"><input type="checkbox" id="chk-cambios" checked> ΔNDVI / ΔSAR (zonas)</label>
-        <label class="layer-item"><input type="checkbox" id="chk-conducciones" checked> Conducciones</label>
-        <label class="layer-item"><input type="checkbox" id="chk-instalaciones" checked> Instalaciones</label>
-        <label class="layer-item"><input type="checkbox" id="chk-poblados" checked> Poblados</label>
-        <label class="layer-item"><input type="checkbox" id="chk-pozos" checked> Pozos (riesgo)</label>
 
         <h3>Documentos</h3>
         <div class="docs-grid">
@@ -66,6 +59,11 @@
             <i class="fa-solid fa-clipboard-check"></i>
             <span>Debrief</span>
           </a>
+          <section class="mission-actions">
+            <button class="btn-dash" onclick="window.location.href='./dashboard/dashboard.html'">
+              <i class="fa-solid fa-chart-line"></i> Abrir Dashboard Operativo
+            </button>
+          </section>
         </div>
 
         <h3>Leyenda</h3>
@@ -81,11 +79,7 @@
             · Riesgo alto</div>
         </div>
 
-        <section class="mission-actions">
-          <button class="btn-dash" onclick="window.location.href='./dashboard/dashboard.html'">
-            <i class="fa-solid fa-chart-line"></i> Abrir Dashboard Operativo
-          </button>
-        </section>
+
       </aside>
 
       <!-- MAPA -->
