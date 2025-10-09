@@ -43,10 +43,29 @@ html, body {
   animation: introTextFade 3s ease-in-out;
 }
 
+.intro-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1.2rem;
+}
+
 .intro-logo {
-  width: 90px;
+  height: 80px;
+  object-fit: contain;
   opacity: 0.9;
-  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 4px rgba(0,255,200,0.4));
+}
+
+/* Ajustes individuales */
+.intro-logo.indra {
+  height: 80px;
+}
+
+.intro-logo.upct {
+  height: 70px;       /* 🔹 reducido un poco para equilibrar */
+  opacity: 0.65;
 }
 
 .intro-title {
