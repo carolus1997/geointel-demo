@@ -5,12 +5,13 @@ const MAPTILER_KEY = 'rk78lPIZURCYo6I9QQdi';
 const map = new maplibregl.Map({
   container: 'map',
   style: `https://api.maptiler.com/maps/darkmatter/style.json?key=${MAPTILER_KEY}`,
-  center: [-1.95, 32.12], // Corredor fronterizo Argelia–Marruecos
-  zoom: 6.5,
+  center: [-4.21875, 31.42],  // centrado en tu tile existente
+  zoom: 8,
   pitch: 0,
   bearing: 0,
   attributionControl: false
 });
+
 
 map.addControl(new maplibregl.NavigationControl(), 'top-right');
 map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'metric' }));
@@ -30,7 +31,11 @@ map.on('load', () => {
     map.addSource(r.id, {
       type: 'raster',
       tiles: [r.path],
-      tileSize: 256
+      tileSize: 256,
+      scheme: 'tms',                          // <- ESTA LÍNEA ES LA CLAVE
+      minzoom: 6,
+      maxzoom: 10,
+      bounds: [-2.3, 31.9, -1.7, 32.3]        // opcional, evita peticiones fuera del AOI
     });
 
     map.addLayer({
@@ -42,9 +47,9 @@ map.on('load', () => {
     });
   });
 
-  // === CONTROL DE CAPAS RASTER ===
+  // === CONTROL DE CAPAS RASTER (inferior derecha) ===
   const controlBar = document.createElement('div');
-  controlBar.className = 'raster-control';
+  controlBar.className = 'raster-control bottom-right';
   rasters.forEach(r => {
     const btn = document.createElement('button');
     btn.className = 'layer-btn';
@@ -60,7 +65,8 @@ map.on('load', () => {
     });
     controlBar.appendChild(btn);
   });
-  document.body.appendChild(controlBar);
+  document.getElementById('map').appendChild(controlBar);
+
 
   // === CAPA GEOJSON: POZOS ===
   fetch('../data/pozos.geojson')
