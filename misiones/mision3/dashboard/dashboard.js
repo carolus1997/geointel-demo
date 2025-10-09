@@ -20,14 +20,22 @@ map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'metric' }));
 map.on('load', () => {
 
   const rasters = [
-    { id: 'ndvi', name: 'ΔNDVI', path: 'tiles/dndvi/{z}/{x}/{y}.png', opacity: 0.75 },
+    { id: 'ndvi', name: 'ΔNDVI', path: 'tiles/dndvi/{z}/{x}/{y}.png', opacity: 0.95 },
     { id: 'sar', name: 'ΔSAR', path: 'tiles/dsar/{z}/{x}/{y}.png', opacity: 0.65 },
     { id: 'dem', name: 'DEM', path: 'tiles/dem/{z}/{x}/{y}.png', opacity: 0.55 },
     { id: 'thermal', name: 'THERMAL', path: 'tiles/thermal/{z}/{x}/{y}.png', opacity: 0.5 }
   ];
 
-  // Añade cada capa raster
+  const styleMap = {
+    ndvi: { opacity: 0.5, brightnessMin: 0.3, brightnessMax: 0.9 },
+    sar: { opacity: 0.6, contrast: 0.7 },
+    dem: { opacity: 0.4, brightnessMax: 0.8 },
+    thermal: { opacity: 0.5, contrast: 1.0, brightnessMin: 0.2 }
+  };
+
   rasters.forEach(r => {
+    const s = styleMap[r.id] || {};
+
     map.addSource(r.id, {
       type: 'raster',
       tiles: [r.path],
@@ -37,15 +45,23 @@ map.on('load', () => {
       maxzoom: 10,
       bounds: [-2.3, 31.9, -1.7, 32.3]        // opcional, evita peticiones fuera del AOI
     });
-
     map.addLayer({
       id: `${r.id}-layer`,
       type: 'raster',
       source: r.id,
-      paint: { 'raster-opacity': r.opacity },
-      layout: { visibility: r.id === 'ndvi' ? 'visible' : 'none' } // NDVI visible por defecto
+      paint: {
+      'raster-opacity': s.opacity ?? 0.6,
+      'raster-brightness-min': s.brightnessMin ?? 0,
+      'raster-brightness-max': s.brightnessMax ?? 1,
+      'raster-contrast': s.contrast ?? 0,
+      'raster-hue-rotate': s.hue ?? 0
+    },
+      layout: { visibility: r.id === 'ndvi' ? 'visible' : 'none' }
     });
   });
+
+
+  
 
   // === CONTROL DE CAPAS RASTER (inferior derecha) ===
   const controlBar = document.createElement('div');
