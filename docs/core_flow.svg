@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460">
+  <style>
+    .box { fill:#0D1117; stroke:#00C896; stroke-width:2; rx:10; ry:10; }
+    .text { fill:#D9E0E6; font-family:'Orbitron', monospace; font-size:13px; }
+    .arrow { stroke:#00E5FF; stroke-width:2; marker-end:url(#arrowhead); }
+    .title { fill:#00FFC6; font-family:'Orbitron', monospace; font-size:16px; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7"
+            refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00E5FF" />
+    </marker>
+  </defs>
+
+  <text x="330" y="40" class="title">FLUJO DE ARRANQUE — GEOINTEL DEMO CORE</text>
+
+  <rect x="60"  y="90"  width="160" height="70" class="box"/>
+  <text x="85"  y="115" class="text">Intro / Preloader</text>
+  <text x="85"  y="135" class="text">showIntro()</text>
+
+  <rect x="290" y="90"  width="160" height="70" class="box"/>
+  <text x="315" y="115" class="text">Mapa</text>
+  <text x="315" y="135" class="text">initMap()</text>
+
+  <rect x="520" y="90"  width="160" height="70" class="box"/>
+  <text x="545" y="115" class="text">Misiones</text>
+  <text x="545" y="135" class="text">loadMissions()</text>
+
+  <rect x="750" y="90"  width="90" height="70" class="box"/>
+  <text x="765" y="115" class="text">Footer</text>
+  <text x="765" y="135" class="text">loadFooter()</text>
+
+  <rect x="400" y="260" width="160" height="70" class="box"/>
+  <text x="435" y="285" class="text">UI / Listo</text>
+  <text x="435" y="305" class="text">hideIntro()</text>
+
+  <line x1="220" y1="125" x2="290" y2="125" class="arrow"/>
+  <line x1="450" y1="125" x2="520" y2="125" class="arrow"/>
+  <line x1="680" y1="125" x2="750" y2="125" class="arrow"/>
+  <line x1="795" y1="160" x2="480" y2="260" class="arrow"/>
+
+  <text x="100" y="190" class="text">Carga inicial</text>
+  <text x="345" y="190" class="text">MapLibre ready</text>
+  <text x="575" y="190" class="text">GeoJSON leído</text>
+  <text x="770" y="190" class="text">Footer + reloj</text>
+
+  <text x="430" y="360" class="text">Interfaz operativa lista</text>
+</svg>

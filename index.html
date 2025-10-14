@@ -17,8 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
 
-  <!-- Intro animada -->
-  <script src="js/intro.js" defer></script>
+  
 </head>
 
 <body class="calcite-mode-dark">
@@ -30,7 +29,7 @@
         <img src="img/logos/logo_upct.png" alt="UPCT" class="intro-logo upct">
       </div>
       <h1 class="intro-title">Plataforma de Demostración Táctica</h1>
-      <p class="intro-text">Initializing Tactical Interface...</p>
+      <p id="intro-status" class="intro-text">Inicializando interfaz táctica...</p>
     </div>
   </div>
 
@@ -73,9 +72,8 @@
     <!-- FOOTER (se carga dinámicamente) -->
   </div>
 
-  <!-- JS PRINCIPALES -->
-
-  <script src="js/main.js"></script>
+  <!-- JS principales -->
+  <script type="module" src="js/core/appCore.js"></script>
   <script src="js/loadFooter.js"></script>
   <script src="js/reloj.js"></script>
   <script src="js/transition.js"></script>
