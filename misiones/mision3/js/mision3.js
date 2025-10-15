@@ -24,6 +24,12 @@ function addGeoLayer({ id, path, type, paint = {}, layout = {}, promoteId }) {
 // === EVENTO PRINCIPAL ===
 map.on('load', () => {
 
+  map.once('idle', () => {
+    document.getElementById('map').classList.add('ready'); // ← activa el fade-in
+    map.resize();
+    map.triggerRepaint();
+  });
+
   // === 1️⃣ CAPA DE RELIEVE ===
   map.addSource('hillshade', {
     type: 'raster',

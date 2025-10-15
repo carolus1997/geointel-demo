@@ -17,6 +17,13 @@ map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'metric' }));
 // === EVENTO DE CARGA PRINCIPAL ===
 map.on('load', () => {
 
+
+  map.once('idle', () => {
+    document.getElementById('map').classList.add('ready'); // ← activa el fade-in
+    map.resize();
+    map.triggerRepaint();
+  });
+
   // === 1️⃣ CAPA DE RELIEVE (HILLSHADE) ===
   map.addSource('hillshade', {
     type: 'raster',
@@ -63,78 +70,39 @@ map.on('load', () => {
   });
 
 
-  // === 3️⃣ CAPA DE MEZQUITAS (GeoServer Docker) ===
-  map.addSource('mezquitas', {
-    type: 'geojson',
-    data: 'http://172.29.48.1:8060/geoserver/geointel/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=geointel:Mezquitas&outputFormat=application/json'
-  });
-
-  map.addLayer({
-    id: 'mezquitas-layer',
-    type: 'circle',
-    source: 'mezquitas',
-    paint: {
-      'circle-radius': 5,
-      'circle-color': '#FF6B00',
-      'circle-stroke-color': '#FFF',
-      'circle-stroke-width': 1
-    }
-  });
-
-  // === POPUPS ===
-  map.on('click', 'mezquitas-layer', e => {
-    const f = e.features[0];
-    const props = f.properties;
-    new maplibregl.Popup()
-      .setLngLat(e.lngLat)
-      .setHTML(`
-        <strong>${props.nombre || 'Mezquita sin nombre'}</strong><br>
-        <em>${props.distrito || 'Distrito no especificado'}</em><br>
-        <strong>Tipo:</strong> ${props.tipo || 'Centro religioso'}
-      `)
-      .addTo(map);
-  });
-
-
   // === 4️⃣ TOGGLES DE CAPAS BASE (LÓGICA COMBINADA) ===
   const toggleHillshade = document.getElementById('toggle-hillshade');
   const toggleSat = document.getElementById('toggle-sat');
 
   function updateBasemapState(activeLayer) {
-    const darkLayers = map.getStyle().layers.filter(l => l.id.includes('background'));
-
-    // 🔹 Estado RELIEVE
+    // Relieve
     if (activeLayer === 'hillshade') {
       map.setLayoutProperty('hillshade-layer', 'visibility', 'visible');
       map.setLayoutProperty('satellite-layer', 'visibility', 'none');
-      darkLayers.forEach(l => map.setPaintProperty(l.id, 'background-opacity', 0.65));
-
       toggleHillshade.classList.add('active');
       toggleSat.classList.remove('active');
     }
 
-    // 🔹 Estado SATÉLITE
+    // Satélite
     else if (activeLayer === 'satellite') {
       map.setLayoutProperty('satellite-layer', 'visibility', 'visible');
       map.setLayoutProperty('hillshade-layer', 'visibility', 'none');
-
-      // opacidad 0 del dark (para evitar superposición visual)
-      darkLayers.forEach(l => map.setPaintProperty(l.id, 'background-opacity', 0.0));
-
       toggleSat.classList.add('active');
       toggleHillshade.classList.remove('active');
     }
 
-    // 🔹 Estado DARK PURO
+    // Modo normal (DarkMatter limpio)
     else {
       map.setLayoutProperty('hillshade-layer', 'visibility', 'none');
       map.setLayoutProperty('satellite-layer', 'visibility', 'none');
-      darkLayers.forEach(l => map.setPaintProperty(l.id, 'background-opacity', 1.0));
-
       toggleHillshade.classList.remove('active');
       toggleSat.classList.remove('active');
     }
+
+    // 💡 Reforzar redibujo del mapa
+    map.triggerRepaint();
   }
+
 
   // === EVENTOS DE BOTONES ===
   if (toggleHillshade) {
@@ -182,3 +150,4 @@ if (btnBack) {
     window.location.href = '../../index.html';
   });
 }
+

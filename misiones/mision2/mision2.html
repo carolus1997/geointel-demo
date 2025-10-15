@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css" />
   <script src="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.js"></script>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
   <!-- html2canvas (para exportar imagen) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -46,26 +49,24 @@
         <h2>Resumen de misión</h2>
         <p class="typewriter">
           Informes OSINT indican ampliación de áreas logísticas y movimiento de materiales en la periferia
-          noreste de Trípoli, cerca de Mitiga. Se evaluarán imágenes Sentinel-2 y Sentinel-1 para detectar
-          cambios estructurales o constructivos recientes.
+          noreste de Trípoli, cerca de Mitiga...
         </p>
 
         <h3>Documentos</h3>
         <div class="docs-grid">
-          <a href="pdf/briefing.pdf" target="_blank" class="doc-card">
-            <i class="fa-solid fa-file-lines"></i>
-            <span>Briefing</span>
-          </a>
-          <a href="pdf/intel.pdf" target="_blank" class="doc-card">
-            <i class="fa-solid fa-chart-column"></i>
-            <span>Informe Intel</span>
-          </a>
-          <a href="pdf/debrief.pdf" target="_blank" class="doc-card">
-            <i class="fa-solid fa-clipboard-check"></i>
-            <span>Debrief</span>
-          </a>
+          <a href="pdf/briefing.pdf" target="_blank" class="doc-card"><i
+              class="fa-solid fa-file-lines"></i><span>Briefing</span></a>
+          <a href="pdf/intel.pdf" target="_blank" class="doc-card"><i class="fa-solid fa-chart-column"></i><span>Informe
+              Intel</span></a>
+          <a href="pdf/debrief.pdf" target="_blank" class="doc-card"><i
+              class="fa-solid fa-clipboard-check"></i><span>Debrief</span></a>
         </div>
+
+        <!-- 🔧 Panel de herramientas justo debajo -->
+        <div id="side-panel-tools"></div>
       </aside>
+
+     
 
       <!-- MAPA -->
       <section id="map-container">
@@ -82,11 +83,14 @@
 
   </div>
 
+  <link rel="stylesheet" href="css/mision2_tools.css" />
+  <script src="js/mision2_tools.js"></script>
+  <script src="js/ui_tools_panel.js"></script>
+
   <script src="../../js/loadFooter.js"></script>
   <script src="../../js/reloj.js"></script>
   <script src="../../js/typewriter.js"></script>
   <script src="js/mision2.js"></script>
-  <script src="js/mision2_tools.js"></script>
   <script src="../../js/transition.js"></script>
 </body>
 

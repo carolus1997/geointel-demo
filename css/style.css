@@ -5,7 +5,8 @@
 /* =============================
    🔹 BASE GLOBAL
 ============================= */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -55,7 +56,7 @@ html, body {
   height: 80px;
   object-fit: contain;
   opacity: 0.9;
-  filter: drop-shadow(0 0 4px rgba(0,255,200,0.4));
+  filter: drop-shadow(0 0 4px rgba(0, 255, 200, 0.4));
 }
 
 /* Ajustes individuales */
@@ -64,7 +65,8 @@ html, body {
 }
 
 .intro-logo.upct {
-  height: 70px;       /* 🔹 reducido un poco para equilibrar */
+  height: 70px;
+  /* 🔹 reducido un poco para equilibrar */
   opacity: 0.65;
 }
 
@@ -78,7 +80,7 @@ html, body {
   font-size: 0.9rem;
   margin-top: 0.8rem;
   color: #00E5FF;
-  text-shadow: 0 0 6px rgba(0,229,255,0.8);
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.8);
   letter-spacing: 1px;
 }
 
@@ -88,30 +90,45 @@ html, body {
   content: '';
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 255, 150, 0.04) 0px,
-    rgba(0, 255, 150, 0.04) 1px,
-    transparent 2px,
-    transparent 4px
-  );
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 255, 150, 0.04) 0px,
+      rgba(0, 255, 150, 0.04) 1px,
+      transparent 2px,
+      transparent 4px);
   pointer-events: none;
 }
 
 /* Animaciones */
 @keyframes introFadeOut {
-  to { opacity: 0; visibility: hidden; }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
+
 @keyframes introTextFade {
-  0% { opacity: 0; transform: scale(0.95); }
-  30% { opacity: 1; transform: scale(1); }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
+
 /* =============================
    🔹 CURSOR DE ESCRITURA
 ============================= */
 /* Desactiva el cursor por pseudo-elemento si existía */
-.typewriter::after { content: none !important; }
+.typewriter::after {
+  content: none !important;
+}
 
 /* Cursor controlado por JS */
 .tw-cursor {
@@ -127,12 +144,26 @@ html, body {
 
 /* Animaciones */
 @keyframes blinkCursor {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
+
 @keyframes fadeOut {
-  from { opacity: 1; }
-  to   { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }
 
 
@@ -144,7 +175,7 @@ html, body {
   font-family: 'Roboto Mono', monospace;
   letter-spacing: 0.5px;
   line-height: 1.4;
-  text-shadow: 0 0 4px rgba(0,229,255,0.3);
+  text-shadow: 0 0 4px rgba(0, 229, 255, 0.3);
   position: relative;
 }
 
@@ -157,8 +188,16 @@ html, body {
 }
 
 @keyframes blinkCursor {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 
@@ -227,7 +266,7 @@ html, body {
 .btn-back:hover {
   background: #00C896;
   color: #0D1117;
-  box-shadow: 0 0 10px rgba(0,200,150,0.5);
+  box-shadow: 0 0 10px rgba(0, 200, 150, 0.5);
 }
 
 /* =============================
@@ -241,7 +280,7 @@ html, body {
 
 #side-panel {
   width: 380px;
-  background: rgba(25, 30, 40, 0.95);
+  background: #151B22;
   border-right: 1px solid #1F262E;
   overflow-y: auto;
   padding: 1rem;
@@ -259,14 +298,22 @@ html, body {
 #map-container {
   flex: 1;
   position: relative;
+  overflow: hidden;
 }
 
 #map {
   position: absolute;
   top: 0;
-  bottom: 0;
-  right: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.maplibregl-canvas {
+  position: absolute !important;
+  inset: 0;
+  z-index: 5 !important;
 }
 
 /* =============================
@@ -284,8 +331,8 @@ html, body {
 }
 
 #basemap-controls button {
-  background: rgba(40,40,40,0.85);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(40, 40, 40, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #eee;
   padding: 6px 10px;
   border-radius: 4px;
@@ -325,7 +372,8 @@ html, body {
 
 .hud-marker {
   position: absolute;
-  top: -14px;  /* centra el HUD sobre el punto */
+  top: -14px;
+  /* centra el HUD sobre el punto */
   left: -14px;
   width: 28px;
   height: 28px;
@@ -339,10 +387,13 @@ html, body {
 
 
 @keyframes hudPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
+
   50% {
     transform: scale(1.1);
     opacity: 0.7;
@@ -354,6 +405,7 @@ html, body {
     transform: scale(0.8);
     opacity: 1;
   }
+
   100% {
     transform: scale(1.8);
     opacity: 0;
@@ -363,16 +415,19 @@ html, body {
 /* Opcional: tooltip con nombre de misión */
 .hud-marker span {
   position: absolute;
-  top: 110%;                /* 🔽 lo coloca justo debajo del círculo */
+  top: 110%;
+  /* 🔽 lo coloca justo debajo del círculo */
   left: 50%;
   transform: translateX(-50%);
-  white-space: nowrap;      /* evita que el texto se parta en varias líneas */
+  white-space: nowrap;
+  /* evita que el texto se parta en varias líneas */
   color: #00ffc6;
   font-size: 11px;
   font-family: 'Orbitron', monospace;
   text-shadow: 0 0 3px #00ffc6;
   letter-spacing: 0.5px;
-  pointer-events: none;     /* evita que interfiera con clics en el HUD */
+  pointer-events: none;
+  /* evita que interfiera con clics en el HUD */
   user-select: none;
 }
 
@@ -388,12 +443,12 @@ html, body {
   margin-bottom: 1rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 0 6px rgba(0,200,150,0.2);
+  box-shadow: 0 0 6px rgba(0, 200, 150, 0.2);
 }
 
 .mission-card:hover {
   border-color: #00C896;
-  box-shadow: 0 0 12px rgba(0,200,150,0.4);
+  box-shadow: 0 0 12px rgba(0, 200, 150, 0.4);
   transform: scale(1.02);
 }
 
@@ -443,7 +498,7 @@ html, body {
 /* Estado crítico / alerta */
 .circle-marker.alert {
   background-color: #FF6B00;
-  box-shadow: 0 0 10px rgba(255,107,0,0.8);
+  box-shadow: 0 0 10px rgba(255, 107, 0, 0.8);
   animation: radarPulseOrange 2.5s infinite;
 }
 
@@ -512,7 +567,7 @@ html, body {
   font-size: 0.8rem;
   letter-spacing: 0.5px;
   transition: all 0.25s ease-in-out;
-  box-shadow: 0 0 6px rgba(0,200,150,0.2);
+  box-shadow: 0 0 6px rgba(0, 200, 150, 0.2);
 }
 
 .doc-card i {
@@ -523,7 +578,7 @@ html, body {
 
 .doc-card:hover {
   border-color: #00C896;
-  box-shadow: 0 0 14px rgba(0,200,150,0.5);
+  box-shadow: 0 0 14px rgba(0, 200, 150, 0.5);
   transform: translateY(-2px);
   background: rgba(0, 255, 198, 0.08);
   color: #00FFC6;
@@ -542,6 +597,7 @@ html, body {
   cursor: pointer;
   transition: .25s;
 }
+
 .btn-dash:hover {
   background: #00C896;
   color: #0D1117;
@@ -565,6 +621,7 @@ html, body {
   align-items: center;
   min-width: 120px;
 }
+
 #clock-time {
   font-size: 1rem;
   letter-spacing: 2px;
@@ -572,6 +629,7 @@ html, body {
   text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
   line-height: 1;
 }
+
 #clock-date {
   font-size: 0.7rem;
   color: #FF4D4D;
@@ -592,9 +650,17 @@ html, body {
 }
 
 @keyframes screenFade {
-  0% { opacity: 0; }
-  50% { opacity: 0.9; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 
@@ -613,22 +679,50 @@ html, body {
   position: relative;
 }
 
-.footer-left { flex: 1; text-align: left; }
-.footer-right { flex-shrink: 0; }
+.footer-left {
+  flex: 1;
+  text-align: left;
+}
+
+.footer-right {
+  flex-shrink: 0;
+}
 
 /* =============================
    🔹 ANIMACIONES
 ============================= */
 @keyframes radarPulse {
-  0%   { transform: scale(0.9); box-shadow: 0 0 6px rgba(0, 229, 255, 0.5); }
-  50%  { transform: scale(1.2); box-shadow: 0 0 18px rgba(0, 229, 255, 1); }
-  100% { transform: scale(0.9); box-shadow: 0 0 6px rgba(0, 229, 255, 0.5); }
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 6px rgba(0, 229, 255, 0.5);
+  }
+
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 18px rgba(0, 229, 255, 1);
+  }
+
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 6px rgba(0, 229, 255, 0.5);
+  }
 }
 
 @keyframes radarPulseOrange {
-  0%   { transform: scale(0.9); box-shadow: 0 0 6px rgba(255,107,0,0.4); }
-  50%  { transform: scale(1.2); box-shadow: 0 0 18px rgba(255,107,0,0.9); }
-  100% { transform: scale(0.9); box-shadow: 0 0 6px rgba(255,107,0,0.4); }
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 6px rgba(255, 107, 0, 0.4);
+  }
+
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 18px rgba(255, 107, 0, 0.9);
+  }
+
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 6px rgba(255, 107, 0, 0.4);
+  }
 }
 
 
@@ -685,6 +779,7 @@ html, body {
   opacity: 0;
   transition: opacity 1s ease;
 }
+
 #map.ready {
   opacity: 1;
 }
@@ -705,5 +800,5 @@ html, body {
   font-size: 0.8rem;
   padding: 0.6rem 1rem;
   z-index: 99999;
-  box-shadow: 0 0 10px rgba(0,200,150,0.4);
+  box-shadow: 0 0 10px rgba(0, 200, 150, 0.4);
 }
