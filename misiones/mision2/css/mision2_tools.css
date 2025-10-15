@@ -68,7 +68,6 @@
   margin-bottom: 5px;
   cursor: pointer;
   transition: all 0.2s;
-  text-align: left;
 }
 
 .tool-btn:hover {
@@ -91,4 +90,118 @@
   font-size: 0.9em;
   color: #aaa;
   min-height: 20px;
+}
+
+/* === NOTAS ANCLADAS AL MAPA === */
+.map-note {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  background: rgba(0, 229, 255, 0.2);
+  border: 1px solid rgba(0, 229, 255, 0.6);
+  border-radius: 8px;
+  padding: 6px 8px;
+  z-index: 999;
+  cursor: move;
+  display: inline-block;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.2s ease, transform 0.1s ease, min-width 0.2s ease, min-height 0.2s ease;
+  max-width: 250px;
+  min-width: 120px;
+  min-height: 40px;
+  width: fit-content;
+  height: fit-content;
+}
+
+.map-note:hover {
+  box-shadow: 0 4px 10px rgba(0, 229, 255, 0.25);
+}
+
+.map-note.dragging {
+  opacity: 0.85;
+  transform: translate(-50%, -100%) scale(1.03);
+}
+
+/* === CUADRO DE TEXTO === */
+.note-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #e8f7ff;
+  font-size: 1.1em;
+  resize: none;
+  outline: none;
+  line-height: 1.4em;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  text-align: center;
+  padding: 2px 4px;
+  overflow: hidden;
+  min-height: 24px;
+  white-space: pre-wrap;
+}
+
+/* === Ajuste dinámico de altura === */
+.note-input:focus {
+  background: rgba(0, 229, 255, 0.08);
+  border-radius: 4px;
+}
+
+/* === Placeholder === */
+.note-input::placeholder {
+  color: rgba(0, 229, 255, 0.5);
+  font-style: italic;
+  text-align: center;
+}
+
+/* === Punta inferior de marcador === */
+.map-note::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid rgba(0, 229, 255, 0.6);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+/* === Selector de color / categoría === */
+.note-color-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  background: var(--note-color, #00E5FF);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.note-color-btn:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 6px var(--note-color, #00E5FF);
+}
+
+/* === Ajuste de colores por categoría === */
+.map-note[data-category="info"] {
+  --note-color: #00E5FF;
+}
+.map-note[data-category="warning"] {
+  --note-color: #FFD400;
+}
+.map-note[data-category="alert"] {
+  --note-color: #FF6B00;
+}
+.map-note[data-category="success"] {
+  --note-color: #00C896;
+}
+
+/* Punta inferior dinámica con variable */
+.map-note::after {
+  border-top: 6px solid var(--note-color, rgba(0, 229, 255, 0.6));
 }
