@@ -45,18 +45,29 @@ function typeText(element, text) {
   cursor.textContent = "▌";
   element.appendChild(cursor);
 
-  (function type() {
-    if (i < text.length) {
-      element.insertBefore(document.createTextNode(text.charAt(i)), cursor);
+  function type() {
+    // Si el cursor o el elemento desaparecen, detener animación
+    if (!cursor.isConnected || !element.isConnected) return;
+
+    // Si el cursor ya no está dentro del elemento, abortar (evita el NotFoundError)
+    if (i < text.length && element.contains(cursor)) {
+      const charNode = document.createTextNode(text.charAt(i));
+      element.insertBefore(charNode, cursor);
       i++;
       const delay = 15 + Math.random() * 35;
       setTimeout(type, delay);
     } else {
-      cursor.classList.add("fade-out");
-      setTimeout(() => cursor.remove(), 500);
+      // Final de texto o cursor perdido
+      if (cursor.isConnected) {
+        cursor.classList.add("fade-out");
+        setTimeout(() => cursor.remove(), 500);
+      }
     }
-  })();
+  }
+
+  type();
 }
+
 
 
 export function showErrorMessage(message = "Error desconocido") {
