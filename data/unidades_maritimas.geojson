@@ -1,0 +1,20 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "bam", "tipo": "BAM", "nombre": "Relámpago" },
+      "geometry": { "type": "Point", "coordinates": [-5.8, 35.9] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "narcolancha", "tipo": "narcolancha", "nombre": "Lancha Rápida" },
+      "geometry": { "type": "Point", "coordinates": [-5.85, 35.85] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "helicoptero", "tipo": "NH90", "nombre": "Helicóptero NH-90" },
+      "geometry": { "type": "Point", "coordinates": [-5.8, 35.9] }
+    }
+  ]
+}

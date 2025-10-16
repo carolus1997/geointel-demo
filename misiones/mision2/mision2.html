@@ -4,41 +4,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Misión 2 — Análisis Periurbano de Trípoli</title>
+  <title>Misión 2 — Estrecho de Gibraltar</title>
 
+  <!-- === ESTILOS === -->
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
   <link rel="stylesheet" href="../../css/style.css" />
-
-  <!-- MapLibre Draw -->
   <link rel="stylesheet" href="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css" />
-  <script src="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.js"></script>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/mision2_tools.css" />
 
-
-  <!-- html2canvas (para exportar imagen) -->
+  <!-- === LIBRERÍAS JS EXTERNAS === -->
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-
 </head>
 
 <body>
   <div id="app-container">
-
     <!-- HEADER -->
     <header class="app-header">
       <div class="header-left">
         <img src="../../img/logos/logo_indra.png" class="logo" alt="Indra">
         <img src="../../img/logos/logo_upct.png" class="logo" alt="UPCT">
       </div>
-
       <div class="header-center">
-        <h1>Misión 2 : Análisis Periurbano de Trípoli</h1>
-        <p class="subtitle">Detección de actividad constructiva periurbana</p>
+        <h1>Misión 2 : Vigilancia del Estrecho</h1>
+        <p class="subtitle">Monitoreo de tráfico marítimo y detección de narcolanchas en el Estrecho de Gibraltar</p>
       </div>
-
       <button id="btn-back" class="btn-back">
         <i class="fa-solid fa-arrow-left"></i> Centro de Operaciones
       </button>
@@ -46,54 +38,65 @@
 
     <!-- CONTENIDO PRINCIPAL -->
     <main id="main-content">
-      <!-- PANEL DE INFORMACIÓN -->
       <aside id="side-panel">
         <h2>Resumen de misión</h2>
         <p class="typewriter">
-          Informes OSINT indican ampliación de áreas logísticas y movimiento de materiales en la periferia
-          noreste de Trípoli, cerca de Mitiga...
+          Esta misión consiste en detectar e interceptar un cargamento de estupefacientes
+          que se espera que cruce desde la costa de Marruecos hasta la costa de Cádiz.
         </p>
 
         <h3>Documentos</h3>
         <div class="docs-grid">
-          <a href="pdf/briefing.pdf" target="_blank" class="doc-card"><i
-              class="fa-solid fa-file-lines"></i><span>Briefing</span></a>
-          <a href="pdf/intel.pdf" target="_blank" class="doc-card"><i class="fa-solid fa-chart-column"></i><span>Informe
-              Intel</span></a>
-          <a href="pdf/debrief.pdf" target="_blank" class="doc-card"><i
-              class="fa-solid fa-clipboard-check"></i><span>Debrief</span></a>
+          <a href="pdf/briefing.pdf" target="_blank" class="doc-card">
+            <i class="fa-solid fa-file-lines"></i><span>Briefing</span></a>
+          <a href="pdf/intel.pdf" target="_blank" class="doc-card">
+            <i class="fa-solid fa-chart-column"></i><span>Informe Intel</span></a>
+          <button id="btn-play" class="doc-card play-btn">
+            <i class="fa-solid fa-play"></i><span>Iniciar misión</span>
+          </button>
         </div>
 
-        <!-- 🔧 Panel de herramientas justo debajo -->
+        <div id="simulation-panel" class="sim-panel">
+          <button id="sim-slower" title="Reducir velocidad">⏪</button>
+          <button id="sim-pause" title="Pausar / Reanudar">⏸️</button>
+          <button id="sim-normal" title="Velocidad normal">▶️ 1x</button>
+          <button id="sim-faster" title="Aumentar velocidad">⏩</button>
+        </div>
+
         <div id="side-panel-tools"></div>
       </aside>
-
-     
 
       <!-- MAPA -->
       <section id="map-container">
         <div id="map"></div>
-        <!-- CONTROLES DE MAPA BASE -->
         <div id="basemap-controls">
           <button id="toggle-hillshade" class="active">Relieve</button>
           <button id="toggle-sat">Satélite</button>
         </div>
-
       </section>
     </main>
-
-
   </div>
 
-  <link rel="stylesheet" href="css/mision2_tools.css" />
-  <script src="js/mision2_tools.js"></script>
-  <script src="js/ui_tools_panel.js"></script>
+  <!-- === UTILIDADES Y MÓDULOS === -->
+  <!-- === MÓDULOS === -->
+  <script src="../../js/core/utils.js"></script>
+  <script src="../../js/modules/movimientoModule.js"></script>
+  <script src="../../js/modules/radarModule.js"></script>
+  <script src="../../js/modules/helicopterModule.js"></script> <!-- ✅ ANTES del táctico -->
+  <script src="../../js/modules/tacticoModule.js"></script>
+  <script src="../../js/ui/simulationPanel.js"></script>
 
-  <script src="../../js/loadFooter.js"></script>
-  <script src="../../js/reloj.js"></script>
+
+  <!-- === UI Y LÓGICA DE MISIÓN === -->
+  <script src="js/ui_tools_panel.js"></script>
+  <script src="js/mision2_tools.js"></script>
   <script src="../../js/typewriter.js"></script>
-  <script src="js/mision2.js"></script>
+  <script src="../../js/reloj.js"></script>
+  <script src="../../js/loadFooter.js"></script>
   <script src="../../js/transition.js"></script>
+
+  <!-- === SCRIPT PRINCIPAL === -->
+  <script src="js/mision2.js"></script>
 </body>
 
 </html>

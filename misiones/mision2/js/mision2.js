@@ -1,20 +1,28 @@
+// ==========================
+//  Misión 2 — mision2.js
+// ==========================
+
 // === CONFIG MAPLIBRE ===
 const MAPTILER_KEY = 'rk78lPIZURCYo6I9QQdi';
 
 const map = new maplibregl.Map({
   container: 'map',
   style: `https://api.maptiler.com/maps/darkmatter/style.json?key=${MAPTILER_KEY}`,
-  center: [13.19, 32.887], // Trípoli
-  zoom: 12,
+  center: [-5.35, 35.95], // Estrecho de Gibraltar
+  zoom: 9,
   attributionControl: false,
-  preserveDrawingBuffer: true // 🔥 clave para capturas correctas
+  preserveDrawingBuffer: true
 });
 
 // === CONTROLES BÁSICOS ===
 map.addControl(new maplibregl.NavigationControl(), 'top-right');
 map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'metric' }));
 
-// === FUNCIÓN PARA AÑADIR CAPAS GEOJSON ===
+// 🕹️ === CONFIGURACIÓN GLOBAL DE SIMULACIÓN ===
+window.SIMULATION_SPEED = 1;   // 1x = velocidad normal
+window.SIMULATION_PAUSED = false; // pausa desactivada al inicio
+
+// === UTIL: añadir capa GeoJSON de polígonos (si hiciera falta) ===
 function addLayer(srcId, dataPath, color) {
   if (map.getSource(srcId)) return;
   map.addSource(srcId, { type: 'geojson', data: dataPath });
@@ -30,89 +38,93 @@ function addLayer(srcId, dataPath, color) {
   });
 }
 
-// === EVENTO PRINCIPAL DE CARGA ===
-map.on('load', () => {
+// === ARRANQUE CUANDO EL MAPA ESTÁ LISTO ===
+map.on('load', async () => {
+  console.log('🗺️ MapLibre listo');
 
+  // Fade-in del canvas
   map.once('idle', () => {
-    document.getElementById('map').classList.add('ready'); // ← activa el fade-in
+    const el = document.getElementById('map');
+    if (el) el.classList.add('ready');
     map.resize();
     map.triggerRepaint();
   });
 
-  // === 1️⃣ CAPA DE RELIEVE ===
-  map.addSource('hillshade', {
-    type: 'raster',
-    tiles: [
-      `https://api.maptiler.com/tiles/hillshade/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`
-    ],
-    tileSize: 256,
-    attribution: '&copy; MapTiler terrain-hillshade'
-  });
+  // === 1) CAPAS BASE: RELIEVE + SATÉLITE ===
+  try {
+    const firstLayerId = map.getStyle().layers?.[0]?.id;
 
-  const firstLayerId = map.getStyle().layers[0].id;
-
-  map.addLayer({
-    id: 'hillshade-layer',
-    type: 'raster',
-    source: 'hillshade',
-    paint: {
-      'raster-opacity': 0.4,
-      'raster-brightness-min': 0.8,
-      'raster-brightness-max': 1.0
-    },
-    layout: { visibility: 'none' }
-  }, firstLayerId);
-
-  // === 2️⃣ CAPA SATÉLITE ===
-  map.addSource('satellite', {
-    type: 'raster',
-    tiles: [
-      `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${MAPTILER_KEY}`
-    ],
-    tileSize: 256,
-    attribution: '&copy; MapTiler satellite-v2'
-  });
-
-  map.addLayer({
-    id: 'satellite-layer',
-    type: 'raster',
-    source: 'satellite',
-    paint: { 'raster-opacity': 1.0 },
-    layout: { visibility: 'none' }
-  });
-
-  // === 3️⃣ CAPAS GEOJSON (locales) ===
-  addLayer('cambios', 'data/cambios_opticos.geojson', '#00C896');
-  addLayer('sar', 'data/rutas.geojson', '#FF6B00');
-
-  // === 4️⃣ CAPA DE SENSORES ===
-  fetch('data/sensores.geojson')
-    .then(res => {
-      if (!res.ok) throw new Error(`Error al cargar sensores.geojson (${res.status})`);
-      return res.json();
-    })
-    .then(data => {
-      data.features.forEach(f => {
-        const el = document.createElement('div');
-        el.className = 'circle-marker alert';
-
-        const [lon, lat] = f.geometry.coordinates;
-        const popupHTML = `
-          <div class="popup-title">${f.properties.nombre}</div>
-          <div class="popup-meta">
-            <strong>Tipo:</strong> ${f.properties.tipo}<br>
-            <strong>Estado:</strong> ${f.properties.estado}
-          </div>`;
-
-        new maplibregl.Marker(el)
-          .setLngLat([lon, lat])
-          .setPopup(new maplibregl.Popup({ offset: 25 }).setHTML(popupHTML))
-          .addTo(map);
+    if (!map.getSource('hillshade')) {
+      map.addSource('hillshade', {
+        type: 'raster',
+        tiles: [
+          `https://api.maptiler.com/tiles/hillshade/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`
+        ],
+        tileSize: 256,
+        attribution: '&copy; MapTiler terrain-hillshade'
       });
-    })
-    .catch(err => console.error('❌ Error cargando sensores.geojson:', err));
+    }
 
-  // === 5️⃣ TOGGLES DE CAPAS BASE ===
+    if (!map.getLayer('hillshade-layer')) {
+      map.addLayer({
+        id: 'hillshade-layer',
+        type: 'raster',
+        source: 'hillshade',
+        paint: {
+          'raster-opacity': 0.4,
+          'raster-brightness-min': 0.8,
+          'raster-brightness-max': 1.0
+        },
+        layout: { visibility: 'none' }
+      }, firstLayerId);
+    }
+
+    if (!map.getSource('satellite')) {
+      map.addSource('satellite', {
+        type: 'raster',
+        tiles: [
+          `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${MAPTILER_KEY}`
+        ],
+        tileSize: 256,
+        attribution: '&copy; MapTiler satellite-v2'
+      });
+    }
+
+    if (!map.getLayer('satellite-layer')) {
+      map.addLayer({
+        id: 'satellite-layer',
+        type: 'raster',
+        source: 'satellite',
+        paint: { 'raster-opacity': 1.0 },
+        layout: { visibility: 'none' }
+      });
+    }
+  } catch (e) {
+    console.warn('⚠️ No se pudieron añadir capas base:', e);
+  }
+
+  // === 2) RUTAS MARÍTIMAS (líneas de referencia) ===
+  try {
+    if (!map.getSource('routes')) {
+      map.addSource('routes', { type: 'geojson', data: '../../data/Rutas.geojson' });
+    }
+    if (!map.getLayer('routes-line')) {
+      map.addLayer({
+        id: 'routes-line',
+        type: 'line',
+        source: 'routes',
+        paint: {
+          'line-color': ['case', ['has', 'stroke'], ['get', 'stroke'], '#00E5FF'],
+          'line-width': ['case', ['has', 'stroke-width'], ['get', 'stroke-width'], 2],
+          'line-opacity': 0.9
+        }
+      });
+    }
+  } catch (e) {
+    console.warn('⚠️ No se pudieron añadir las rutas:', e);
+  }
+
+  // === 3) TOGGLES de base ===
   const toggleHillshade = document.getElementById('toggle-hillshade');
   const toggleSat = document.getElementById('toggle-sat');
 
@@ -142,41 +154,121 @@ map.on('load', () => {
     });
   }
 
-  // === CONTROL DE DIBUJO ===
-  const Draw = new MapboxDraw({
-    displayControlsDefault: false,
-    styles: [
-      {
-        id: "gl-draw-polygon-fill",
-        type: "fill",
-        filter: ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
-        paint: { "fill-color": "#00E5FF", "fill-opacity": 0.1 }
-      },
-      {
-        id: "gl-draw-line-active",
-        type: "line",
-        filter: ["all", ["==", "$type", "LineString"], ["!=", "mode", "static"]],
-        paint: { "line-color": "#00C896", "line-width": 2 }
-      },
-      {
-        id: "gl-draw-point-active",
-        type: "circle",
-        filter: ["all", ["==", "$type", "Point"], ["!=", "mode", "static"]],
-        paint: {
-          "circle-radius": 6,
-          "circle-color": "#FF6B00",
-          "circle-stroke-color": "#fff",
-          "circle-stroke-width": 1.5
+  // === 4) Dibujo (Draw) + Panel de herramientas ===
+  try {
+    const Draw = new MapboxDraw({
+      displayControlsDefault: false,
+      styles: [
+        {
+          id: 'gl-draw-polygon-fill',
+          type: 'fill',
+          filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+          paint: { 'fill-color': '#00E5FF', 'fill-opacity': 0.1 }
+        },
+        {
+          id: 'gl-draw-line-active',
+          type: 'line',
+          filter: ['all', ['==', '$type', 'LineString'], ['!=', 'mode', 'static']],
+          paint: { 'line-color': '#00C896', 'line-width': 2 }
+        },
+        {
+          id: 'gl-draw-point-active',
+          type: 'circle',
+          filter: ['all', ['==', '$type', 'Point'], ['!=', 'mode', 'static']],
+          paint: {
+            'circle-radius': 6,
+            'circle-color': '#FF6B00',
+            'circle-stroke-color': '#fff',
+            'circle-stroke-width': 1.5
+          }
         }
-      }
-    ]
-  });
+      ]
+    });
+    map.addControl(Draw, 'top-left');
+    if (window.ToolsPanel && typeof ToolsPanel.init === 'function') {
+      ToolsPanel.init(map, Draw, 'side-panel-tools');
+    }
+  } catch (e) {
+    console.warn('⚠️ Draw/ToolsPanel no disponibles:', e);
+  }
 
-  map.addControl(Draw, "top-left");
-  ToolsPanel.init(map, Draw, "side-panel-tools");
+  // === 5) Esperar a que los módulos globales estén listos ===
+  await waitForModules(['MovimientoModule', 'RadarModule', 'HelicopterModule']);
+
+  // === 6) Lanzar misión principal ===
+  if (typeof startMision2 === 'function') {
+    await startMision2();
+  } else {
+    console.error('❌ startMision2() no está definida.');
+  }
+
+  // === 7) Inicializar panel de simulación (si existe)
+  if (window.SimulationPanel?.init) SimulationPanel.init();
 });
 
-// === BOTÓN DE REGRESO ===
+
+// ————————————————————————————————
+// Helpers
+// ————————————————————————————————
+function waitForModules(names, timeoutMs = 5000) {
+  return new Promise((resolve) => {
+    const t0 = performance.now();
+    (function check() {
+      const missing = names.filter(n => !window[n]);
+      if (missing.length === 0) return resolve();
+      if (performance.now() - t0 > timeoutMs) {
+        console.warn('⏳ Módulos que no llegaron a tiempo:', missing);
+        return resolve();
+      }
+      setTimeout(check, 100);
+    })();
+  });
+}
+
+
+// ————————————————————————————————
+//  Bloque principal de la misión
+// ————————————————————————————————
+async function startMision2() {
+  try {
+    console.log('🚀 Iniciando Misión 2...');
+
+    // 1️⃣ Cargar unidades principales
+    await MovimientoModule.init(map, '../../data/unidades_maritimas.geojson');
+
+    // 2️⃣ Inicializar helicóptero (sobre BAM)
+    if (window.HelicopterModule?.init) {
+      HelicopterModule.init(map, 'helicoptero');
+    }
+
+    // 3️⃣ Cargar rutas desde GeoJSON
+    const routes = await MovimientoModule.loadRoutes('../../data/Rutas.geojson');
+    const bamRoute = routes.get('ruta_bam')?.coords;
+    const narcoRoute = routes.get('ruta_narcolancha')?.coords;
+
+    // 4️⃣ Animaciones
+    const BAM_SPEED = 13;
+    const NARCO_SPEED = 20;
+    if (bamRoute) MovimientoModule.animateUnit('bam', bamRoute, BAM_SPEED);
+    if (narcoRoute) MovimientoModule.animateUnit('narcolancha', narcoRoute, NARCO_SPEED);
+
+    // 5️⃣ Radar + detección
+    setTimeout(() => {
+      if (window.RadarModule?.init) RadarModule.init(map, 'bam');
+      if (window.TacticoModule?.monitorDetection)
+        TacticoModule.monitorDetection('bam', 'narcolancha');
+    }, 1000);
+
+    console.log('🟢 Misión 2 activada con flujo de intercepción');
+  } catch (err) {
+    console.error('❌ Error en startMision2:', err);
+  }
+}
+
+
+// ————————————————————————————————
+//  Botón de regreso
+// ————————————————————————————————
 const btnBack = document.getElementById('btn-back');
 if (btnBack) {
   btnBack.addEventListener('click', () => {

@@ -6,6 +6,7 @@
       "properties": {
         "nombre": "Contraterrorismo Urbano",
         "descripcion": "Modelización Socioeconómica anti radicalización",
+        "estado": "activa",
         "enlace": "mision1.html"
       },
       "geometry": {
@@ -16,13 +17,14 @@
     {
       "type": "Feature",
       "properties": {
-        "nombre": "Trípoli (Libia)",
-        "descripcion": "Detección constructiva periurbana.",
+        "nombre": "Vigilancia del Estrecho",
+        "descripcion": "Monitoreo de tráfico marítimo y detección de narcolanchas en la zona del Estrecho de Gibraltar",
+        "estado": "activa",
         "enlace": "mision2.html"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [13.191, 32.887]
+        "coordinates": [-5.35, 35.95]
       }
     },
     {
@@ -30,6 +32,7 @@
       "properties": {
         "nombre": "Argelia–Marruecos",
         "descripcion": "Pozos de agua como vector en guerra híbrida.",
+        "estado": "activa",
         "enlace": "mision3.html"
       },
       "geometry": {

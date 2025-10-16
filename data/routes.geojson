@@ -1,0 +1,63 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ruta_narcolancha",
+        "tipo": "route",
+        "nombre": "Ruta Narcolancha",
+        "stroke": "#FF0000",
+        "stroke-width": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-5.85, 35.85],
+          [-5.83, 35.86],
+          [-5.81, 35.87],
+          [-5.79, 35.88],
+          [-5.77, 35.89]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ruta_bam",
+        "tipo": "route",
+        "nombre": "Patrulla BAM",
+        "stroke": "#0080FF",
+        "stroke-width": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-5.8, 35.9],
+          [-5.79, 35.905],
+          [-5.78, 35.905],
+          [-5.77, 35.91]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ruta_intercepcion",
+        "tipo": "route",
+        "nombre": "Ruta Interceptación Helicóptero",
+        "meetingPoint": [-5.79, 35.88],
+        "stroke": "#00FF00",
+        "stroke-width": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-5.8, 35.9],   
+          [-5.795, 35.89],
+          [-5.79, 35.88]  
+        ]
+      }
+    }
+  ]
+}

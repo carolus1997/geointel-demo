@@ -7,6 +7,7 @@ import { showErrorMessage } from "./uiModule.js";
  * del panel lateral y los marcadores HUD en el mapa.
  */
 export async function loadMissions(map) {
+  console.log("🧪 loadMissions() ejecutándose...");
   const dataPath = `${getBasePath()}data/misiones.geojson`;
 
   try {
@@ -26,11 +27,17 @@ export async function loadMissions(map) {
 
     // === 2. Iterar misiones y crear HUD + tarjetas ===
     data.features.forEach((feature, idx) => {
-      const { nombre, descripcion, enlace, estado } = feature.properties;
+      let { nombre, descripcion, enlace, estado } = feature.properties;
       const [lon, lat] = feature.geometry.coordinates.map(Number);
       if (isNaN(lon) || isNaN(lat)) {
         Logger.error(`Coordenadas inválidas en misión ${nombre || idx}`);
         return;
+      }
+
+      // === 2.1. Verificar si el estado está guardado en localStorage ===
+      const estadoGuardado = localStorage.getItem(`estado-${enlace}`);
+      if (estadoGuardado) {
+        estado = estadoGuardado; // sobrescribe con el estado persistente
       }
 
       // --- HUD marcador ---
@@ -61,17 +68,41 @@ export async function loadMissions(map) {
       const card = document.createElement("div");
       card.className = "mission-card";
       card.innerHTML = `
-        <h3>${nombre}</h3>
-        <p>${descripcion}</p>
-        <button>Ver misión</button>
-      `;
+  <h3>${nombre}</h3>
+  <p>${descripcion}</p>
+  <button></button>
+`;
 
-      // Clic en botón → abrir misión
-      card.querySelector("button").addEventListener("click", (e) => {
-        e.stopPropagation();
-        Logger.ui(`Abriendo misión: ${nombre}`);
-        window.location.href = getMisionURL(enlace);
-      });
+      const btn = card.querySelector("button");
+
+      // === Estado visual del botón según la misión ===
+      if (estado === "completada") {
+        btn.textContent = "Completada";
+        btn.disabled = true;
+        btn.classList.add("btn-completada");
+      } else if (estado === "bloqueada") {
+        btn.textContent = "Bloqueada";
+        btn.disabled = true;
+        btn.classList.add("btn-bloqueada");
+      } else {
+        btn.textContent = "Ver misión";
+        btn.classList.add("btn-activa");
+
+        // Clic en botón → guardar estado y abrir misión
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          Logger.ui(`Abriendo misión: ${nombre}`);
+
+          // ✅ Guardar como completada
+          localStorage.setItem(`estado-${enlace}`, "completada");
+
+          hud.classList.remove("activa", "bloqueada");
+          hud.classList.add("completada");
+
+          window.location.href = getMisionURL(enlace);
+        });
+      }
+
 
       // Clic en tarjeta → centrar mapa
       card.addEventListener("click", () => {
@@ -86,4 +117,36 @@ export async function loadMissions(map) {
     Logger.error("Error al cargar las misiones", err);
     showErrorMessage("No se pudieron cargar las misiones activas. Verifica el archivo misiones.geojson.");
   }
+
+  // Botón para resetear todas las misiones
+  const resetBtn = document.createElement("button");
+  resetBtn.textContent = "Resetear misiones";
+  resetBtn.style.cssText = `
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #222;
+  color: #00ffc6;
+  border: 1px solid #00ffc6;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 2000;
+`;
+
+  resetBtn.addEventListener("click", () => {
+    const confirmReset = confirm("¿Seguro que quieres resetear el estado de todas las misiones?");
+    if (!confirmReset) return;
+
+    // Borrar todas las claves que empiezan por estado-
+    Object.keys(localStorage)
+      .filter(key => key.startsWith("estado-"))
+      .forEach(key => localStorage.removeItem(key));
+
+    // Opcional: recargar la página para aplicar cambios
+    window.location.reload();
+  });
+
+  document.body.appendChild(resetBtn);
+
 }
