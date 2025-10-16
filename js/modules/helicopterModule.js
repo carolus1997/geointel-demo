@@ -32,22 +32,7 @@ window.HelicopterModule = (() => {
       el.style.transition = 'opacity 600ms ease, transform 400ms ease';
 
       // Crear rastro
-      if (!map.getSource(pathSourceId)) {
-        map.addSource(pathSourceId, {
-          type: 'geojson',
-          data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } }
-        });
-        map.addLayer({
-          id: pathSourceId,
-          type: 'line',
-          source: pathSourceId,
-          paint: {
-            'line-color': '#00E5FF',
-            'line-width': 2,
-            'line-opacity': 0.7
-          }
-        });
-      }
+      
 
       // Crear enlace táctico BAM↔Heli
       if (!map.getSource(linkSourceId)) {
@@ -150,7 +135,12 @@ window.HelicopterModule = (() => {
       if (distKm < approachThresholdKm) {
         console.log(`🎯 Interceptación lograda (distancia ${distKm.toFixed(2)} km). Cambiando a followUnit()`);
         if (onArrival) onArrival();
-        HelicopterModule.followUnit(targetId, { heliSpeedMps: speed, leadSeconds: 5 });
+        console.log('🚁 Iniciando patrulla dinámica post-intercepción...');
+        HelicopterModule.startDynamicPatrol(targetId, {
+          radiusDeg: 0.004,       // ~400 m
+          angularSpeed: 0.03,     // velocidad de rotación
+        });
+
         return;
       }
 
@@ -263,6 +253,26 @@ window.HelicopterModule = (() => {
     }
   }
 
+  // === clearPath: limpia o reduce la estela de vuelo ===
+  function clearPath(keepLast = 0) {
+    if (!map.getSource(pathSourceId)) return;
+
+    // Conserva solo los últimos puntos si se indica
+    if (keepLast > 0 && pathCoords.length > keepLast) {
+      pathCoords = pathCoords.slice(-keepLast);
+    } else {
+      pathCoords = [];
+    }
+
+    const src = map.getSource(pathSourceId);
+    src.setData({
+      type: 'Feature',
+      geometry: { type: 'LineString', coordinates: pathCoords }
+    });
+    console.log(`🧹 Estela del helicóptero limpiada (quedan ${pathCoords.length} puntos).`);
+  }
+
+
   // === Enlace táctico BAM ↔ Heli ===
   function startLinkLine() {
     if (map.getSource(linkSourceId)) return; // ya existe
@@ -330,7 +340,7 @@ window.HelicopterModule = (() => {
     cancelAnimationFrame(linkFrame);
     const el = heliMarker.getElement();
     el.style.opacity = '0';
-    setTimeout(() => (el.style.display = 'none'), 600);
+    setTimeout(() => (el.style.display = 'none'), 20);
     if (map.getLayer(radarSourceId)) {
       map.removeLayer(radarSourceId);
       map.removeSource(radarSourceId);
@@ -367,6 +377,69 @@ window.HelicopterModule = (() => {
     patrolFrame = null;
   }
 
+  // === startDynamicPatrol: patrulla orbital amplia y estable alrededor de una unidad móvil ===
+  function startDynamicPatrol(targetId, opts = {}) {
+    if (!heliMarker) return console.warn('🚫 HelicopterModule: sin helicóptero inicializado');
+    if (patrolFrame) cancelAnimationFrame(patrolFrame);
+
+    // 🧹 Limpia la estela al iniciar la patrulla
+    clearPath(0)
+
+    // 🧭 Configuración por defecto o personalizada
+    const radiusDeg = opts.radiusDeg || 2;      // 🔹 Antes 0.005 → ahora 4x más (~2 km)
+    const angularSpeed = opts.angularSpeed || 0.0001; // 🔹 Antes 0.05 → ahora 5x más lento
+    const correctionRate = opts.correctionRate || 0.05;
+    const updateInterval = 1000; // ms entre actualizaciones de radar
+    let angle = 0;
+    let lastUpdate = 0;
+
+    console.log(`🔄 Patrulla dinámica iniciada (radio: ${radiusDeg}°, velocidad angular: ${angularSpeed}) alrededor de ${targetId}`);
+
+    function loop(timestamp) {
+      if (window.SIMULATION_PAUSED) return requestAnimationFrame(loop);
+      if (!heliMarker) return;
+
+      const targetPos = MovimientoModule.getPosition(targetId);
+      if (!targetPos) {
+        patrolFrame = requestAnimationFrame(loop);
+        return;
+      }
+
+      // Usamos coordenadas en metros para mayor precisión
+      const [tx, ty] = window.CoordUtils.lonLatToMerc(targetPos[0], targetPos[1]);
+
+      // Orbita circular amplia con centro móvil
+      angle += angularSpeed * (window.SIMULATION_SPEED || 1);
+      const radiusMeters = radiusDeg * 111320; // grados → metros aprox.
+      const patrolX = tx + radiusMeters * Math.cos(angle);
+      const patrolY = ty + radiusMeters * Math.sin(angle);
+
+      const [lon, lat] = window.CoordUtils.toLonLat(patrolX, patrolY);
+      heliMarker.setLngLat([lon, lat]);
+      updatePath([lon, lat]);
+      updateLink();
+
+      // 🔹 Actualiza el radar del helicóptero de forma ligera
+      if (window.HelicopterRadar?.update) {
+        const now = performance.now();
+        if (now - lastUpdate > updateInterval) {
+          HelicopterRadar.update([lon, lat]);
+          lastUpdate = now;
+        }
+      }
+
+      patrolFrame = requestAnimationFrame(loop);
+    }
+
+    patrolFrame = requestAnimationFrame(loop);
+  }
+
+  function stopPatrol() {
+    if (patrolFrame) cancelAnimationFrame(patrolFrame);
+    patrolFrame = null;
+  }
+
+
   // === Exportar módulo completo ===
   return {
     init,
@@ -374,8 +447,12 @@ window.HelicopterModule = (() => {
     goToPoint,
     followUnit,
     startPatrolAround,
+    startDynamicPatrol,
+    stopPatrol,           // 👈 también exportamos stopPatrol
+    clearPath,
     stop
   };
+
 
 
   // === drawRadarCircle: crea o actualiza el radar visual del helicóptero ===
