@@ -49,6 +49,8 @@ map.on('load', async () => {
     map.resize();
     map.triggerRepaint();
   });
+  map.once('idle', addCuartelesGuardiaCivil);
+
 
   // === 1) CAPAS BASE: RELIEVE + SATÉLITE ===
   try {
@@ -123,6 +125,93 @@ map.on('load', async () => {
   } catch (e) {
     console.warn('⚠️ No se pudieron añadir las rutas:', e);
   }
+
+  // === 🟩 Añadir cuarteles Guardia Civil como capa integrada ===
+
+  map.addSource('gc', { type: 'geojson', data: '../../data/guadiaCivil.geojson' });
+  map.addLayer({
+    id: 'gc-icons',
+    type: 'symbol',
+    source: 'gc',
+    layout: {
+      'icon-image': 'cuartel-icon', // PNG o sprite registrado
+      'icon-size': 0.8
+    }
+  });
+
+  async function addCuartelesGuardiaCivil() {
+    try {
+      const res = await fetch('../../data/guadiaCivil.geojson');
+      const data = await res.json();
+
+      if (!data.features || !Array.isArray(data.features)) {
+        console.warn('⚠️ GeoJSON inválido o vacío');
+        return;
+      }
+
+      // 🔹 1. Convertir SVG a imagen en memoria (canvas → bitmap)
+      const svgUrl = '../../img/icons/icon_guardia_civil.svg';
+      const img = await fetch(svgUrl)
+        .then(r => r.text())
+        .then(svgText => {
+          return new Promise((resolve) => {
+            const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+            const image = new Image();
+            image.onload = () => {
+              const canvas = document.createElement('canvas');
+              canvas.width = 64;
+              canvas.height = 64;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(image, 0, 0, 64, 64);
+              const pngUrl = canvas.toDataURL('image/png');
+              const pngImg = new Image();
+              pngImg.onload = () => resolve(pngImg);
+              pngImg.src = pngUrl;
+            };
+            image.src = url;
+          });
+        });
+
+      // 🔹 2. Registrar el icono como recurso interno
+      if (!map.hasImage('icon_guardia_civil')) {
+        map.addImage('icon_guardia_civil', img);
+      }
+
+      // 🔹 3. Crear fuente GeoJSON
+      if (!map.getSource('cuarteles_gc')) {
+        map.addSource('cuarteles_gc', {
+          type: 'geojson',
+          data: data
+        });
+      }
+
+      // 🔹 4. Añadir capa simbólica
+      if (!map.getLayer('cuarteles_gc_layer')) {
+        map.addLayer({
+          id: 'cuarteles_gc_layer',
+          type: 'symbol',
+          source: 'cuarteles_gc',
+          layout: {
+            'icon-image': 'icon_guardia_civil',
+            'icon-size': 0.5,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true
+          }
+        });
+      }
+
+      console.log(`✅ ${data.features.length} cuarteles renderizados con addLayer()`);
+    } catch (err) {
+      console.error('❌ Error al añadir cuarteles Guardia Civil:', err);
+    }
+  }
+
+
+  // Llamar una vez el mapa esté completamente listo
+  map.once('idle', () => setTimeout(addCuartelesGuardiaCivil, 1000));
+
+
 
   // === 3) TOGGLES de base ===
   const toggleHillshade = document.getElementById('toggle-hillshade');

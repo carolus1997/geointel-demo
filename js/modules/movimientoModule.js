@@ -24,7 +24,7 @@ window.MovimientoModule = (() => {
             el.onerror = () => console.warn(`⚠️ Icono no encontrado para tipo: ${tipo}`);
 
             // === Crear marcador con el elemento IMG ===
-            const marker = new maplibregl.Marker({ element: el })
+            const marker = new maplibregl.Marker({ element: el,anchor: 'center'})
                 .setLngLat(coords)
                 .addTo(map);
 

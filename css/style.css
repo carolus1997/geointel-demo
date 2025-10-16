@@ -917,3 +917,35 @@ button.btn-activa {
   background: #00e5ff;
   color: #111;
 }
+
+.gc-icon {
+  position: relative;
+  z-index: 9999 !important;
+}
+
+.gc-icon:hover {
+  transform: translate(-50%, -50%) scale(1.3);
+  filter: drop-shadow(0 0 5px #00E5FF);
+}
+
+
+#map-container {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.gc-marker {
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.gc-marker:hover {
+  transform: scale(1.3);
+  filter: drop-shadow(0 0 5px #00E5FF);
+}
+
+
+
+
+

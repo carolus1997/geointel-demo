@@ -31,7 +31,7 @@ window.HelicopterModule = (() => {
       el.style.opacity = '0';
       el.style.transition = 'opacity 600ms ease, transform 400ms ease';
 
-      // Crear rastro
+
       
 
       // Crear enlace táctico BAM↔Heli
