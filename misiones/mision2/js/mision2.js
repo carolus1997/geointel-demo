@@ -235,11 +235,16 @@ async function startMision2() {
 
     // 1️⃣ Cargar unidades principales
     await MovimientoModule.init(map, '../../data/unidades_maritimas.geojson');
+    await waitForModules(['MovimientoModule', 'RadarModule', 'HelicopterModule']);
+    if (window.HelicopterRadar?.init) HelicopterRadar.init(map);
+
 
     // 2️⃣ Inicializar helicóptero (sobre BAM)
     if (window.HelicopterModule?.init) {
       HelicopterModule.init(map, 'helicoptero');
     }
+    if (window.HelicopterRadar?.init) HelicopterRadar.init(map);
+
 
     // 3️⃣ Cargar rutas desde GeoJSON
     const routes = await MovimientoModule.loadRoutes('../../data/Rutas.geojson');

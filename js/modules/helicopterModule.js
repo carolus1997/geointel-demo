@@ -10,6 +10,9 @@ window.HelicopterModule = (() => {
   const pathSourceId = 'heli-path';
   const linkSourceId = 'heli-link';
   let patrolFrame = null; // 🌀 animación circular (patrulla)
+  const radarSourceId = 'heli-radar';
+  let radarPulse = 0; // fase de animación del pulso
+
 
   // === INIT ===
   function init(mapInstance, heliId = heliIdDefault) {
@@ -108,64 +111,76 @@ window.HelicopterModule = (() => {
     console.log(`🎯 Objetivo del helicóptero: ${target[0].toFixed(4)}, ${target[1].toFixed(4)}`);
 
     // Animar hacia el punto de intercepción
-    goToPoint([start.lng, start.lat], target, options.speed || 0.002, () => {
-      console.log('✅ Helicóptero llegó al punto de interceptación');
-      if (typeof options.onArrival === 'function') options.onArrival();
-    });
+    goToPoint([start.lng, start.lat], target, options.speed || 120, () => {
+      console.log('✅ Helicóptero llegó al punto inicial de intercepción');
+    }, 'narcolancha'); // 👈 añadimos targetId como último parámetro
+
   }
 
 
-  // === goToPoint: vuelo lineal con interpolación (speed en m/s) ===
-  function goToPoint(startLngLat, targetLngLat, speed = 120, onArrival) {
+  // === goToPoint: vuelo dinámico con radar independiente ===
+  function goToPoint(startLngLat, targetLngLat, speed = 120, onArrival, targetId = 'narcolancha') {
     if (animFrame) cancelAnimationFrame(animFrame);
 
-    // Normalizar coordenadas (acepta {lng,lat} o [lng,lat])
+    // Normalizar coordenadas de entrada
     const start = Array.isArray(startLngLat)
       ? startLngLat
       : [startLngLat.lng, startLngLat.lat];
-    const end = Array.isArray(targetLngLat)
-      ? targetLngLat
-      : [targetLngLat.lng, targetLngLat.lat];
 
-    // Convertir a Mercator (metros) para calcular distancia real
-    const [sx, sy] = window.CoordUtils.lonLatToMerc(start[0], start[1]);
-    const [ex, ey] = window.CoordUtils.lonLatToMerc(end[0], end[1]);
-    const totalDistMeters = Math.hypot(ex - sx, ey - sy) || 1e-6;
+    let currentPos = [...start]; // posición dinámica del helicóptero
+    const correctionRate = 0.05; // suavizado direccional
+    const approachThresholdKm = 2; // cambio a seguimiento directo
 
-    console.log('✈️ goToPoint (m/s):', start, '→', end, 'dist(m):', Math.round(totalDistMeters));
+    console.log(`✈️ goToPoint iniciado desde ${start} hacia ${targetLngLat} (velocidad: ${speed} m/s)`);
 
-    let traveled = 0;
-
-    const step = () => {
+    function step() {
       if (window.SIMULATION_PAUSED) return requestAnimationFrame(step);
 
-      // 🧠 APLICAR MULTIPLICADOR DE SIMULACIÓN
-      const simSpeed = window.SIMULATION_SPEED || 1;
-      const stepMeters = speed * (1 / 60) * simSpeed; // <--- Aquí la clave
-      traveled += stepMeters;
+      // Obtener posición actualizada del objetivo (narcolancha)
+      const targetPos = MovimientoModule.getPosition(targetId) || targetLngLat;
+      const [tx, ty] = window.CoordUtils.lonLatToMerc(targetPos[0], targetPos[1]);
+      const [hx, hy] = window.CoordUtils.lonLatToMerc(currentPos[0], currentPos[1]);
 
-      const fraction = Math.min(1, traveled / totalDistMeters);
+      const dx = tx - hx;
+      const dy = ty - hy;
+      const distMeters = Math.hypot(dx, dy);
+      const distKm = distMeters / 1000;
 
-      // interpolación en lon/lat lineal (válida para distancias moderadas)
-      const lon = start[0] + (end[0] - start[0]) * fraction;
-      const lat = start[1] + (end[1] - start[1]) * fraction;
-      heliMarker.setLngLat([lon, lat]);
-      updatePath([lon, lat]);
-      updateLink();
-
-      if (fraction >= 1) {
+      // Si ya está lo suficientemente cerca → cambiar a seguimiento directo
+      if (distKm < approachThresholdKm) {
+        console.log(`🎯 Interceptación lograda (distancia ${distKm.toFixed(2)} km). Cambiando a followUnit()`);
         if (onArrival) onArrival();
+        HelicopterModule.followUnit(targetId, { heliSpeedMps: speed, leadSeconds: 5 });
         return;
       }
+
+      // Calcular desplazamiento por frame
+      const simSpeed = window.SIMULATION_SPEED || 1;
+      const heliSpeed = speed * simSpeed;
+      const stepMeters = heliSpeed * (1 / 60);
+      const fraction = Math.min(1, stepMeters / distMeters);
+
+      // Suavizado direccional
+      const nextX = hx + dx * fraction * (1 - correctionRate);
+      const nextY = hy + dy * fraction * (1 - correctionRate);
+      const [lon, lat] = window.CoordUtils.toLonLat(nextX, nextY);
+
+      // Actualizar posición y trayectorias
+      currentPos = [lon, lat];
+      heliMarker.setLngLat(currentPos);
+      updatePath(currentPos);
+      updateLink();
+
+      // 🔹 Notificar radar del helicóptero (sin redibujar directamente)
+      if (window.HelicopterRadar?.update) {
+        HelicopterRadar.update(currentPos);
+      }
+
       animFrame = requestAnimationFrame(step);
-    };
+    }
 
     step();
   }
-
-
-
-
 
 
   // === FOLLOW UNIT: seguir dinámicamente a otra unidad (predictivo, usando velocidad) ===
@@ -316,6 +331,11 @@ window.HelicopterModule = (() => {
     const el = heliMarker.getElement();
     el.style.opacity = '0';
     setTimeout(() => (el.style.display = 'none'), 600);
+    if (map.getLayer(radarSourceId)) {
+      map.removeLayer(radarSourceId);
+      map.removeSource(radarSourceId);
+    }
+
   }
 
   // === startPatrolAround: patrullaje circular lento y amplio ===
@@ -353,7 +373,65 @@ window.HelicopterModule = (() => {
     deploy,
     goToPoint,
     followUnit,
-    startPatrolAround, // 👈 añadimos aquí
+    startPatrolAround,
     stop
   };
+
+
+  // === drawRadarCircle: crea o actualiza el radar visual del helicóptero ===
+  function drawRadarCircle(center, radiusKm = 3) {
+    if (!map) return;
+
+    const radiusMeters = radiusKm * 1000;
+
+    // Construir círculo aproximado (64 lados)
+    const coords = [];
+    const numSides = 64;
+    for (let i = 0; i <= numSides; i++) {
+      const angle = (i / numSides) * 2 * Math.PI;
+      const dx = radiusMeters * Math.cos(angle);
+      const dy = radiusMeters * Math.sin(angle);
+      const [lon, lat] = window.CoordUtils.toLonLat(
+        ...window.CoordUtils.lonLatToMerc(center[0], center[1]).map((v, j) =>
+          j === 0 ? v + dx : v + dy
+        )
+      );
+      coords.push([lon, lat]);
+    }
+
+    const feature = {
+      type: 'Feature',
+      geometry: { type: 'Polygon', coordinates: [coords] }
+    };
+
+    if (!map.getSource(radarSourceId)) {
+      map.addSource(radarSourceId, { type: 'geojson', data: feature });
+      map.addLayer({
+        id: radarSourceId,
+        type: 'fill',
+        source: radarSourceId,
+        paint: {
+          'fill-color': '#00E5FF',
+          'fill-opacity': 0.15
+        }
+      });
+    } else {
+      const src = map.getSource(radarSourceId);
+      if (src) src.setData(feature);
+    }
+  }
+
+  // === animateRadarPulse: hace que el radar "respire" visualmente ===
+  function animateRadarPulse(center) {
+    if (!map.getLayer(radarSourceId)) return;
+
+    radarPulse += 0.05;
+    const opacity = 0.15 + 0.05 * Math.sin(radarPulse);
+    map.setPaintProperty(radarSourceId, 'fill-opacity', opacity);
+
+    drawRadarCircle(center, 3); // mantener actualizado el centro
+    requestAnimationFrame(() => animateRadarPulse(center));
+  }
+
+
 })();
