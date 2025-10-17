@@ -229,28 +229,105 @@ window.ToolsPanel = (() => {
     }
 
 
-    // === Captura ===
-    // === Captura completa (mapa + notas + UI) ===
-    function capturarMapa() {
+    // === 📸 Captura táctica avanzada ===
+    async function capturarMapa() {
         const mapContainer = map.getContainer();
+        const canvas = map.getCanvas();
 
+        // 🧊 1. Congelar transformaciones para evitar distorsiones elípticas
+        const prevTransform = canvas.style.transform;
+        canvas.style.transform = 'none';
+        const svgs = mapContainer.querySelectorAll('svg');
+        svgs.forEach(svg => (svg.style.transform = 'none'));
+
+        // Pausar momentáneamente animaciones de radar si existen
+        document.querySelectorAll('.radar-sweep, .pulse-line').forEach(el => {
+            el.style.animationPlayState = 'paused';
+        });
+
+        // Forzar un frame estable antes de la captura
+        map.triggerRepaint();
+        await new Promise(r => setTimeout(r, 150));
+
+        // 🖼️ 2. Captura del contenedor completo con html2canvas
         html2canvas(mapContainer, {
             useCORS: true,
             allowTaint: true,
             backgroundColor: null,
-            scale: 2 // mejor resolución
-        }).then(canvas => {
-            const dataURL = canvas.toDataURL('image/png');
-            const enlace = document.createElement('a');
-            enlace.download = `captura_mision2_${Date.now()}.png`;
-            enlace.href = dataURL;
-            enlace.click();
-            actualizarEstado('📸 Captura guardada (incluye notas y capas visibles).');
-        }).catch(err => {
-            console.error('❌ Error al capturar:', err);
-            actualizarEstado('⚠️ Error al generar la captura.');
-        });
+            scale: 2,
+            logging: false,
+            ignoreElements: el =>
+                el.classList.contains('mapboxgl-control-container') // evita duplicar controles zoom
+        })
+            .then(canvasOut => {
+                // Restaurar transformaciones
+                canvas.style.transform = prevTransform;
+                svgs.forEach(svg => (svg.style.transform = ''));
+                document.querySelectorAll('.radar-sweep, .pulse-line').forEach(el => {
+                    el.style.animationPlayState = '';
+                });
+
+                // === 3. Dibujar plantilla táctica sobre el canvas resultante ===
+                const ctx = canvasOut.getContext('2d');
+                const w = canvasOut.width;
+                const h = canvasOut.height;
+
+                // --- Franja inferior oscura ---
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, h - 110, w, 110);
+
+                // --- Título de misión ---
+                ctx.font = 'bold 36px "Segoe UI", Roboto, sans-serif';
+                ctx.fillStyle = '#00E5FF';
+                ctx.textAlign = 'left';
+                ctx.fillText('Misión 2 — Interceptación en el Estrecho de Gibraltar', 50, h - 50);
+
+                // --- Fecha/hora local ---
+                ctx.font = '20px "Segoe UI", Roboto, sans-serif';
+                ctx.fillStyle = '#ccc';
+                ctx.textAlign = 'right';
+                const now = new Date().toLocaleString('es-ES', {
+                    hour12: false,
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                ctx.fillText(now, w - 50, h - 40);
+
+                // --- Logo táctico (opcional) ---
+                const logo = new Image();
+                logo.crossOrigin = 'anonymous';
+                logo.src = 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Emblem_of_Spain.svg'; // puedes reemplazar por tu PNG local
+                logo.onload = () => {
+                    const size = 90;
+                    ctx.globalAlpha = 0.25;
+                    ctx.drawImage(logo, w - size - 40, h - size - 40, size, size);
+                    ctx.globalAlpha = 1.0;
+
+                    // --- Exportar ---
+                    guardarCanvasComoPNG(canvasOut);
+                };
+                logo.onerror = () => guardarCanvasComoPNG(canvasOut);
+            })
+            .catch(err => {
+                console.error('❌ Error al capturar:', err);
+                actualizarEstado('⚠️ Error al generar la captura.');
+            });
     }
+
+    // === 💾 Guardar imagen final ===
+    function guardarCanvasComoPNG(canvasOut) {
+        const dataURL = canvasOut.toDataURL('image/png');
+        const enlace = document.createElement('a');
+        enlace.download = `captura_mision2_${Date.now()}.png`;
+        enlace.href = dataURL;
+        enlace.click();
+        actualizarEstado('📸 Captura táctica guardada.');
+    }
+
+
 
 
     function actualizarEstado(msg) {

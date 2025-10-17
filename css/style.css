@@ -861,6 +861,20 @@ button.btn-activa {
   opacity: 1;
 }
 
+.map-note {
+  overflow: visible !important;
+  transform: translate(-50%, -100%) scale(1); /* evitar subpixel scaling */
+  text-rendering: geometricPrecision;
+}
+
+.note-input {
+  white-space: pre-wrap;
+  line-height: 1.2em;
+  text-align: center;
+  word-break: break-word;
+}
+
+
 
 /* =============================
    🔹 DEBUG HUD
