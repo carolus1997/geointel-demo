@@ -1,7 +1,6 @@
-// logger.js — Sistema de registro táctico unificado
+// js/core/logger.js — Sistema de registro táctico unificado (modo global)
 
-export const Logger = (() => {
-
+window.Logger = (() => {
   const colors = {
     map: "color:#00E5FF",
     mission: "color:#00FFC6",
@@ -27,7 +26,6 @@ export const Logger = (() => {
     console.log(`%c[${now}] ${prefix} ${message}`, color, extra);
   }
 
-  // Métodos específicos
   return {
     core: (msg) => log("core", msg),
     map: (msg) => log("map", msg),
@@ -36,5 +34,4 @@ export const Logger = (() => {
     ok: (msg) => log("success", msg),
     error: (msg, extra) => log("error", msg, extra),
   };
-
 })();

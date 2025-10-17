@@ -1,5 +1,6 @@
-// js/core/uiModule.js
-export function showIntro(message = "Inicializando interfaz táctica...") {
+// js/core/uiModule.js — versión global (window.*)
+
+window.showIntro = function (message = "Inicializando interfaz táctica...") {
   const intro = document.getElementById("intro-screen");
   const status = document.getElementById("intro-status");
   if (!intro) return;
@@ -17,17 +18,17 @@ export function showIntro(message = "Inicializando interfaz táctica...") {
     loader.className = "intro-loader";
     intro.querySelector(".intro-content")?.appendChild(loader);
   }
-}
+};
 
-export function updateIntroStatus(text) {
+window.updateIntroStatus = function (text) {
   const status = document.getElementById("intro-status");
   if (status) {
     status.textContent = ""; // limpia texto anterior
     typeText(status, text); // escribe nuevo texto con animación
   }
-}
+};
 
-export function hideIntro() {
+window.hideIntro = function () {
   const intro = document.getElementById("intro-screen");
   if (!intro) return;
 
@@ -35,7 +36,7 @@ export function hideIntro() {
   setTimeout(() => {
     intro.style.display = "none";
   }, 1000); // coincide con transición CSS
-}
+};
 
 // === Animación de escritura táctica (mini-typewriter interno) ===
 function typeText(element, text) {
@@ -68,9 +69,7 @@ function typeText(element, text) {
   type();
 }
 
-
-
-export function showErrorMessage(message = "Error desconocido") {
+window.showErrorMessage = function (message = "Error desconocido") {
   const container = document.createElement("div");
   container.className = "ui-error-hud";
   container.innerHTML = `
@@ -85,4 +84,4 @@ export function showErrorMessage(message = "Error desconocido") {
   document.getElementById("reload-btn").addEventListener("click", () => {
     window.location.reload();
   });
-}
+};

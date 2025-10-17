@@ -1,4 +1,4 @@
-// js/utils.js
+// js/core/utils.js
 
 // Clave pública MapTiler
 window.MAPTILER_KEY = 'rk78lPIZURCYo6I9QQdi';

@@ -1,7 +1,7 @@
-// debugHUD.js — monitor táctico de depuración
-import { Logger } from "./logger.js";
+// js/core/debugHUD.js — Monitor táctico de depuración (modo global)
 
-export const DebugHUD = (() => {
+(function () {
+  const Logger = window.Logger || console;
   let hudEl;
 
   function init() {
@@ -31,14 +31,15 @@ export const DebugHUD = (() => {
   }
 
   function startFPSCounter() {
-    let last = performance.now(), frames = 0;
+    let last = performance.now(),
+      frames = 0;
     const fpsEl = document.getElementById("fps-info");
 
     function loop() {
       const now = performance.now();
       frames++;
       if (now - last >= 1000) {
-        fpsEl.textContent = `FPS: ${frames}`;
+        if (fpsEl) fpsEl.textContent = `FPS: ${frames}`;
         frames = 0;
         last = now;
       }
@@ -47,5 +48,6 @@ export const DebugHUD = (() => {
     loop();
   }
 
-  return { init };
+  // Registrar globalmente
+  window.DebugHUD = { init };
 })();

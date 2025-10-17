@@ -1,35 +1,42 @@
-import { initMap } from "./mapModule.js";
-import { loadMissions } from "./missionsModule.js";
-import { showIntro, hideIntro, updateIntroStatus } from "./uiModule.js";
-import { delay } from "./utils.js";
-import { DebugHUD } from "./debugHUD.js";
+// js/core/appCore.js — versión global y estable
 
-window.addEventListener("DOMContentLoaded", async () => {
-  await AppCore.init();
-});
-
-export const AppCore = (() => {
+window.AppCore = (() => {
   async function init() {
-    DebugHUD.init();
-    showIntro("Inicializando módulo de mapa...");
-    await delay(600);
+    try {
+      // 1️⃣ Activa HUD de depuración
+      if (window.DebugHUD) window.DebugHUD.init();
 
-    const map = await initMap();
-    updateIntroStatus("Cargando misiones activas...");
-    await loadMissions(map); // ← Aquí se cargan los HUDs desde el GeoJSON
+      // 2️⃣ Muestra intro animada
+      window.showIntro("Inicializando módulo de mapa...");
+      await window.delay(600);
 
-    // 🧪 Comprobamos si los HUDs se han insertado en el DOM
-    setTimeout(() => {
-      const inserted = document.querySelectorAll('.hud-marker');
-      console.log(`✅ HUDs visibles en DOM: ${inserted.length}`);
-    }, 1000);
+      // 3️⃣ Inicializa el mapa
+      const map = await window.initMap();
+      window.updateIntroStatus("Cargando misiones activas...");
+      await window.loadMissions(map);
 
-    updateIntroStatus("Sincronizando interfaz...");
-    await delay(600);
+      // 4️⃣ Verifica HUDs cargados
+      setTimeout(() => {
+        const inserted = document.querySelectorAll(".hud-marker");
+        window.Logger.ui(`✅ HUDs visibles en DOM: ${inserted.length}`);
+      }, 1000);
 
-    hideIntro();
-    console.log("✅ Plataforma inicializada correctamente");
+      // 5️⃣ Finaliza carga
+      window.updateIntroStatus("Sincronizando interfaz...");
+      await window.delay(600);
+
+      window.hideIntro();
+      window.Logger.ok("✅ Plataforma inicializada correctamente");
+    } catch (err) {
+      console.error("❌ Error crítico en AppCore:", err);
+      if (window.showErrorMessage) {
+        window.showErrorMessage("Error al inicializar la plataforma táctica.");
+      }
+    }
   }
+
+  // Inicialización automática
+  window.addEventListener("DOMContentLoaded", init);
 
   return { init };
 })();
