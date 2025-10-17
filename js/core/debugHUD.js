@@ -1,20 +1,31 @@
-// js/core/debugHUD.js — Monitor táctico de depuración (modo global)
-
-(function () {
-  const Logger = window.Logger || console;
-  let hudEl;
+// js/core/debugHUD.js — HUD táctico extendido
+window.DebugHUD = (() => {
+  let hudEl, logsEl, fpsEl, errors = 0;
+  let active = false;
 
   function init() {
     document.addEventListener("keydown", (e) => {
       if (e.shiftKey && e.key.toLowerCase() === "d") toggleHUD();
     });
+
+    // Escucha los logs
+    document.addEventListener("logger:update", (e) => {
+      if (!active) return;
+      const { time, type, message } = e.detail;
+      const line = document.createElement("div");
+      line.textContent = `[${time}] ${type.toUpperCase()}: ${message}`;
+      line.className = `log-line ${type}`;
+      logsEl.prepend(line);
+      if (logsEl.children.length > 20) logsEl.removeChild(logsEl.lastChild);
+      if (type === "error") errors++;
+      updateStatus();
+    });
   }
 
   function toggleHUD() {
-    if (hudEl) {
+    if (active) {
       hudEl.remove();
-      hudEl = null;
-      Logger.ui("Debug HUD oculto");
+      active = false;
       return;
     }
 
@@ -22,24 +33,24 @@
     hudEl.id = "debug-hud";
     hudEl.innerHTML = `
       <h4>🧩 DEBUG HUD</h4>
-      <p id="fps-info">FPS: ...</p>
-      <p id="layer-info">Capas: ...</p>
+      <div id="hud-status">FPS: ... | Errores: 0</div>
+      <div id="hud-logs" class="log-container"></div>
     `;
     document.body.appendChild(hudEl);
-    Logger.ui("Debug HUD activado");
+
+    logsEl = hudEl.querySelector("#hud-logs");
+    fpsEl = hudEl.querySelector("#hud-status");
+    active = true;
     startFPSCounter();
   }
 
   function startFPSCounter() {
-    let last = performance.now(),
-      frames = 0;
-    const fpsEl = document.getElementById("fps-info");
-
+    let last = performance.now(), frames = 0;
     function loop() {
       const now = performance.now();
       frames++;
       if (now - last >= 1000) {
-        if (fpsEl) fpsEl.textContent = `FPS: ${frames}`;
+        updateStatus(frames);
         frames = 0;
         last = now;
       }
@@ -48,6 +59,9 @@
     loop();
   }
 
-  // Registrar globalmente
-  window.DebugHUD = { init };
+  function updateStatus(fps = 0) {
+    if (fpsEl) fpsEl.textContent = `FPS: ${fps} | Errores: ${errors}`;
+  }
+
+  return { init };
 })();

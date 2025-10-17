@@ -103,28 +103,24 @@ window.loadMissions = async function (map) {
     window.showErrorMessage?.("No se pudieron cargar las misiones activas. Verifica el archivo misiones.geojson.");
   }
 
-  // Botón para resetear misiones
+  // === Botón para resetear misiones (reposicionado al panel lateral) ===
   const resetBtn = document.createElement("button");
   resetBtn.textContent = "Resetear misiones";
-  resetBtn.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: #222;
-    color: #00ffc6;
-    border: 1px solid #00ffc6;
-    padding: 6px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    z-index: 2000;
-  `;
+  resetBtn.className = "reset-btn";
+
   resetBtn.addEventListener("click", () => {
     const confirmReset = confirm("¿Seguro que quieres resetear el estado de todas las misiones?");
     if (!confirmReset) return;
+
     Object.keys(localStorage)
       .filter((key) => key.startsWith("estado-"))
       .forEach((key) => localStorage.removeItem(key));
+
     window.location.reload();
   });
-  document.body.appendChild(resetBtn);
+
+  // 👉 Insertar el botón dentro del panel lateral
+  const sidePanel = document.getElementById("side-panel");
+  if (sidePanel) sidePanel.appendChild(resetBtn);
+
 };

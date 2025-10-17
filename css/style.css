@@ -8,6 +8,7 @@
 html,
 body {
   margin: 0;
+  overflow: hidden;
   padding: 0;
   height: 100%;
   background-color: #0D1117;
@@ -15,11 +16,7 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
-#app-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
+
 
 /* =============================
    🔹 INTRO ANIMADA
@@ -272,10 +269,17 @@ body {
 /* =============================
    🔹 LAYOUT PRINCIPAL
 ============================= */
-#main-content {
+
+ #app-container {
   display: flex;
-  flex: 1;
-  overflow: hidden;
+  flex-direction: column;
+  height: 100vh; /* toda la altura de la ventana */
+}
+
+#main-content {
+  flex: 1 0 auto; /* ocupa todo el espacio restante */
+  display: flex;
+  overflow: hidden; /* sin scroll interno */
 }
 
 #side-panel {
@@ -298,11 +302,14 @@ body {
 #map-container {
   flex: 1;
   position: relative;
-  overflow: hidden;
+   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 #map {
-  position: absolute;
+  flex: 1 1 auto; /* ocupa el espacio restante dentro del contenedor */
+  position: relative;
   top: 0;
   left: 0;
   width: 100%;
@@ -351,6 +358,28 @@ body {
 }
 
 
+.reset-btn {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  background: #111;
+  color: #00ffc6;
+  border: 1px solid #00ffc6;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: 'Orbitron', monospace;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+}
+
+.reset-btn:hover {
+  background: #00ffc6;
+  color: #0D1117;
+  box-shadow: 0 0 10px rgba(0, 255, 198, 0.5);
+}
+
+
 /* =============================
    🔹 HUD circular animado
 ============================= */
@@ -365,9 +394,11 @@ body {
 .maplibregl-marker {
   z-index: 1000 !important;
 }
+
 .maplibregl-popup {
   z-index: 1100 !important;
 }
+
 .maplibregl-canvas {
   z-index: 0 !important;
 }
@@ -395,15 +426,19 @@ body {
   border: 1px solid rgba(0, 255, 198, 0.6);
   animation: hudWave 2s infinite;
 }
+
 .hud-marker::after {
   animation-delay: 1s;
 }
 
 @keyframes hudPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
+
   50% {
     transform: scale(1.1);
     opacity: 0.7;
@@ -415,6 +450,7 @@ body {
     transform: scale(0.8);
     opacity: 1;
   }
+
   100% {
     transform: scale(1.8);
     opacity: 0;
@@ -443,11 +479,13 @@ body {
   border-color: #00FFC6;
   box-shadow: 0 0 10px #00ffc6, 0 0 20px rgba(0, 255, 198, 0.3);
 }
+
 .hud-marker.completada {
   border-color: #66ff66;
   background: rgba(102, 255, 102, 0.1);
   box-shadow: 0 0 10px #66ff66, 0 0 20px rgba(102, 255, 102, 0.3);
 }
+
 .hud-marker.bloqueada {
   border-color: #ff5555;
   background: rgba(255, 85, 85, 0.1);
@@ -702,7 +740,17 @@ button.btn-activa {
   font-size: 0.8rem;
   border-top: 1px solid #1F262E;
   position: relative;
+  z-index: 10000; /* 👈 se eleva sobre overlays */
+  opacity: 1 !important; /* 👈 evita transiciones heredadas */
+  transition: none !important; /* 👈 desactiva efectos */
 }
+#app-container footer,
+.app-footer {
+  visibility: visible !important;
+  opacity: 1 !important;
+  animation: none !important;
+}
+
 
 .footer-left {
   flex: 1;
@@ -801,8 +849,12 @@ button.btn-activa {
 
 
 #map {
-  opacity: 0;
-  transition: opacity 1s ease;
+  flex: 1 1 auto;
+  /* ocupa todo el espacio disponible */
+  min-height: 0;
+  /* evita que el mapa fuerce overflow */
+  position: relative;
+  z-index: 1;
 }
 
 #map.ready {
@@ -839,16 +891,28 @@ button.btn-activa {
 
 /* === Radar circular === */
 @keyframes rotateRadar {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes radarPulse {
-  0%, 100% { opacity: 0.08; }
-  50% { opacity: 0.18; }
+
+  0%,
+  100% {
+    opacity: 0.08;
+  }
+
+  50% {
+    opacity: 0.18;
+  }
 }
 
-.maplibregl-canvas-container canvas + canvas {
+.maplibregl-canvas-container canvas+canvas {
   animation: radarPulse 3s ease-in-out infinite;
 }
 
@@ -881,14 +945,20 @@ button.btn-activa {
 }
 
 @keyframes pulseDetected {
-  from { transform: translate(-50%, -50%) scale(1); }
-  to { transform: translate(-50%, -50%) scale(1.3); }
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  to {
+    transform: translate(-50%, -50%) scale(1.3);
+  }
 }
 
 .sim-panel {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  left: 15px; /* 👈 antes estaba right:10px */
+  right: auto; 
   background: rgba(25, 30, 40, 0.85);
   border: 1px solid #00e5ff33;
   border-radius: 8px;
@@ -897,6 +967,7 @@ button.btn-activa {
   gap: 6px;
   z-index: 9999;
   box-shadow: 0 0 8px rgba(0, 229, 255, 0.2);
+  justify-content: flex-start; /* 🔹 mejor alineación a la izquierda */
 }
 
 .sim-panel button {
@@ -909,13 +980,22 @@ button.btn-activa {
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
+
 .sim-panel button:hover {
   background: #00e5ff;
   color: #111;
 }
+
 .sim-panel button.active {
   background: #00e5ff;
   color: #111;
+}
+
+.sim-panel.top-left {
+  top: 15px;
+  left: 15px;
+  right: auto;
+  justify-content: flex-start;
 }
 
 .gc-icon {
@@ -929,23 +1009,14 @@ button.btn-activa {
 }
 
 
-#map-container {
-  position: relative !important;
-  overflow: visible !important;
-}
-
 .gc-marker {
   width: 26px;
   height: 26px;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
+
 .gc-marker:hover {
   transform: scale(1.3);
   filter: drop-shadow(0 0 5px #00E5FF);
 }
-
-
-
-
-

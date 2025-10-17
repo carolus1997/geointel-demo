@@ -49,7 +49,12 @@ map.on('load', async () => {
     map.resize();
     map.triggerRepaint();
   });
-  map.once('idle', addCuartelesGuardiaCivil);
+  map.once('idle', async () => {
+    if (window.GuardiaCivilModule?.init) {
+      await GuardiaCivilModule.init(map);
+    }
+  });
+
 
 
   // === 1) CAPAS BASE: RELIEVE + SATÉLITE ===
@@ -293,6 +298,8 @@ map.on('load', async () => {
 
   // === 7) Inicializar panel de simulación (si existe)
   if (window.SimulationPanel?.init) SimulationPanel.init();
+
+
 });
 
 
