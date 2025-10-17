@@ -249,42 +249,49 @@ map.on('load', async () => {
   }
 
   // === 4) Dibujo (Draw) + Panel de herramientas ===
-  try {
-    const Draw = new MapboxDraw({
-      displayControlsDefault: false,
-      styles: [
-        {
-          id: 'gl-draw-polygon-fill',
-          type: 'fill',
-          filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
-          paint: { 'fill-color': '#00E5FF', 'fill-opacity': 0.1 }
-        },
-        {
-          id: 'gl-draw-line-active',
-          type: 'line',
-          filter: ['all', ['==', '$type', 'LineString'], ['!=', 'mode', 'static']],
-          paint: { 'line-color': '#00C896', 'line-width': 2 }
-        },
-        {
-          id: 'gl-draw-point-active',
-          type: 'circle',
-          filter: ['all', ['==', '$type', 'Point'], ['!=', 'mode', 'static']],
-          paint: {
-            'circle-radius': 6,
-            'circle-color': '#FF6B00',
-            'circle-stroke-color': '#fff',
-            'circle-stroke-width': 1.5
-          }
+  // === 4) Dibujo (Draw) + Toolbox flotante ===
+try {
+  const Draw = new MapboxDraw({
+    displayControlsDefault: false,
+    styles: [
+      {
+        id: "gl-draw-polygon-fill",
+        type: "fill",
+        filter: ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+        paint: { "fill-color": "#00E5FF", "fill-opacity": 0.1 }
+      },
+      {
+        id: "gl-draw-line-active",
+        type: "line",
+        filter: ["all", ["==", "$type", "LineString"], ["!=", "mode", "static"]],
+        paint: { "line-color": "#00C896", "line-width": 2 }
+      },
+      {
+        id: "gl-draw-point-active",
+        type: "circle",
+        filter: ["all", ["==", "$type", "Point"], ["!=", "mode", "static"]],
+        paint: {
+          "circle-radius": 6,
+          "circle-color": "#FF6B00",
+          "circle-stroke-color": "#fff",
+          "circle-stroke-width": 1.5
         }
-      ]
-    });
-    map.addControl(Draw, 'top-left');
-    if (window.ToolsPanel && typeof ToolsPanel.init === 'function') {
-      ToolsPanel.init(map, Draw, 'side-panel-tools');
-    }
-  } catch (e) {
-    console.warn('⚠️ Draw/ToolsPanel no disponibles:', e);
-  }
+      }
+    ]
+  });
+
+  map.addControl(Draw, "top-right"); // mejor en top-right para no chocar con toolbox
+
+  // 🧩 Inicializar toolbox táctico
+  map.once("idle", () => {
+    console.log("🧭 Inicializando Toolbox...");
+    Toolbox.init(map, Draw);
+  });
+
+} catch (err) {
+  console.error("❌ Error al inicializar Draw/Toolbox:", err);
+}
+
 
   // === 5) Esperar a que los módulos globales estén listos ===
   await waitForModules(['MovimientoModule', 'RadarModule', 'HelicopterModule']);
