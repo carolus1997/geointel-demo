@@ -1,0 +1,759 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2025-10-19T10:47:00Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4392787521",
+        "locality": "place",
+        "man_made": "water_well",
+        "name": "Hassi Mennassa حاسي مناسة",
+        "name:ar": "حاسي مناسة",
+        "name:fr": "Hassi Mennassa",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 14.18
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 14.13
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 14.04
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 14.12
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 14.31
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 14.33
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 14.39
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 14.53
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 14.43
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 14.38
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 14.33
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 14.51
+          }
+        ],
+        "ult_nivel_m": 14.51
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.3283537,
+          32.2179699
+        ]
+      },
+      "id": "node/4392787521"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4395478097",
+        "man_made": "water_well",
+        "name": "Hassi Tarchoun حاسي الطرشون",
+        "name:ar": "حاسي الطرشون",
+        "name:en": "Hassi Tarchoun",
+        "name:fr": "Hassi Tarchoun",
+        "place": "hamlet",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 8.95
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 9.15
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 9.08
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 9.04
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 9.21
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 9.16
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 9.08
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 9.19
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 9.37
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 9.42
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 9.52
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 9.49
+          }
+        ],
+        "ult_nivel_m": 9.49
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.4627593,
+          32.4579239
+        ]
+      },
+      "id": "node/4395478097"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4396826799",
+        "name": "Ain Slimane Lamlalih عين سليمان الملاليح",
+        "name:ar": "عين سليمان الملاليح",
+        "name:fr": "Ain Slimane Lamlalih",
+        "natural": "spring",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 10.24
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 10.4
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 10.45
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 10.62
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 10.74
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 10.77
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 10.73
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 10.69
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 10.86
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 10.99
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 11.1
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 11.25
+          }
+        ],
+        "ult_nivel_m": 11.25
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.3017038,
+          32.4429353
+        ]
+      },
+      "id": "node/4396826799"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4419756546",
+        "name": "Ain Oussimane عين أوسيمان",
+        "name:ar": "عين أوسيمان",
+        "name:fr": "Ain Oussimane",
+        "natural": "spring",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 12.88
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 13.06
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 13.03
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 12.99
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 12.91
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 13.02
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 13.03
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 13.2
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 13.19
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 13.38
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 13.44
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 13.52
+          }
+        ],
+        "ult_nivel_m": 13.52
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2602138,
+          32.1116387
+        ]
+      },
+      "id": "node/4419756546"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4441508690",
+        "man_made": "water_well",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 8.26
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 8.2
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 8.39
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 8.37
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 8.48
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 8.66
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 8.65
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 8.66
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 8.62
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 8.54
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 8.59
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 8.52
+          }
+        ],
+        "ult_nivel_m": 8.52
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2499231,
+          32.0556576
+        ]
+      },
+      "id": "node/4441508690"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5642276221",
+        "name": "بئر بشار رقم 183-01",
+        "name:ar": "بئر بشار رقم 183-01",
+        "name:en": "TP 183 BIR-01 bechar",
+        "name:fr": "TP 183 BIR-01 Bechar",
+        "natural": "spring",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 10.97
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 10.93
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 10.97
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 10.94
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 11.06
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 11.04
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 11.13
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 11.3
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 11.47
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 11.46
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 11.57
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 11.75
+          }
+        ],
+        "ult_nivel_m": 11.75
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.6025074,
+          31.8482583
+        ]
+      },
+      "id": "node/5642276221"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6708170872",
+        "name": "Hassi Ould Merah",
+        "name:ar": "حاسي ولد مراح",
+        "name:fr": "Hassi Ould Merah",
+        "natural": "spring",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 12.47
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 12.44
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 12.39
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 12.31
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 12.4
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 12.48
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 12.43
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 12.39
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 12.3
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 12.32
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 12.28
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 12.35
+          }
+        ],
+        "ult_nivel_m": 12.35
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2410065,
+          32.0224908
+        ]
+      },
+      "id": "node/6708170872"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9370170507",
+        "natural": "spring",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 12.71
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 12.8
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 12.89
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 12.93
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 12.84
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 12.92
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 13.0
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 12.97
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 12.97
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 12.89
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 12.91
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 13.1
+          }
+        ],
+        "ult_nivel_m": 13.1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2465184,
+          31.9999178
+        ]
+      },
+      "id": "node/9370170507"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11269958276",
+        "access": "yes",
+        "man_made": "water_well",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 11.06
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 11.06
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 11.07
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 11.15
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 11.17
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 11.1
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 11.28
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 11.33
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 11.49
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 11.4
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 11.37
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 11.42
+          }
+        ],
+        "ult_nivel_m": 11.42
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.9451106,
+          32.2319897
+        ]
+      },
+      "id": "node/11269958276"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11274451862",
+        "man_made": "water_well",
+        "ref": "Chott Tigri",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 10.12
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 10.22
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 10.15
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 10.16
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 10.21
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 10.32
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 10.42
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 10.44
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 10.43
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 10.41
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 10.34
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 10.39
+          }
+        ],
+        "ult_nivel_m": 10.39
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.6732819,
+          32.8096482
+        ]
+      },
+      "id": "node/11274451862"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11274478872",
+        "man_made": "water_well",
+        "ref": "Chott Tigri",
+        "niveles_piezometricos": [
+          {
+            "mes": "2025-01",
+            "nivel_m": 14.79
+          },
+          {
+            "mes": "2025-02",
+            "nivel_m": 14.78
+          },
+          {
+            "mes": "2025-03",
+            "nivel_m": 14.87
+          },
+          {
+            "mes": "2025-04",
+            "nivel_m": 14.82
+          },
+          {
+            "mes": "2025-05",
+            "nivel_m": 14.99
+          },
+          {
+            "mes": "2025-06",
+            "nivel_m": 15.16
+          },
+          {
+            "mes": "2025-07",
+            "nivel_m": 15.23
+          },
+          {
+            "mes": "2025-08",
+            "nivel_m": 15.17
+          },
+          {
+            "mes": "2025-09",
+            "nivel_m": 15.13
+          },
+          {
+            "mes": "2025-10",
+            "nivel_m": 15.16
+          },
+          {
+            "mes": "2025-11",
+            "nivel_m": 15.11
+          },
+          {
+            "mes": "2025-12",
+            "nivel_m": 15.02
+          }
+        ],
+        "ult_nivel_m": 15.02
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.672951,
+          32.809241
+        ]
+      },
+      "id": "node/11274478872"
+    }
+  ]
+}
