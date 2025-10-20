@@ -1,4 +1,9 @@
 /* === TOOLBOX PRINCIPAL === */
+#map {
+  width: 100%;
+  height: 100%;
+}
+
 #map-container #toolbox {
   position: absolute;
   left: 15px;
@@ -6,7 +11,7 @@
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  background: rgba(0, 0, 0, 0.85);
+  background: #191e28d9;
   border: 1px solid #00e5ff55;
   border-radius: 10px;
   padding: 6px;
@@ -17,7 +22,7 @@
 }
 
 #map-container #toolbox button {
-  background: transparent;
+  background: #111;
   border: 1px solid #00e5ff55;
   color: #00e5ff;
   font-size: 16px;
@@ -26,6 +31,7 @@
   cursor: pointer;
   transition: 0.25s;
 }
+
 #map-container #toolbox button:hover {
   background: #00e5ff22;
   transform: scale(1.05);
@@ -54,6 +60,13 @@
   transform: translateY(-50%) translateX(10px);
   box-shadow: 0 0 12px #00ffc620, 0 0 25px rgba(0, 229, 255, 0.1);
 }
+
+.dropdown-panel:not(.visible) {
+  opacity: 0;
+  transform: translateY(-5px);
+  pointer-events: none;
+}
+
 
 /* === SELECTOR DE COLOR === */
 #color-dropdown {
@@ -100,8 +113,15 @@
 }
 
 @keyframes pulse {
-  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-  100% { transform: translate(-50%, -50%) scale(1.7); opacity: 0; }
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1.7);
+    opacity: 0;
+  }
 }
 
 /* === PANEL BUFFER === */
@@ -150,6 +170,7 @@
   letter-spacing: 0.5px;
   transition: all 0.25s;
 }
+
 #buffer-panel .apply:hover {
   background: #00ffc6;
   box-shadow: 0 0 6px #00ffc6;
@@ -157,28 +178,81 @@
 
 
 /* === ANOTACIONES (integradas con color táctico) === */
-.map-note {
+/* === OVERLAY GENERAL === */
+#notes-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1800;
+}
+
+#notes-overlay .map-note {
+  position: absolute;
+  transform: translate(-50%, -100%);
   background: rgba(0, 10, 20, 0.9);
   border: 2px solid var(--note-color, #00E5FF);
   border-radius: 6px;
   box-shadow: 0 0 10px var(--note-color, #00E5FF55);
   width: 170px;
   padding: 6px;
-  z-index: 1700;
-  transform: translate(-50%, -100%);
-  transition: border-color 0.3s, box-shadow 0.3s;
+  z-index: 1810;
+  pointer-events: all;
+  animation: noteAppear 0.25s ease-out;
+}
+
+@keyframes noteAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -80%) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+}
+
+.map-note.dragging {
+  opacity: 0.7;
+  cursor: grabbing;
+}
+
+.map-note.active {
+  box-shadow: 0 0 15px var(--note-color, #00E5FF);
+  border-width: 2px;
+}
+
+.map-note.flash {
+  animation: noteFlash 0.8s ease-out;
+}
+
+@keyframes noteFlash {
+  0% {
+    box-shadow: 0 0 20px var(--note-color);
+  }
+
+  100% {
+    box-shadow: 0 0 10px transparent;
+  }
 }
 
 .map-note textarea {
   width: 100%;
   height: 60px;
   background: transparent;
-  color: #00ffc6;
-  font-size: 13px;
   border: none;
   resize: none;
   outline: none;
+  font-size: 13px;
   font-family: "Consolas", monospace;
+  color: #00ffc6;
+}
+
+.map-note textarea:focus {
+  background: rgba(0, 255, 198, 0.05);
 }
 
 .map-note .close-note {
@@ -190,32 +264,77 @@
   border: none;
   cursor: pointer;
   font-size: 12px;
-  transition: 0.2s;
 }
 
 .map-note .close-note:hover {
   color: #ff0044;
 }
 
+/* Pequeño tooltip al crear */
 .note-tip {
   position: fixed;
-  top: 12%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 10, 20, 0.9);
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 255, 198, 0.12);
   color: #00ffc6;
-  border: 1px solid #00e5ff55;
-  border-radius: 6px;
+  border: 1px solid #00ffc6;
   padding: 6px 12px;
-  font-size: 13px;
-  z-index: 9999;
-  animation: fadeInNote 0.3s ease, fadeOutNote 0.5s 2s ease forwards;
+  border-radius: 6px;
+  font-size: 14px;
+  z-index: 5000;
+  backdrop-filter: blur(3px);
+  animation: fadeOut 2s ease forwards;
 }
 
-@keyframes fadeInNote {
-  from { opacity: 0; transform: translate(-50%, -120%) scale(0.9); }
-  to { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+@keyframes fadeOut {
+  0% { opacity: 1; transform: translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(10px); }
 }
-@keyframes fadeOutNote {
-  to { opacity: 0; transform: translate(-50%, -100%) scale(0.95); }
+
+
+
+/* === Tooltip del modo borrador === */
+.delete-tooltip {
+  position: fixed;
+  top: 12px;
+  left: 160px;
+  background: #111;
+  color: #00e5ff;
+  border: 1px solid #00e5ff55;
+  padding: 6px 10px;
+  border-radius: 8px;
+  z-index: 2000;
+  box-shadow: 0 0 10px rgba(0, 229, 255, .25)
+}
+
+.note-tip {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  background: #0b1a1f;
+  color: #00e5ff;
+  border: 1px solid #00ffc655;
+  padding: 6px 10px;
+  border-radius: 8px;
+  z-index: 2000;
+  box-shadow: 0 0 8px rgba(0, 255, 198, .25)
+}
+
+@keyframes tooltipFade {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+#toolbox button.active {
+  background: #ff6b0040;
+  border-color: #ff6b00;
+  box-shadow: 0 0 10px #ff6b00aa;
 }

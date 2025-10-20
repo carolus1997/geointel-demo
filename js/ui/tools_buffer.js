@@ -1,3 +1,6 @@
+// ======================================================
+// 🧮 ToolBuffer — Panel de generación de buffers
+// ======================================================
 window.ToolBuffer = (() => {
   let panel;
 
@@ -24,18 +27,22 @@ window.ToolBuffer = (() => {
     `;
     container.appendChild(panel);
 
+    // Aplicar buffer
     document.getElementById("btn-buffer-apply").onclick = () => aplicar(map, draw);
+
+    // 🧠 Activar autocierre por hover-out
+    if (window.AutoHidePanels) AutoHidePanels.bind(panel, toggle);
   }
 
-  function toggle() {
+  function toggle(show = null) {
     if (!panel) return;
-    panel.classList.toggle("visible");
+    const visible = show !== null ? show : !panel.classList.contains("visible");
+    panel.classList.toggle("visible", visible);
   }
 
   function posicionarRespecto(btn) {
     if (!panel || !btn) return;
     const rect = btn.getBoundingClientRect();
-    
   }
 
   function aplicar(map, draw) {

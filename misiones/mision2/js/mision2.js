@@ -49,11 +49,7 @@ map.on('load', async () => {
     map.resize();
     map.triggerRepaint();
   });
-  map.once('idle', async () => {
-    if (window.GuardiaCivilModule?.init) {
-      await GuardiaCivilModule.init(map);
-    }
-  });
+
 
 
 
@@ -110,6 +106,9 @@ map.on('load', async () => {
     console.warn('⚠️ No se pudieron añadir capas base:', e);
   }
 
+
+
+
   // === 2) RUTAS MARÍTIMAS (líneas de referencia) ===
   try {
     if (!map.getSource('routes')) {
@@ -131,90 +130,43 @@ map.on('load', async () => {
     console.warn('⚠️ No se pudieron añadir las rutas:', e);
   }
 
-  // === 🟩 Añadir cuarteles Guardia Civil como capa integrada ===
 
-  map.addSource('gc', { type: 'geojson', data: '../../data/guadiaCivil.geojson' });
-  map.addLayer({
-    id: 'gc-icons',
-    type: 'symbol',
-    source: 'gc',
-    layout: {
-      'icon-image': 'cuartel-icon', // PNG o sprite registrado
-      'icon-size': 0.8
-    }
-  });
+  function getBasePath() {
+  return window.location.origin + '/misiones/mision2/';
+}
+  // === 🌬️ Capa de viento local (tileado con gdal2tiles) ===
+  try {
+    console.log('🌬️ Añadiendo capa de viento local (tiles XYZ)...');
 
-  async function addCuartelesGuardiaCivil() {
-    try {
-      const res = await fetch('../../data/guadiaCivil.geojson');
-      const data = await res.json();
+    map.addSource('wind-local', {
+      type: 'raster',
+      tiles: [`${getBasePath()}tiles/WindMap/{z}/{x}/{y}.png`],
+      tileSize: 256,
+      attribution: '© WindMap local — Carlos M.P.'
+    });
 
-      if (!data.features || !Array.isArray(data.features)) {
-        console.warn('⚠️ GeoJSON inválido o vacío');
-        return;
-      }
+    map.addLayer({
+      id: 'wind-local-layer',
+      type: 'raster',
+      source: 'wind-local',
+      paint: {
+        'raster-opacity': 0.85,
+        'raster-brightness-min': 0.8,
+        'raster-brightness-max': 1.0,
+        'raster-contrast': 0.15
+      },
+      layout: { visibility: 'visible' }
+    });
 
-      // 🔹 1. Convertir SVG a imagen en memoria (canvas → bitmap)
-      const svgUrl = '../../img/icons/icon_guardia_civil.svg';
-      const img = await fetch(svgUrl)
-        .then(r => r.text())
-        .then(svgText => {
-          return new Promise((resolve) => {
-            const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
-            const url = URL.createObjectURL(svgBlob);
-            const image = new Image();
-            image.onload = () => {
-              const canvas = document.createElement('canvas');
-              canvas.width = 64;
-              canvas.height = 64;
-              const ctx = canvas.getContext('2d');
-              ctx.drawImage(image, 0, 0, 64, 64);
-              const pngUrl = canvas.toDataURL('image/png');
-              const pngImg = new Image();
-              pngImg.onload = () => resolve(pngImg);
-              pngImg.src = pngUrl;
-            };
-            image.src = url;
-          });
-        });
-
-      // 🔹 2. Registrar el icono como recurso interno
-      if (!map.hasImage('icon_guardia_civil')) {
-        map.addImage('icon_guardia_civil', img);
-      }
-
-      // 🔹 3. Crear fuente GeoJSON
-      if (!map.getSource('cuarteles_gc')) {
-        map.addSource('cuarteles_gc', {
-          type: 'geojson',
-          data: data
-        });
-      }
-
-      // 🔹 4. Añadir capa simbólica
-      if (!map.getLayer('cuarteles_gc_layer')) {
-        map.addLayer({
-          id: 'cuarteles_gc_layer',
-          type: 'symbol',
-          source: 'cuarteles_gc',
-          layout: {
-            'icon-image': 'icon_guardia_civil',
-            'icon-size': 0.5,
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true
-          }
-        });
-      }
-
-      console.log(`✅ ${data.features.length} cuarteles renderizados con addLayer()`);
-    } catch (err) {
-      console.error('❌ Error al añadir cuarteles Guardia Civil:', err);
-    }
+    console.log('✅ Capa de viento local añadida correctamente.');
+  } catch (err) {
+    console.error('❌ Error al añadir capa de viento local:', err);
   }
 
 
-  // Llamar una vez el mapa esté completamente listo
-  map.once('idle', () => setTimeout(addCuartelesGuardiaCivil, 1000));
+
+
+
 
 
 
@@ -248,49 +200,68 @@ map.on('load', async () => {
     });
   }
 
-  // === 4) Dibujo (Draw) + Panel de herramientas ===
-  // === 4) Dibujo (Draw) + Toolbox flotante ===
-try {
-  const Draw = new MapboxDraw({
-    displayControlsDefault: false,
-    styles: [
-      {
-        id: "gl-draw-polygon-fill",
-        type: "fill",
-        filter: ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
-        paint: { "fill-color": "#00E5FF", "fill-opacity": 0.1 }
-      },
-      {
-        id: "gl-draw-line-active",
-        type: "line",
-        filter: ["all", ["==", "$type", "LineString"], ["!=", "mode", "static"]],
-        paint: { "line-color": "#00C896", "line-width": 2 }
-      },
-      {
-        id: "gl-draw-point-active",
-        type: "circle",
-        filter: ["all", ["==", "$type", "Point"], ["!=", "mode", "static"]],
-        paint: {
-          "circle-radius": 6,
-          "circle-color": "#FF6B00",
-          "circle-stroke-color": "#fff",
-          "circle-stroke-width": 1.5
-        }
+  const toggleWindLocal = document.getElementById('toggle-wind-local');
+
+  if (toggleWindLocal) {
+    toggleWindLocal.addEventListener('click', () => {
+      if (!map.getLayer('wind-local-layer')) {
+        console.warn('⚠️ La capa de viento todavía no está disponible.');
+        return;
       }
-    ]
-  });
 
-  map.addControl(Draw, "top-right"); // mejor en top-right para no chocar con toolbox
+      const currentVis = map.getLayoutProperty('wind-local-layer', 'visibility');
+      const newVis = currentVis === 'none' ? 'visible' : 'none';
+      map.setLayoutProperty('wind-local-layer', 'visibility', newVis);
+      toggleWindLocal.classList.toggle('active', newVis === 'visible');
+    });
+  }
 
-  // 🧩 Inicializar toolbox táctico
-  map.once("idle", () => {
-    console.log("🧭 Inicializando Toolbox...");
-    Toolbox.init(map, Draw);
-  });
 
-} catch (err) {
-  console.error("❌ Error al inicializar Draw/Toolbox:", err);
-}
+
+
+
+  // === 4) Dibujo (Draw) + Toolbox flotante ===
+  try {
+    const Draw = new MapboxDraw({
+      displayControlsDefault: false,
+      styles: [
+        {
+          id: "gl-draw-polygon-fill",
+          type: "fill",
+          filter: ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+          paint: { "fill-color": "#00E5FF", "fill-opacity": 0.1 }
+        },
+        {
+          id: "gl-draw-line-active",
+          type: "line",
+          filter: ["all", ["==", "$type", "LineString"], ["!=", "mode", "static"]],
+          paint: { "line-color": "#00C896", "line-width": 2 }
+        },
+        {
+          id: "gl-draw-point-active",
+          type: "circle",
+          filter: ["all", ["==", "$type", "Point"], ["!=", "mode", "static"]],
+          paint: {
+            "circle-radius": 6,
+            "circle-color": "#FF6B00",
+            "circle-stroke-color": "#fff",
+            "circle-stroke-width": 1.5
+          }
+        }
+      ]
+    });
+
+    map.addControl(Draw, "top-right"); // mejor en top-right para no chocar con toolbox
+
+    // 🧩 Inicializar toolbox táctico
+    map.once("idle", () => {
+      console.log("🧭 Inicializando Toolbox...");
+      Toolbox.init(map, Draw);
+    });
+
+  } catch (err) {
+    console.error("❌ Error al inicializar Draw/Toolbox:", err);
+  }
 
 
   // === 5) Esperar a que los módulos globales estén listos ===

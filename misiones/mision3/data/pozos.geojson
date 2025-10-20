@@ -1,59 +1,198 @@
 {
   "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2025-10-19T10:47:00Z",
   "features": [
     {
       "type": "Feature",
+      "properties": {
+        "@id": "node/4392787521",
+        "locality": "place",
+        "man_made": "water_well",
+        "name": "Hassi Mennassa حاسي مناسة",
+        "name:ar": "حاسي مناسة",
+        "name:fr": "Hassi Mennassa"
+      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -2.62,
-          32.54
+          -1.3283537,
+          32.2179699
         ]
       },
-      "properties": {
-        "id": "W001",
-        "nombre": "Pozo Ih",
-        "delta_ndvi": -0.16,
-        "delta_sar_db": 1.8,
-        "pobl_dep": 350,
-        "riesgo": 0.78
-      }
+      "id": "node/4392787521"
     },
     {
       "type": "Feature",
+      "properties": {
+        "@id": "node/4395478097",
+        "man_made": "water_well",
+        "name": "Hassi Tarchoun حاسي الطرشون",
+        "name:ar": "حاسي الطرشون",
+        "name:en": "Hassi Tarchoun",
+        "name:fr": "Hassi Tarchoun",
+        "place": "hamlet"
+      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -2.28,
-          32.46
+          -1.4627593,
+          32.4579239
         ]
       },
-      "properties": {
-        "id": "W002",
-        "nombre": "Pozo Jb",
-        "delta_ndvi": -0.07,
-        "delta_sar_db": 0.6,
-        "pobl_dep": 210,
-        "riesgo": 0.42
-      }
+      "id": "node/4395478097"
     },
     {
       "type": "Feature",
+      "properties": {
+        "@id": "node/4396826799",
+        "name": "Ain Slimane Lamlalih عين سليمان الملاليح",
+        "name:ar": "عين سليمان الملاليح",
+        "name:fr": "Ain Slimane Lamlalih",
+        "natural": "spring"
+      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -2.42,
-          32.40
+          -1.3017038,
+          32.4429353
         ]
       },
+      "id": "node/4396826799"
+    },
+    {
+      "type": "Feature",
       "properties": {
-        "id": "W003",
-        "nombre": "Pozo Kc",
-        "delta_ndvi": -0.02,
-        "delta_sar_db": 0.1,
-        "pobl_dep": 120,
-        "riesgo": 0.18
-      }
+        "@id": "node/4419756546",
+        "name": "Ain Oussimane عين أوسيمان",
+        "name:ar": "عين أوسيمان",
+        "name:fr": "Ain Oussimane",
+        "natural": "spring"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2602138,
+          32.1116387
+        ]
+      },
+      "id": "node/4419756546"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4441508690",
+        "man_made": "water_well"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2499231,
+          32.0556576
+        ]
+      },
+      "id": "node/4441508690"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5642276221",
+        "name": "بئر بشار رقم 183-01",
+        "name:ar": "بئر بشار رقم 183-01",
+        "name:en": "TP 183 BIR-01 bechar",
+        "name:fr": "TP 183 BIR-01 Bechar",
+        "natural": "spring"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.6025074,
+          31.8482583
+        ]
+      },
+      "id": "node/5642276221"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6708170872",
+        "name": "Hassi Ould Merah",
+        "name:ar": "حاسي ولد مراح",
+        "name:fr": "Hassi Ould Merah",
+        "natural": "spring"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2410065,
+          32.0224908
+        ]
+      },
+      "id": "node/6708170872"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9370170507",
+        "natural": "spring"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2465184,
+          31.9999178
+        ]
+      },
+      "id": "node/9370170507"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11269958276",
+        "access": "yes",
+        "man_made": "water_well"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.9451106,
+          32.2319897
+        ]
+      },
+      "id": "node/11269958276"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11274451862",
+        "man_made": "water_well",
+        "ref": "Chott Tigri"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.6732819,
+          32.8096482
+        ]
+      },
+      "id": "node/11274451862"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11274478872",
+        "man_made": "water_well",
+        "ref": "Chott Tigri"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.672951,
+          32.809241
+        ]
+      },
+      "id": "node/11274478872"
     }
   ]
 }

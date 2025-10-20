@@ -1,0 +1,1215 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2025-10-19T10:48:59Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/391616757",
+        "capital": "8",
+        "ele": "1459",
+        "name": "Tendrara ⵜⵏⴷⵕⴰⵕⴰ تندرارة",
+        "name:ar": "تندرارة",
+        "name:ber": "ⵜⵏⴷⵕⴰⵕⴰ",
+        "name:en": "Tendrara",
+        "name:fr": "Tendrara",
+        "place": "town",
+        "population": "8507",
+        "population:date": "2014-09-01",
+        "wikidata": "Q3518036",
+        "wikipedia": "fr:Tendrara"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.000089,
+          33.049438
+        ]
+      },
+      "id": "node/391616757"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/400921641",
+        "alt_name": "Iche",
+        "name": "Ich ⵉⵛ إيش",
+        "name:ar": "إيش",
+        "name:ber": "ⵉⵛ",
+        "name:en": "Ich",
+        "name:fr": "Ich",
+        "place": "village",
+        "wikidata": "Q3147628",
+        "wikipedia": "fr:Ich"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.0030033,
+          32.51284
+        ]
+      },
+      "id": "node/400921641"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424636421",
+        "name": "Hassi Elhouari",
+        "name:ar": "حاسي الهواري",
+        "name:fr": "Hassi Elhouari",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.0690546,
+          31.7477877
+        ]
+      },
+      "id": "node/424636421"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424638440",
+        "alt_name:ar": "بني أونيف",
+        "name": "Beni Ounif",
+        "name:ar": "بني ونيف",
+        "name:azb": "بنی ونیف",
+        "name:ber": "ⴱⵏⵉ ⵡⴻⵏⵏⵉⴼ",
+        "name:de": "Bani Wunif",
+        "name:en": "Beni Ounif",
+        "name:fa": "بنی ونیف",
+        "name:fr": "Béni Ounif",
+        "name:kab": "At Winifen",
+        "place": "town",
+        "population": "11209",
+        "postal_code": "08100",
+        "wikidata": "Q1648984",
+        "wikimedia_commons": "Category:Beni Ounif",
+        "wikipedia": "ar:بني ونيف"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2486808,
+          32.0501891
+        ]
+      },
+      "id": "node/424638440"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424649543",
+        "alt_name:ar": "واد لخضر;الواد لخضر",
+        "alt_name:en": "Zoubia",
+        "name": "Oued Lakhdar",
+        "name:ar": "وادي الأخضر",
+        "name:ber": "ⵡⴰⴷ ⵍⴰⴽⴷⴰⵔ",
+        "name:de": "Oued Lakhdar",
+        "name:en": "Oued Lakhdar",
+        "name:fr": "Oued Lakhdar",
+        "name:kab": "Wad Lexḍer",
+        "old_name:ar": "دوفرييه",
+        "old_name:fr": "Duveyrier",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.9995194,
+          32.1452041
+        ]
+      },
+      "id": "node/424649543"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424651417",
+        "name": "Hadjret Mguil",
+        "name:ar": "حجرة مڤيل",
+        "name:de": "Hadjrat Mguil",
+        "name:en": "Hadjrat Mguil",
+        "name:fr": "Hadjrat Mguil",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.9223051,
+          32.2760464
+        ]
+      },
+      "id": "node/424651417"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424652612",
+        "alt_name:ar": "جنين بورزق",
+        "name": "Djeniene Bourezg",
+        "name:ar": "جنيان بورزق",
+        "name:azb": "جنین بورزق",
+        "name:ber": "ⴵⴻⵏⵢⴰⵏ ⴱⵓⵔⵣⴻⵇ",
+        "name:en": "Djéniane Bourzeg",
+        "name:fa": "جنین بورزق",
+        "name:fr": "Djeniene Bourezg",
+        "name:it": "Djéniane Bourzeg",
+        "name:kab": "Ǧneyyen Burezg",
+        "name:ms": "Djéniane Bourzeg",
+        "name:pt": "Djéniane Bourzeg",
+        "name:vi": "Djeniane Bourzeg",
+        "place": "village",
+        "wikidata": "Q3032892",
+        "wikimedia_commons": "Category:Djeniene Bourezg",
+        "wikipedia": "ar:جنين بورزق"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.8044918,
+          32.3725656
+        ]
+      },
+      "id": "node/424652612"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424653940",
+        "name": "Dayet El Kerch",
+        "name:ar": "ضاية الكرش",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.7599649,
+          32.4405961
+        ]
+      },
+      "id": "node/424653940"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424654777",
+        "name": "Oglats",
+        "name:ar": "العقلات",
+        "name:en": "Oglats",
+        "name:fr": "Les Oglats",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.6525049,
+          32.4962103
+        ]
+      },
+      "id": "node/424654777"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424656538",
+        "name": "Moghrar",
+        "name:ar": "مغرار",
+        "name:ber": "ⵎⵓⵖⴰⵔ",
+        "name:en": "Moghrar",
+        "name:fr": "Moghrar",
+        "name:kab": "Muɣrar",
+        "place": "village",
+        "population": "4431"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.5761147,
+          32.5149231
+        ]
+      },
+      "id": "node/424656538"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424657355",
+        "name": "Aïn Sefra",
+        "name:ar": "عين الصفراء",
+        "name:ber": "ⵄⵉⵏ ⵚⴻⴼⵔⴰ",
+        "name:en": "Ain Sefra",
+        "name:es": "Aïn Séfra",
+        "name:fr": "Aïn Séfra",
+        "name:he": "עין ספרה",
+        "name:kab": "Ɛin Ṣefra",
+        "ons": "4503",
+        "place": "town",
+        "population": "54229",
+        "postal_code": "45200",
+        "wikidata": "Q2745712",
+        "wikimedia_commons": "Category:Aïn Sefra",
+        "wikipedia": "fr:Aïn Sefra"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.577859,
+          32.7568151
+        ]
+      },
+      "id": "node/424657355"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424659761",
+        "name": "Tirkount",
+        "name:ar": "تيركونت",
+        "name:ber": "ⵝⵉⵕⴽⵓⵏⵜ",
+        "name:de": "Tirkount",
+        "name:en": "Tirkount",
+        "name:es": "Tirkount",
+        "name:fr": "Tirkount",
+        "name:it": "Tirkount",
+        "name:kab": "Tirkunt",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.6077013,
+          32.8245566
+        ]
+      },
+      "id": "node/424659761"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/424700694",
+        "name": "Boughelaba",
+        "name:ar": "بوغلابة",
+        "name:de": "Boughelaba",
+        "name:en": "Boughelaba",
+        "name:fr": "Boughelaba",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.5694531,
+          32.9431733
+        ]
+      },
+      "id": "node/424700694"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/490536991",
+        "name": "Taghit",
+        "name:ar": "تاغيت",
+        "name:ber": "ⵜⴰⵖⵉⵜ",
+        "name:en": "Taghit",
+        "name:fr": "Taghit",
+        "name:kab": "Taɣit",
+        "place": "village",
+        "population": "6505",
+        "tourism": "attraction",
+        "wikidata": "Q3052604",
+        "wikimedia_commons": "Category:Taghit",
+        "wikipedia": "fr:Taghit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.0294754,
+          30.9170611
+        ]
+      },
+      "id": "node/490536991"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1370724528",
+        "long_name": "فرطاسة الغربية",
+        "long_name:ar": "فرطاسة الغربية",
+        "name": "Forthassa Gharbia",
+        "name:ar": "فرطاسة",
+        "name:en": "Fortassa Gharbia",
+        "name:fr": "Forthassa Gharbia",
+        "name:kab": "Furtasa Tutrimt",
+        "place": "village",
+        "wikidata": "Q15218235",
+        "wikipedia": "en:Forthassa Gharbia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2439371,
+          32.8422476
+        ]
+      },
+      "id": "node/1370724528"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1370724530",
+        "name": "El Hendjir",
+        "name:ar": "الحنجير",
+        "name:de": "El Hendjir",
+        "name:en": "El Hendjir",
+        "name:fr": "El Hendjir",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.7105852,
+          32.7168283
+        ]
+      },
+      "id": "node/1370724530"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1370724531",
+        "name": "Aïn Ben Khellil",
+        "name:ar": "عين بن خليل",
+        "name:ber": "ⵄⵉⵏ ⴱⴻⵏ ⵅⵍⵉⵍ",
+        "name:en": "Ain Ben Khelil",
+        "name:fr": "Aïn Ben Khellil",
+        "name:kab": "Ɛin Ben Xlil",
+        "place": "village",
+        "population": "12632"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.762427,
+          33.287927
+        ]
+      },
+      "id": "node/1370724531"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1573550069",
+        "name": "Kenadsa",
+        "name:ar": "القنادسة",
+        "name:az-Arab": "قنادسه",
+        "name:azb": "قنادسه",
+        "name:ber": "ⵇⵏⴰⴷⵙⴰ",
+        "name:de": "Kenadsa",
+        "name:en": "Kenadsa",
+        "name:es": "Kenadsa",
+        "name:fa": "قنادسه",
+        "name:fr": "Kenadsa",
+        "name:kab": "Qnadsa",
+        "place": "town",
+        "population": "14060",
+        "postal_code": "08011",
+        "wikidata": "Q390925",
+        "wikimedia_commons": "Category:Kenadsa",
+        "wikipedia": "ar:القنادسة",
+        "wikipedia:es": "Kenadsa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.432661,
+          31.5545321
+        ]
+      },
+      "id": "node/1573550069"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1573564801",
+        "name": "Mougheul",
+        "name:ar": "موغل",
+        "name:azb": "موغل",
+        "name:ber": "ⵎⵓⵖⴻⵍ",
+        "name:en": "Mougheul",
+        "name:fa": "موغل",
+        "name:fr": "Mougheul",
+        "name:kab": "Muɣel",
+        "name:ur": "موغل",
+        "place": "village",
+        "wikidata": "Q1649172",
+        "wikipedia": "ar:موغل"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2182475,
+          32.0233478
+        ]
+      },
+      "id": "node/1573564801"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1573564804",
+        "alt_name:ar": "لحمر;قصر الأحمر;قصر لحمر",
+        "name": "Lahmar",
+        "name:ar": "الأحمر",
+        "name:ber": "ⵍⴰⵃⵎⴻⵔ",
+        "name:en": "Lahmar",
+        "name:fr": "Lahmar",
+        "name:kab": "Laḥmer",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2593871,
+          31.9326993
+        ]
+      },
+      "id": "node/1573564804"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1573564806",
+        "alt_name:ar": "بوقايس",
+        "name": "Boukais",
+        "name:ar": "بوكايس",
+        "name:azb": "بوکایس",
+        "name:ber": "ⴱⵓⴽⴰⵢⴻⵙ",
+        "name:de": "Boukais",
+        "name:en": "Boukais",
+        "name:fa": "بوکایس",
+        "name:fr": "Boukais",
+        "name:kab": "Bukayes",
+        "name:ks": "بوکایس",
+        "name:ur": "بوکایس",
+        "place": "village",
+        "wikidata": "Q2921673",
+        "wikipedia": "ar:بوكايس"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.4678608,
+          31.9244504
+        ]
+      },
+      "id": "node/1573564806"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1573564808",
+        "name": "Souissifa",
+        "name:ar": "سويسيفة",
+        "name:de": "Souissifa",
+        "name:en": "Souissifa",
+        "name:fr": "Souissifa",
+        "name:kab": "Swisifa",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2163001,
+          31.9329906
+        ]
+      },
+      "id": "node/1573564808"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1650522318",
+        "name": "Et-Tarid",
+        "place": "hamlet",
+        "source": "IGN Map"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.9585773,
+          33.3744339
+        ]
+      },
+      "id": "node/1650522318"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1937202250",
+        "name": "Benzireg",
+        "name:ar": "بن زيراق",
+        "name:de": "Benzireg",
+        "name:en": "Benzireg",
+        "name:fr": "Benzireg",
+        "place": "hamlet",
+        "wikidata": "Q12902719",
+        "wikipedia": "en:Benzireg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.8370681,
+          31.9219457
+        ]
+      },
+      "id": "node/1937202250"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1973350108",
+        "capital": "7",
+        "name": "Abou Lakhal ⵄⴱⴱⵓ ⵍⴽⵃⵍ عبو لكحل",
+        "name:ar": "عبو لكحل",
+        "name:ber": "ⵄⴱⴱⵓ ⵍⴽⵃⵍ",
+        "name:en": "Abou Lakhal",
+        "name:fr": "Abbou lakhal",
+        "name:zgh": "ⵄⴱⴱⵓ ⵍⴽⵃⵍ",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.5133879,
+          32.1569307
+        ]
+      },
+      "id": "node/1973350108"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2123877454",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2901587,
+          32.8192973
+        ]
+      },
+      "id": "node/2123877454"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2123877473",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2037161,
+          32.8390589
+        ]
+      },
+      "id": "node/2123877473"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2684815039",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.4602934,
+          32.5652378
+        ]
+      },
+      "id": "node/2684815039"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2684815162",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.4530688,
+          32.5577629
+        ]
+      },
+      "id": "node/2684815162"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2684876357",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.4482301,
+          32.4917986
+        ]
+      },
+      "id": "node/2684876357"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2684889893",
+        "name": "El Menabha",
+        "name:ar": "المنابهة",
+        "name:en": "El Menabha",
+        "name:fr": "El Menabha",
+        "place": "hamlet",
+        "wikidata": "Q7184574",
+        "wikipedia": "en:El Menabha"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2709898,
+          32.0148335
+        ]
+      },
+      "id": "node/2684889893"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2684889952",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.261484,
+          31.9089004
+        ]
+      },
+      "id": "node/2684889952"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3149555850",
+        "name": "Mengoub",
+        "name:fr": "Mengoub",
+        "place": "hamlet",
+        "wikidata": "Q6817022",
+        "wikipedia": "en:Mengoub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2495794,
+          32.2624218
+        ]
+      },
+      "id": "node/3149555850"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3968415395",
+        "name": "Zaouia Fougania",
+        "name:ar": "زاوية فوغانية",
+        "name:en": "Zaouia Fougania",
+        "name:fr": "Zaouia Fougania",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.0502523,
+          30.9390901
+        ]
+      },
+      "id": "node/3968415395"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3975668854",
+        "name": "Bekhti",
+        "name:ar": "بختي",
+        "name:en": "Bekhti",
+        "name:fr": "Bekhti",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.0062268,
+          30.866082
+        ]
+      },
+      "id": "node/3975668854"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3975668855",
+        "name": "Barbi",
+        "name:ar": "بَرْبي",
+        "name:en": "Barbi",
+        "name:fr": "Barbi",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.01563,
+          30.8845287
+        ]
+      },
+      "id": "node/3975668855"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3975668856",
+        "name": "Brika",
+        "name:ar": "بريكة",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.0249837,
+          30.9061823
+        ]
+      },
+      "id": "node/3975668856"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4312701322",
+        "name": "Fendi",
+        "name:ar": "فندي",
+        "name:azb": "فندی",
+        "name:en": "Fendi",
+        "name:fa": "فندی",
+        "name:fr": "Fendi",
+        "name:kab": "Fendi",
+        "name:pt": "Fendi",
+        "place": "village",
+        "wikidata": "Q12902733",
+        "wikipedia": "en:Fendi, Algeria"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.477497,
+          31.840313
+        ]
+      },
+      "id": "node/4312701322"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4317706900",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.5596808,
+          32.134812
+        ]
+      },
+      "id": "node/4317706900"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4384731676",
+        "name": "Teniet El Beida (Tizi Tamellalet) ثنية البيضة (تيزي تاملالت)",
+        "name:ar": "ثنية البيضة (تيزي تاملالت)",
+        "name:en": "Teniet El Beida (Tizi Tamellalet)",
+        "name:fr": "Teniet El Beida (Tizi Tamellalet)",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2711825,
+          32.1233315
+        ]
+      },
+      "id": "node/4384731676"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4384743364",
+        "name": "Essehli السهلي",
+        "name:ar": "السهلي",
+        "name:en": "Essehli",
+        "name:fr": "Essehli",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2097583,
+          32.1271784
+        ]
+      },
+      "id": "node/4384743364"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4384743588",
+        "name": "Oasis Djeninate",
+        "name:ar": "واحة الجنينات",
+        "name:en": "Oasis Djeninate",
+        "name:fr": "Oasis Djeninate",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.1285126,
+          32.1641471
+        ]
+      },
+      "id": "node/4384743588"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4392781802",
+        "name": "Teniet Mennassa ثنية مناسة",
+        "name:ar": "ثنية مناسة",
+        "name:en": "Teniet Mennassa",
+        "name:fr": "Teniet Mennassa",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.3413674,
+          32.2437963
+        ]
+      },
+      "id": "node/4392781802"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4395478097",
+        "man_made": "water_well",
+        "name": "Hassi Tarchoun حاسي الطرشون",
+        "name:ar": "حاسي الطرشون",
+        "name:en": "Hassi Tarchoun",
+        "name:fr": "Hassi Tarchoun",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.4627593,
+          32.4579239
+        ]
+      },
+      "id": "node/4395478097"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4396806382",
+        "name": "Hazem Delim حازم دليم",
+        "name:ar": "حازم دليم",
+        "name:en": "Hazem Delim",
+        "name:fr": "Hazem Delim",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.3574733,
+          32.4142664
+        ]
+      },
+      "id": "node/4396806382"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4396815005",
+        "name": "Lamlalih الملاليح",
+        "name:ar": "الملاليح",
+        "name:en": "Lamlalih",
+        "name:fr": "Lamlalih",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.3058422,
+          32.445923
+        ]
+      },
+      "id": "node/4396815005"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4396827313",
+        "name": "Ennouidir النويدير",
+        "name:ar": "النويدير",
+        "name:en": "Ennouidir",
+        "name:fr": "Ennouidir",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.317281,
+          32.4400987
+        ]
+      },
+      "id": "node/4396827313"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5119309616",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.7556641,
+          33.0914336
+        ]
+      },
+      "id": "node/5119309616"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5119310091",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.7051071,
+          32.7597993
+        ]
+      },
+      "id": "node/5119310091"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5480643217",
+        "name": "Forthassa Charkia",
+        "name:ar": "فرطاسة الشرقية",
+        "name:en": "Forthassa Charkia",
+        "name:fr": "Forthassa Charkia",
+        "name:kab": "Furtasa Umalu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2051694,
+          32.873566
+        ]
+      },
+      "id": "node/5480643217"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5480643357",
+        "name": "Sidi Moussa",
+        "name:ar": "سيدي موسى",
+        "name:ber": "ⵙⵉⴸⵉ ⵎⵓⵙⴰ",
+        "name:en": "Sidi Moussa",
+        "name:fr": "Sidi Moussa",
+        "name:kab": "Sidi Musa",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.7797807,
+          33.3147676
+        ]
+      },
+      "id": "node/5480643357"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5480655978",
+        "alt_name:ar": "فورثاسة",
+        "name": "Oulgag",
+        "name:ar": "أولقاق",
+        "name:en": "Oulgag",
+        "name:fr": "Oulgag",
+        "name:kab": "Ulgag",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.1184234,
+          32.7374859
+        ]
+      },
+      "id": "node/5480655978"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5480702165",
+        "name": "Sfissifa",
+        "name:ar": "صفيصيفة",
+        "name:ber": "ⵜⵏⴻⵏⵜ",
+        "name:en": "Sfissifa",
+        "name:fr": "Sfissifa",
+        "name:kab": "Ṣfiṣifa",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.860422,
+          32.7274215
+        ]
+      },
+      "id": "node/5480702165"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5480710636",
+        "alt_name:ar": "سيدي براهيم",
+        "name": "Sidi Brahim",
+        "name:ar": "سيدي إبراهيم",
+        "name:ber": "ⵙⵉⴸⵉ ⴱⵔⴰⵀⵉⵎ",
+        "name:de": "Sidi Brahim",
+        "name:en": "Sidi Brahim",
+        "name:fr": "Sidi Brahim",
+        "name:kab": "Sidi Brahim",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.5394103,
+          32.3476099
+        ]
+      },
+      "id": "node/5480710636"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6909408037",
+        "name": "Djeniene",
+        "name:ar": "جنين",
+        "name:en": "Djeniene",
+        "name:fr": "Djeniene",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.1781716,
+          31.5593523
+        ]
+      },
+      "id": "node/6909408037"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9941003218",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.1780665,
+          32.2523503
+        ]
+      },
+      "id": "node/9941003218"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12421598455",
+        "name": "Gaaloul",
+        "name:ber": "ⴳⴰⵄⵍⵓⵍ",
+        "name:en": "Gaaloul",
+        "name:fr": "Gaaloul",
+        "name:kab": "Gaɛlul",
+        "place": "village",
+        "population": "100"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.1374871,
+          32.9654756
+        ]
+      },
+      "id": "node/12421598455"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12467660740",
+        "name": "Hassi Aricha",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.0701533,
+          32.7062335
+        ]
+      },
+      "id": "node/12467660740"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13142700024",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.7513108,
+          32.0530034
+        ]
+      },
+      "id": "node/13142700024"
+    }
+  ]
+}

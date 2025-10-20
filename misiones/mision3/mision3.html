@@ -9,8 +9,14 @@
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
   <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 
+  <!-- MAPBOX DRAW (probado y funcional con MapLibre) -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.css" rel="stylesheet" />
+
+
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../js/ui/css/ui_tools.css" />
 </head>
 
 <body>
@@ -47,11 +53,11 @@
 
         <h3>Documentos</h3>
         <div class="docs-grid">
-          <a href="pdf/briefing.pdf" target="_blank" class="doc-card">
+          <a href="../../docs/Centro de Inteligencia Fronteriza.pdf" target="_blank" class="doc-card">
             <i class="fa-solid fa-file-lines"></i>
             <span>Briefing</span>
           </a>
-          <a href="pdf/intel.pdf" target="_blank" class="doc-card">
+          <a href="../../docs/Centro de Inteligencia Fronteriza Informe.pdf" target="_blank" class="doc-card">
             <i class="fa-solid fa-chart-column"></i>
             <span>Informe Intel</span>
           </a>
@@ -66,25 +72,19 @@
           </section>
         </div>
 
-        <h3>Leyenda</h3>
-        <div style="font-size:.85rem;color:#B3B8BD;line-height:1.3">
-          <div><span
-              style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#00E5FF;border:2px solid #fff;box-shadow:0 0 6px rgba(0,229,255,.7);margin-right:6px;"></span>Pozos
-            · Riesgo bajo</div>
-          <div><span
-              style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#FFA500;border:2px solid #fff;box-shadow:0 0 6px rgba(255,165,0,.7);margin-right:6px;"></span>Pozos
-            · Riesgo medio</div>
-          <div><span
-              style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#FF2B2B;border:2px solid #fff;box-shadow:0 0 6px rgba(255,0,0,.7);margin-right:6px;"></span>Pozos
-            · Riesgo alto</div>
-        </div>
-
 
       </aside>
 
       <!-- MAPA -->
       <section id="map-container">
         <div id="map"></div>
+
+        <!-- TOOL PANEL -->
+        <div id="tool-panel" class="tool-panel hidden">
+          <div id="tool-buttons"></div>
+          <div id="tool-content"></div>
+        </div>
+
         <div id="basemap-controls">
           <button id="toggle-hillshade" class="active">Relieve</button>
           <button id="toggle-sat">Satélite</button>
@@ -93,6 +93,20 @@
       </section>
     </main>
   </div>
+
+
+  <!-- === TOOLSET TÁCTICO GLOBAL === -->
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
+  <script src="../../js/ui/ui_toolbox.js"></script>
+  <script src="../../js/ui/tools_draw.js"></script>
+  <script src="../../js/ui/tools_buffer.js"></script>
+  <script src="../../js/ui/tools_notes.js"></script>
+  <script src="../../js/ui/tools_capture.js"></script>
+  <script src="../../js/ui/tools_colorSelector.js"></script>
+  <script src="../../js/ui/tools_delete.js"></script>
+  <script src="../mision2/js/ui_tools_panel.js"></script>
+  <script src="../mision2/js/mision2_tools.js"></script>
+
 
   <!-- Scripts comunes -->
   <script src="../..//js/typewriter.js" defer></script>

@@ -1,8 +1,0 @@
-{
-    "type":"FeatureCollection",
-    "features":[
-      { "type":"Feature","geometry":{"type":"Point","coordinates":[-2.6,32.52]},"properties":{"nombre":"Aldea A","poblacion":820}},
-      { "type":"Feature","geometry":{"type":"Point","coordinates":[-2.3,32.48]},"properties":{"nombre":"Aldea B","poblacion":1200}}
-    ]
-  }
-  

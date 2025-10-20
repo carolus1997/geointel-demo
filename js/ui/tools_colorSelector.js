@@ -1,4 +1,6 @@
+// ======================================================
 // 🎨 Selector de color táctico (desplegable desde el botón principal)
+// ======================================================
 window.ToolColorSelector = (() => {
   const tipos = {
     seguro: "#00C896",
@@ -20,8 +22,8 @@ window.ToolColorSelector = (() => {
     panel.innerHTML = Object.entries(tipos)
       .map(
         ([key, color]) => `
-        <div class="color-opt" data-key="${key}" style="--clr:${color}" title="${key}"></div>
-      `
+          <div class="color-opt" data-key="${key}" style="--clr:${color}" title="${key}"></div>
+        `
       )
       .join("");
 
@@ -34,6 +36,9 @@ window.ToolColorSelector = (() => {
         actualizarUI();
       });
     });
+
+    // 🧠 Activar autocierre por hover-out
+    if (window.AutoHidePanels) AutoHidePanels.bind(panel, toggle);
 
     window.ACTIVE_DRAW_COLOR = tipos[activo];
     actualizarUI();
@@ -49,16 +54,20 @@ window.ToolColorSelector = (() => {
     if (!panel || !btn) return;
     const rect = btn.getBoundingClientRect();
     panel.style.position = "absolute";
-    
   }
 
   function actualizarUI() {
     panel.querySelectorAll(".color-opt").forEach((opt) => {
       opt.classList.toggle("active", opt.dataset.key === activo);
     });
+
+    // Emitir evento global de cambio de color táctico
+    const event = new CustomEvent("TACTICAL_COLOR_CHANGED", {
+      detail: { color: tipos[activo] }
+    });
+    document.dispatchEvent(event);
   }
 
-  // 🔹 Método común para otros módulos (notas, polígonos, etc.)
   function getActivo() {
     return { tipo: activo, color: tipos[activo] };
   }

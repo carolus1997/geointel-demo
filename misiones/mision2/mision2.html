@@ -12,12 +12,22 @@
   <link rel="stylesheet" href="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="css/mision2_tools.css" />
+  <link rel="icon" href="../../img/logos/logo_indra.png" />
 
   <!-- === LIBRERÍAS JS EXTERNAS === -->
-  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <!-- MapLibre -->
+<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+<link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+
+
+  <!-- Mapbox Draw y otras dependencias -->
   <script src="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+
 </head>
+
 
 <body>
   <div id="app-container">
@@ -47,16 +57,16 @@
 
         <h3>Documentos</h3>
         <div class="docs-grid">
-          <a href="pdf/briefing.pdf" target="_blank" class="doc-card">
+          <a href="../../docs/Centro de Inteligencia Maritima.pdf" target="_blank" class="doc-card">
             <i class="fa-solid fa-file-lines"></i><span>Briefing</span></a>
-          <a href="pdf/intel.pdf" target="_blank" class="doc-card">
+          <a href="../../docs/Centro de Inteligencia Marítima Informe.pdf" target="_blank" class="doc-card">
             <i class="fa-solid fa-chart-column"></i><span>Informe Intel</span></a>
           <button id="btn-play" class="doc-card play-btn">
             <i class="fa-solid fa-play"></i><span>Iniciar misión</span>
           </button>
         </div>
 
-        
+
       </aside>
 
       <!-- MAPA -->
@@ -65,7 +75,9 @@
         <div id="basemap-controls">
           <button id="toggle-hillshade" class="active">Relieve</button>
           <button id="toggle-sat">Satélite</button>
+          <button id="toggle-wind-local">Atlas Viento</button>
         </div>
+
 
         <div id="simulation-panel" class="sim-panel">
           <button id="sim-slower" title="Reducir velocidad">⏪</button>
@@ -95,6 +107,8 @@
   <script src="../../js/ui/tools_notes.js"></script>
   <script src="../../js/ui/tools_capture.js"></script>
   <script src="../../js/ui/tools_colorSelector.js"></script>
+  <script src="../../js/ui/tools_delete.js"></script>
+
 
   <!-- === UI Y LÓGICA DE MISIÓN === -->
   <script src="js/ui_tools_panel.js"></script>

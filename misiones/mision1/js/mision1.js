@@ -1,40 +1,39 @@
+import { renderZonasRiesgo } from './puntosRiesgo.js';
+
 const MAPTILER_KEY = 'rk78lPIZURCYo6I9QQdi';
 
-// === MAPA BASE PRINCIPAL (DARKMATTER) ===
+// === Crear el mapa ===
 const map = new maplibregl.Map({
   container: 'map',
   style: `https://api.maptiler.com/maps/darkmatter/style.json?key=${MAPTILER_KEY}`,
-  center: [-3.7038, 40.4168], // Madrid
+  center: [-3.7038, 40.4168],
   zoom: 10.5,
   pitch: 0,
   bearing: 0,
   attributionControl: false
 });
 
+// === Controles básicos ===
 map.addControl(new maplibregl.NavigationControl(), 'top-right');
 map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'metric' }));
 
-// === EVENTO DE CARGA PRINCIPAL ===
+// === Al cargar el mapa ===
 map.on('load', () => {
-
-
   map.once('idle', () => {
-    document.getElementById('map').classList.add('ready'); // ← activa el fade-in
+    document.getElementById('map').classList.add('ready');
     map.resize();
     map.triggerRepaint();
   });
 
-  // === 1️⃣ CAPA DE RELIEVE (HILLSHADE) ===
+  // === CAPAS BASE: RELIEVE Y SATÉLITE ===
+  const firstLayerId = map.getStyle().layers[0].id;
+
   map.addSource('hillshade', {
     type: 'raster',
-    tiles: [
-      `https://api.maptiler.com/tiles/hillshade/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`
-    ],
+    tiles: [`https://api.maptiler.com/tiles/hillshade/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`],
     tileSize: 256,
     attribution: '&copy; MapTiler'
   });
-
-  const firstLayerId = map.getStyle().layers[0].id;
 
   map.addLayer({
     id: 'hillshade-layer',
@@ -46,81 +45,116 @@ map.on('load', () => {
       'raster-brightness-min': 0.7,
       'raster-brightness-max': 1.0
     },
-    layout: { visibility: 'none' } // oculta al inicio
-  }, firstLayerId); // debajo de todo
+    layout: { visibility: 'visible' }
+  }, firstLayerId);
 
-
-  // === 2️⃣ CAPA SATÉLITE (encima de todo, sin etiquetas visibles) ===
   map.addSource('satellite', {
     type: 'raster',
-    tiles: [
-      `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${MAPTILER_KEY}`
-    ],
+    tiles: [`https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${MAPTILER_KEY}`],
     tileSize: 256,
     attribution: '&copy; MapTiler'
   });
 
-  // sin beforeId -> se añade al tope (encima de todo)
   map.addLayer({
     id: 'satellite-layer',
     type: 'raster',
     source: 'satellite',
     paint: { 'raster-opacity': 1.0 },
-    layout: { visibility: 'none' } // oculta al inicio
+    layout: { visibility: 'none' }
   });
 
-
-  // === 4️⃣ TOGGLES DE CAPAS BASE (LÓGICA COMBINADA) ===
+  // === TOGGLES DE CAPA BASE ===
   const toggleHillshade = document.getElementById('toggle-hillshade');
   const toggleSat = document.getElementById('toggle-sat');
 
   function updateBasemapState(activeLayer) {
-    // Relieve
-    if (activeLayer === 'hillshade') {
-      map.setLayoutProperty('hillshade-layer', 'visibility', 'visible');
-      map.setLayoutProperty('satellite-layer', 'visibility', 'none');
-      toggleHillshade.classList.add('active');
-      toggleSat.classList.remove('active');
-    }
+    const isHillshade = activeLayer === 'hillshade';
+    const isSatellite = activeLayer === 'satellite';
 
-    // Satélite
-    else if (activeLayer === 'satellite') {
-      map.setLayoutProperty('satellite-layer', 'visibility', 'visible');
-      map.setLayoutProperty('hillshade-layer', 'visibility', 'none');
-      toggleSat.classList.add('active');
-      toggleHillshade.classList.remove('active');
-    }
+    map.setLayoutProperty('hillshade-layer', 'visibility', isHillshade ? 'visible' : 'none');
+    map.setLayoutProperty('satellite-layer', 'visibility', isSatellite ? 'visible' : 'none');
 
-    // Modo normal (DarkMatter limpio)
-    else {
-      map.setLayoutProperty('hillshade-layer', 'visibility', 'none');
-      map.setLayoutProperty('satellite-layer', 'visibility', 'none');
-      toggleHillshade.classList.remove('active');
-      toggleSat.classList.remove('active');
-    }
-
-    // 💡 Reforzar redibujo del mapa
+    toggleHillshade?.classList.toggle('active', isHillshade);
+    toggleSat?.classList.toggle('active', isSatellite);
     map.triggerRepaint();
   }
 
+  toggleHillshade?.addEventListener('click', () => {
+    const active = toggleHillshade.classList.contains('active');
+    updateBasemapState(active ? null : 'hillshade');
+  });
 
-  // === EVENTOS DE BOTONES ===
-  if (toggleHillshade) {
-    toggleHillshade.addEventListener('click', () => {
-      const isActive = toggleHillshade.classList.contains('active');
-      updateBasemapState(isActive ? null : 'hillshade');
-    });
+  toggleSat?.addEventListener('click', () => {
+    const active = toggleSat.classList.contains('active');
+    updateBasemapState(active ? null : 'satellite');
+  });
+
+  // === HUD ZONAS DE RIESGO ===
+  try {
+    renderZonasRiesgo(map);
+  } catch (e) {
+    console.warn("⚠️ No se pudo cargar renderZonasRiesgo:", e);
   }
 
-  if (toggleSat) {
-    toggleSat.addEventListener('click', () => {
-      const isActive = toggleSat.classList.contains('active');
-      updateBasemapState(isActive ? null : 'satellite');
+  // === TOOLBOX + DIBUJO ===
+  try {
+    console.log("📦 Comprobando si MapboxDraw está definido...");
+    console.log("🧪 typeof MapboxDraw:", typeof MapboxDraw);
+
+    if (typeof MapboxDraw === 'undefined') {
+      throw new Error("❌ MapboxDraw no está definido. Posible fallo en la carga del script.");
+    }
+
+    console.log("✅ MapboxDraw está definido, intentando instanciar...");
+
+    const Draw = new MapboxDraw({
+      displayControlsDefault: false,
+      styles: [
+        {
+          id: "gl-draw-polygon-fill",
+          type: "fill",
+          filter: ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+          paint: { "fill-color": "#00E5FF", "fill-opacity": 0.1 }
+        },
+        {
+          id: "gl-draw-line-active",
+          type: "line",
+          filter: ["all", ["==", "$type", "LineString"], ["!=", "mode", "static"]],
+          paint: { "line-color": "#00C896", "line-width": 2 }
+        },
+        {
+          id: "gl-draw-point-active",
+          type: "circle",
+          filter: ["all", ["==", "$type", "Point"], ["!=", "mode", "static"]],
+          paint: {
+            "circle-radius": 6,
+            "circle-color": "#FF6B00",
+            "circle-stroke-color": "#fff",
+            "circle-stroke-width": 1.5
+          }
+        }
+      ]
     });
+
+    console.log("✅ Instancia de MapboxDraw creada.");
+    console.log("🧭 Comprobando si 'map' está definido:", typeof map);
+
+    map.addControl(Draw, 'top-right');
+    console.log("✅ Control Draw añadido al mapa.");
+
+    if (typeof Toolbox === 'undefined') {
+      throw new Error("❌ Toolbox no está definido. ¿Cargaste ui_toolbox.js correctamente?");
+    }
+
+    console.log("🧪 Iniciando Toolbox...");
+    Toolbox.init(map, Draw);
+    console.log("✅ Toolbox inicializado.");
+
+  } catch (err) {
+    console.error("❌ Error al inicializar Toolbox o Draw:", err);
   }
 
 });
-
 
 // === HUD COORDENADAS Y HORA ===
 const coordDisplay = document.getElementById('coords');
@@ -134,20 +168,15 @@ if (coordDisplay) {
 }
 
 if (timeDisplay) {
-  function updateTime() {
+  const updateTime = () => {
     const now = new Date();
     timeDisplay.textContent = now.toLocaleTimeString('es-ES', { timeZone: 'Europe/Madrid' });
-  }
+  };
   setInterval(updateTime, 1000);
   updateTime();
 }
 
-
-// === BOTÓN DE REGRESO ===
-const btnBack = document.getElementById('btn-back');
-if (btnBack) {
-  btnBack.addEventListener('click', () => {
-    window.location.href = '../../index.html';
-  });
-}
-
+// === BOTÓN REGRESO ===
+document.getElementById('btn-back')?.addEventListener('click', () => {
+  window.location.href = '../../index.html';
+});

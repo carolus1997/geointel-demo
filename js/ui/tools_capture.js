@@ -1,43 +1,44 @@
-// ======================================================
-// 📸 ToolsCapture — Captura táctica con overlay de misión
-// ======================================================
+// ===============================
+// 📸 ToolsCapture — Captura exacta del mapa visible
+// ===============================
 window.ToolsCapture = (() => {
-  async function capturar(map) {
-    const mapContainer = map.getContainer();
+  async function capture(map) {
+    try {
+      if (!map) throw new Error("Mapa no inicializado");
 
-    html2canvas(mapContainer, {
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: null,
-      scale: 2,
-      logging: false
-    }).then(canvas => {
-      const ctx = canvas.getContext("2d");
-      const w = canvas.width;
-      const h = canvas.height;
+      // Forzar repintado del mapa
+      map.triggerRepaint();
+      await new Promise((r) => requestAnimationFrame(r));
 
-      // Franja táctica inferior
-      ctx.fillStyle = "rgba(0,0,0,0.7)";
-      ctx.fillRect(0, h - 100, w, 100);
+      const canvas = map.getCanvas();
+      const rect = canvas.getBoundingClientRect();
 
-      // Título
-      ctx.font = "bold 28px 'Segoe UI'";
-      ctx.fillStyle = "#00E5FF";
-      ctx.fillText("Misión — Captura táctica", 40, h - 45);
+      // Crear un canvas del mismo tamaño visible en pantalla
+      const exportCanvas = document.createElement("canvas");
+      exportCanvas.width = rect.width;
+      exportCanvas.height = rect.height;
 
-      // Fecha
-      ctx.font = "18px 'Segoe UI'";
-      ctx.fillStyle = "#ccc";
-      const now = new Date().toLocaleString("es-ES", { hour12: false });
-      ctx.fillText(now, w - 220, h - 45);
+      const ctx = exportCanvas.getContext("2d");
 
+      // Factor de corrección para evitar que se “alargue”
+      const scale = rect.width / canvas.width;
+      ctx.scale(scale, scale);
+
+      // Copiar solo la parte visible del mapa
+      ctx.drawImage(canvas, 0, 0);
+
+      // Descargar el PNG
       const link = document.createElement("a");
-      link.download = `captura_${Date.now()}.png`;
-      link.href = canvas.toDataURL("image/png");
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      link.href = exportCanvas.toDataURL("image/png");
+      link.download = `captura_mision_${timestamp}.png`;
       link.click();
-      alert("📸 Captura táctica guardada.");
-    });
+
+      console.info("📸 Captura exportada correctamente");
+    } catch (err) {
+      console.error("❌ Error en ToolsCapture:", err);
+    }
   }
 
-  return { capturar };
+  return { capture };
 })();

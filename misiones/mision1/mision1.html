@@ -10,11 +10,18 @@
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
   <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 
+  <!-- Mapbox Draw para MapLibre -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.css" rel="stylesheet" />
+
+
+
   <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <!-- Estilos -->
   <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../js/ui/css/ui_tools.css" />
 </head>
 
 <body>
@@ -26,12 +33,10 @@
         <img src="../../img/logos/logo_indra.png" class="logo" alt="Indra">
         <img src="../../img/logos/logo_upct.png" class="logo" alt="UPCT">
       </div>
-
       <div class="header-center">
         <h1>Misión 1 : Contraterrorismo Urbano</h1>
         <p class="subtitle typewriter">Modelización socioeconómica y análisis de riesgo de radicalización</p>
       </div>
-
       <div class="header-right">
         <button id="btn-back" class="btn-back">
           <i class="fa-solid fa-arrow-left"></i> Centro de Operaciones
@@ -41,38 +46,45 @@
 
     <!-- CONTENIDO PRINCIPAL -->
     <main id="main-content">
-
       <!-- PANEL LATERAL -->
       <aside id="side-panel">
         <h2>Resumen de misión</h2>
-        <p class="typewriter">
-          La misión consiste en identificar patrones espaciales de radicalización en entornos urbanos mediante
-          indicadores socioeconómicos, localización de mezquitas y densidad de incidentes registrados.
-          Se busca detectar áreas vulnerables para orientar intervenciones preventivas.
-        </p>
-
+        <p class="typewriter">La misión consiste en identificar patrones espaciales de radicalización en entornos
+          urbanos.</p>
 
         <h3>Documentos</h3>
         <div class="docs-grid">
-          <a href="pdf/briefing.pdf" target="_blank" class="doc-card">
-            <i class="fa-solid fa-file-lines"></i>
-            <span>Briefing</span>
+          <a href="../../docs/Centro de Inteligencia Urbana.pdf" target="_blank" class="doc-card">
+            <i class="fa-solid fa-file-lines"></i><span>Briefing</span>
           </a>
-          <a href="pdf/intel.pdf" target="_blank" class="doc-card">
-            <i class="fa-solid fa-chart-column"></i>
-            <span>Informe Intel</span>
+          <a href="../../docs/Centro de Inteligencia Urbana Informe.pdf" target="_blank" class="doc-card">
+            <i class="fa-solid fa-chart-column"></i><span>Informe Intel</span>
           </a>
           <a href="pdf/debrief.pdf" target="_blank" class="doc-card">
-            <i class="fa-solid fa-clipboard-check"></i>
-            <span>Debrief</span>
+            <i class="fa-solid fa-clipboard-check"></i><span>Debrief</span>
           </a>
         </div>
 
+        <h3>Zonas de riesgo</h3>
+        <div id="risk-container">
+          <div class="risk-grid-wrapper">
+            <div class="risk-grid">
+              <!-- tarjetas dinámicas -->
+            </div>
+          </div>
+        </div>
       </aside>
 
       <!-- MAPA -->
       <section id="map-container">
         <div id="map"></div>
+
+        <!-- TOOL PANEL -->
+        <div id="tool-panel" class="tool-panel hidden">
+          <div id="tool-buttons"></div>
+          <div id="tool-content"></div>
+        </div>
+
         <!-- CONTROLES DE MAPA BASE -->
         <div id="basemap-controls">
           <button id="toggle-hillshade" class="active">Relieve</button>
@@ -82,12 +94,27 @@
     </main>
   </div>
 
-  <!-- JS -->
-  <script src="js/mision1.js"></script>
+  <!-- === TOOLSET TÁCTICO GLOBAL === -->
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
+  <script src="../../js/ui/ui_toolbox.js"></script>
+  <script src="../../js/ui/tools_draw.js"></script>
+  <script src="../../js/ui/tools_buffer.js"></script>
+  <script src="../../js/ui/tools_notes.js"></script>
+  <script src="../../js/ui/tools_capture.js"></script>
+  <script src="../../js/ui/tools_colorSelector.js"></script>
+  <script src="../../js/ui/tools_delete.js"></script>
+  <script src="../mision2/js/ui_tools_panel.js"></script>
+  <script src="../mision2/js/mision2_tools.js"></script>
+
+
+
+  <!-- Funcionalidades generales -->
   <script src="../../js/loadFooter.js"></script>
   <script src="../../js/reloj.js"></script>
   <script src="../../js/typewriter.js"></script>
 
+  <!-- Misión -->
+  <script type="module" src="js/mision1.js"></script>
 </body>
 
 </html>
