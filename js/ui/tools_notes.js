@@ -1,80 +1,212 @@
 // ======================================================
-// 📸 tools_capture.js — Captura táctica con proporción real
+// 🗒️ ToolsNotes — Viñetas tácticas ancladas al mapa (versión universal)
 // ======================================================
-window.ToolsCapture = (() => {
+window.ToolsNotes = (() => {
   let map;
+  let active = false;
+  let currentGlobalColor = "#00C896";
+  let noteCounter = 0;
+  const notes = new Map(); // id → { el, lngLat }
 
+  const COLORS = [
+    { name: "seguro", color: "#00C896" },
+    { name: "riesgo", color: "#FFD400" },
+    { name: "hostil", color: "#FF2F00" },
+    { name: "observacion", color: "#00E5FF" },
+  ];
+
+  // ======================================================
   function init(_map) {
     map = _map;
-    console.log("📸 ToolsCapture inicializado (modo canvas real)");
+    if (!map) {
+      console.warn("⚠️ ToolsNotes.init llamado sin mapa válido");
+      return;
+    }
+    console.log("🗒️ ToolsNotes inicializado para:", map._container?.id || "mapa desconocido");
+
+    // Escuchar cambios globales de color táctico
+    document.addEventListener("TACTICAL_COLOR_CHANGED", (e) => {
+      currentGlobalColor = e.detail.color;
+    });
+
+    // Actualización sincronizada con render
+    map.on("render", () => {
+      if (map.loaded()) updatePositions();
+    });
   }
 
-  async function capture() {
-    if (!map) return console.warn("⚠️ Map no inicializado en ToolsCapture");
+  // ======================================================
+  function activate() {
+    if (!map) return console.warn("⚠️ Map no inicializado en ToolsNotes");
+    active = !active;
+    console.log(active ? "🟢 Modo notas activado" : "🔴 Modo notas desactivado");
+    map.getCanvas().style.cursor = active ? "text" : "";
 
-    const mapContainer = document.getElementById("map-container");
-    const mapCanvas = map.getCanvas();
-    const uiElements = document.querySelectorAll("#toolbox, .dropdown-panel, #simulation-panel, #side-panel, #basemap-controls");
-
-    // 1️⃣ Ocultar interfaz
-    uiElements.forEach(el => (el.style.display = "none"));
-
-    try {
-      // 2️⃣ Crear canvas temporal del mapa
-      const width = mapCanvas.width;
-      const height = mapCanvas.height;
-
-      const exportCanvas = document.createElement("canvas");
-      exportCanvas.width = width;
-      exportCanvas.height = height;
-      const ctx = exportCanvas.getContext("2d");
-
-      // Copiar el mapa renderizado
-      ctx.drawImage(mapCanvas, 0, 0, width, height);
-
-      // 3️⃣ Capturar overlays HTML (notas, radar, etc.)
-      const overlays = document.querySelectorAll(".map-note, .radar-sector, .custom-overlay");
-      for (const el of overlays) {
-        const canvasOverlay = await html2canvas(el, {
-          backgroundColor: null,
-          useCORS: true,
-          logging: false,
-          scale: 2
-        });
-
-        const rect = el.getBoundingClientRect();
-        const mapRect = mapContainer.getBoundingClientRect();
-        const x = rect.left - mapRect.left;
-        const y = rect.top - mapRect.top;
-        ctx.drawImage(canvasOverlay, x, y);
-      }
-
-      // 4️⃣ Exportar como PNG
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const filename = `captura_mision_${timestamp}.png`;
-      const link = document.createElement("a");
-      link.download = filename;
-      link.href = exportCanvas.toDataURL("image/png");
-      link.click();
-
-      flash("📸 Captura guardada correctamente");
-    } catch (err) {
-      console.error("❌ Error en ToolsCapture:", err);
-      flash("⚠️ Error al capturar");
-    } finally {
-      // 5️⃣ Restaurar interfaz
-      uiElements.forEach(el => (el.style.display = ""));
+    if (active) {
+      map.once("click", (e) => {
+        createNoteAt(e.lngLat);
+        activate(); // desactivar después de crear
+      });
     }
   }
 
-  // 🧩 Notificación temporal
-  function flash(msg) {
-    const el = document.createElement("div");
-    el.className = "note-tip";
-    el.textContent = msg;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 1800);
+  // ======================================================
+  function createNoteAt(lngLat) {
+    const container =
+      document.getElementById("map-container") ||
+      document.querySelector(".map-container") ||
+      map.getContainer();
+
+    const id = `note-${++noteCounter}`;
+    const color = currentGlobalColor;
+
+    // === Nota base ===
+    const note = document.createElement("div");
+    note.id = id;
+    note.className = "map-note";
+    note.dataset.color = color;
+    note.style.setProperty("--note-color", color);
+    Object.assign(note.style, {
+      border: `2px solid ${color}`,
+      background: "rgba(0,0,0,0.6)",
+      borderRadius: "6px",
+      padding: "6px 8px",
+      minWidth: "120px",
+      color: "#fff",
+      fontSize: "13px",
+      userSelect: "none",
+      cursor: "move",
+      zIndex: 900,
+      backdropFilter: "blur(2px)",
+      position: "absolute",
+      transition: "border-color 0.2s",
+      transformOrigin: "bottom center",
+    });
+
+    // === Texto editable ===
+    const input = document.createElement("div");
+    input.className = "note-input";
+    input.contentEditable = true;
+    input.textContent = "Nueva nota...";
+    Object.assign(input.style, {
+      outline: "none",
+      background: "transparent",
+      paddingRight: "16px",
+    });
+    note.appendChild(input);
+
+    // === Piquito táctico ===
+    const tip = document.createElement("div");
+    Object.assign(tip.style, {
+      position: "absolute",
+      bottom: "-8px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      width: 0,
+      height: 0,
+      borderLeft: "6px solid transparent",
+      borderRight: "6px solid transparent",
+      borderTop: `8px solid ${color}`,
+    });
+    note.appendChild(tip);
+
+    // === Botón de color ===
+    const colorBtn = document.createElement("div");
+    colorBtn.className = "note-color-btn";
+    Object.assign(colorBtn.style, {
+      position: "absolute",
+      top: "4px",
+      right: "4px",
+      width: "12px",
+      height: "12px",
+      borderRadius: "50%",
+      background: color,
+      border: "1px solid #000",
+      cursor: "pointer",
+    });
+    colorBtn.title = "Cambiar color táctico";
+    colorBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const currentIndex = COLORS.findIndex((c) => c.color === note.dataset.color);
+      const next = COLORS[(currentIndex + 1) % COLORS.length];
+      note.dataset.color = next.color;
+      note.style.borderColor = next.color;
+      note.style.setProperty("--note-color", next.color);
+      colorBtn.style.background = next.color;
+      tip.style.borderTopColor = next.color;
+    });
+    note.appendChild(colorBtn);
+
+    // === Añadir al mapa ===
+    container.appendChild(note);
+    notes.set(id, { el: note, lngLat });
+    updatePosition(id);
+    makeDraggable(note, id);
   }
 
-  return { init, capture };
+  // ======================================================
+  function updatePositions() {
+    const zoom = map.getZoom();
+    const scale = Math.min(1, zoom / 10);
+    for (const [id] of notes) updatePosition(id, scale);
+  }
+
+  function updatePosition(id, scale = 1) {
+    const data = notes.get(id);
+    if (!data) return;
+    const pos = map.project(data.lngLat);
+    if (!pos || isNaN(pos.x) || isNaN(pos.y)) return;
+    data.el.style.left = `${pos.x}px`;
+    data.el.style.top = `${pos.y}px`;
+    data.el.style.transform = `translate(-50%, -100%) scale(${scale})`;
+  }
+
+  // ======================================================
+  function makeDraggable(el, id) {
+    let isDragging = false;
+    let startX, startY, initialLngLat;
+
+    el.addEventListener("mousedown", (e) => {
+      if (e.target.contentEditable === "true" || e.target.classList.contains("note-color-btn"))
+        return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      initialLngLat = notes.get(id)?.lngLat;
+      el.style.opacity = "0.8";
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      const current = map.project(initialLngLat);
+      const moved = new maplibregl.Point(current.x + dx, current.y + dy);
+      const newLngLat = map.unproject(moved);
+      notes.set(id, { el, lngLat: newLngLat });
+      updatePosition(id);
+    });
+
+    window.addEventListener("mouseup", () => {
+      if (isDragging) {
+        isDragging = false;
+        el.style.opacity = "1";
+      }
+    });
+  }
+
+  // ======================================================
+  function removeByElement(el) {
+    if (!el) return;
+    notes.delete(el.id);
+    el.remove();
+  }
+
+  function clearAll() {
+    for (const [id, obj] of notes) obj.el.remove();
+    notes.clear();
+  }
+
+  // ======================================================
+  return { init, activate, removeByElement, clearAll };
 })();

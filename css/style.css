@@ -270,16 +270,19 @@ body {
    🔹 LAYOUT PRINCIPAL
 ============================= */
 
- #app-container {
+#app-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* toda la altura de la ventana */
+  height: 100vh;
+  /* toda la altura de la ventana */
 }
 
 #main-content {
-  flex: 1 0 auto; /* ocupa todo el espacio restante */
+  flex: 1 0 auto;
+  /* ocupa todo el espacio restante */
   display: flex;
-  overflow: hidden; /* sin scroll interno */
+  overflow: hidden;
+  /* sin scroll interno */
 }
 
 #side-panel {
@@ -302,13 +305,14 @@ body {
 #map-container {
   flex: 1;
   position: relative;
-   overflow: hidden;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 #map {
-  flex: 1 1 auto; /* ocupa el espacio restante dentro del contenedor */
+  flex: 1 1 auto;
+  /* ocupa el espacio restante dentro del contenedor */
   position: relative;
   top: 0;
   left: 0;
@@ -741,10 +745,14 @@ button.btn-activa {
   font-size: 0.8rem;
   border-top: 1px solid #1F262E;
   position: relative;
-  z-index: 10000; /* 👈 se eleva sobre overlays */
-  opacity: 1 !important; /* 👈 evita transiciones heredadas */
-  transition: none !important; /* 👈 desactiva efectos */
+  z-index: 10000;
+  /* 👈 se eleva sobre overlays */
+  opacity: 1 !important;
+  /* 👈 evita transiciones heredadas */
+  transition: none !important;
+  /* 👈 desactiva efectos */
 }
+
 #app-container footer,
 .app-footer {
   visibility: visible !important;
@@ -864,7 +872,7 @@ button.btn-activa {
 
 .map-note {
   overflow: visible !important;
-  transform: translate(-50%, -100%) scale(1); /* evitar subpixel scaling */
+  transform: translate(-50%, -100%) scale(1);
   text-rendering: geometricPrecision;
 }
 
@@ -873,7 +881,15 @@ button.btn-activa {
   line-height: 1.2em;
   text-align: center;
   word-break: break-word;
+  cursor: text;
 }
+
+.note-color-btn:hover {
+  transform: scale(1.3);
+  transition: transform 0.15s ease;
+}
+
+
 
 
 
@@ -972,8 +988,9 @@ button.btn-activa {
 .sim-panel {
   position: absolute;
   top: 15px;
-  left: 15px; /* 👈 antes estaba right:10px */
-  right: auto; 
+  left: 15px;
+  /* 👈 antes estaba right:10px */
+  right: auto;
   background: #191e28d9;
   border: 1px solid #00e5ff33;
   border-radius: 8px;
@@ -982,7 +999,8 @@ button.btn-activa {
   gap: 6px;
   z-index: 9999;
   box-shadow: 0 0 8px rgba(0, 229, 255, 0.2);
-  justify-content: flex-start; /* 🔹 mejor alineación a la izquierda */
+  justify-content: flex-start;
+  /* 🔹 mejor alineación a la izquierda */
 }
 
 .sim-panel button {
@@ -1125,9 +1143,11 @@ button.btn-activa {
 
 
 .risk-grid-wrapper {
-  max-height: 50vh; /* Ajusta según lo que quieras mostrar */
+  max-height: 50vh;
+  /* Ajusta según lo que quieras mostrar */
   overflow-y: auto;
-  padding-right: 4px; /* espacio para evitar que tape la scrollbar */
+  padding-right: 4px;
+  /* espacio para evitar que tape la scrollbar */
   margin-top: 0.5rem;
 }
 
@@ -1135,10 +1155,12 @@ button.btn-activa {
 .risk-grid-wrapper::-webkit-scrollbar {
   width: 6px;
 }
+
 .risk-grid-wrapper::-webkit-scrollbar-thumb {
   background-color: #00ffc6aa;
   border-radius: 3px;
 }
+
 .risk-grid-wrapper::-webkit-scrollbar-track {
   background-color: transparent;
 }

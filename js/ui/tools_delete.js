@@ -246,7 +246,6 @@ window.ToolsDelete = (() => {
     }
 
     await microTick();
-    flash('🧹 Todo eliminado', 'green');
     map.getCanvas().style.cursor = ''; // restaurar cursor
     deleteMode = false;
   }
