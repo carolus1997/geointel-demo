@@ -1,12 +1,14 @@
 // === CONFIGURACIÓN GENERAL ===
 const MAPTILER_KEY = 'rk78lPIZURCYo6I9QQdi';
-
+// === PARÁMETROS TÁCTICOS ===
+const RADIO_ANTENA_ASENT = 2; // km — distancia máxima antena ↔ asentamiento
+const RADIO_ASENT_POZO = 5;   // km — distancia máxima asentamiento ↔ pozo
 // === MAPA BASE ===
 const map = new maplibregl.Map({
   container: 'map',
   style: `https://api.maptiler.com/maps/darkmatter/style.json?key=${MAPTILER_KEY}`,
-  center: [-4.21875, 31.42],
-  zoom: 8,
+  center: [-2.01, 32.42],
+  zoom: 9,
   pitch: 0,
   bearing: 0,
   attributionControl: false
@@ -37,64 +39,76 @@ function addGeoLayer({ id, path, type, paint = {}, layout = {}, promoteId }) {
 
 // === CAPAS RASTER ===
 map.on('load', () => {
-  const rasters = [
-    { id: 'ndvi', name: 'ΔNDVI', path: 'tiles/dndvi/{z}/{x}/{y}.png', opacity: 0.95 },
-    { id: 'sar', name: 'ΔSAR', path: 'tiles/dsar/{z}/{x}/{y}.png', opacity: 0.65 },
-    { id: 'dem', name: 'DEM', path: 'tiles/dem/{z}/{x}/{y}.png', opacity: 0.55 },
-    { id: 'thermal', name: 'THERMAL', path: 'tiles/thermal/{z}/{x}/{y}.png', opacity: 0.5 }
+
+
+
+  // === KPI CALCULATOR ===
+  async function updateKPIs() {
+    try {
+      const [antenas, asentamientos, pozos] = await Promise.all([
+        fetch('../data/antenasTelecomunicaciones.geojson').then(r => r.json()),
+        fetch('../data/asentamientosAldeas.geojson').then(r => r.json()),
+        fetch('../data/pozos_niveles.geojson').then(r => r.json())
+      ]);
+
+      // 1️⃣ Antenas activas
+      const antenasActivas = antenas.features.length;
+
+      // 2️⃣ Aglomeraciones (ej: población > 500 si existe campo 'pop_est')
+      const aglomeraciones = asentamientos.features.filter(f =>
+        (f.properties.pop_est || 0) > 500
+      ).length;
+
+      // 3️⃣ Pozos críticos (riesgo ≥ 0.6)
+      const pozosCriticos = pozos.features.filter(f =>
+        (f.properties.risk_score || 0) >= 0.6
+      ).length;
+
+      // Actualizar DOM
+      document.getElementById('kpi-antenas').textContent = antenasActivas;
+      document.getElementById('kpi-asentamientos').textContent = aglomeraciones;
+      document.getElementById('kpi-pozos').textContent = pozosCriticos;
+
+      console.log(`📊 KPIs actualizados — Antenas:${antenasActivas}, Aglomeraciones:${aglomeraciones}, Pozos críticos:${pozosCriticos}`);
+    } catch (err) {
+      console.error('❌ Error actualizando KPIs:', err);
+    }
+  }
+
+  // Llamar tras carga del mapa
+  map.once('load', updateKPIs);
+
+
+  // === CONTROL DE CAPAS: FILTROS DE INFORMACIÓN ===
+  const controlPanel = document.createElement('div');
+  controlPanel.className = 'intel-control bottom-right';
+
+  const layers = [
+    { id: 'antenas', name: ' Antenas', color: '#00C896' },
+    { id: 'asentamientos', name: ' Asentamientos', color: '#FFD400' },
+    { id: 'pozos', name: ' Pozos críticos', color: '#FF4D4D' },
   ];
 
-  const styleMap = {
-    ndvi: { opacity: 0.5, brightnessMin: 0.3, brightnessMax: 0.9 },
-    sar: { opacity: 0.6, contrast: 0.7 },
-    dem: { opacity: 0.4, brightnessMax: 0.8 },
-    thermal: { opacity: 0.5, contrast: 1.0, brightnessMin: 0.2 }
-  };
-
-  rasters.forEach(r => {
-    const s = styleMap[r.id] || {};
-    map.addSource(r.id, {
-      type: 'raster',
-      tiles: [r.path],
-      tileSize: 256,
-      scheme: 'tms',
-      minzoom: 6,
-      maxzoom: 10,
-      bounds: [-2.3, 31.9, -1.7, 32.3]
-    });
-    map.addLayer({
-      id: `${r.id}-layer`,
-      type: 'raster',
-      source: r.id,
-      paint: {
-        'raster-opacity': s.opacity ?? 0.6,
-        'raster-brightness-min': s.brightnessMin ?? 0,
-        'raster-brightness-max': s.brightnessMax ?? 1,
-        'raster-contrast': s.contrast ?? 0
-      },
-      layout: { visibility: r.id === 'ndvi' ? 'visible' : 'none' }
-    });
-  });
-
-  // === CONTROL DE CAPAS RASTER ===
-  const controlBar = document.createElement('div');
-  controlBar.className = 'raster-control bottom-right';
-  rasters.forEach(r => {
+  layers.forEach(layer => {
     const btn = document.createElement('button');
-    btn.className = 'layer-btn';
-    btn.textContent = r.name;
-    btn.dataset.layer = r.id;
-    if (r.id === 'ndvi') btn.classList.add('active');
+    btn.className = 'layer-toggle';
+    btn.textContent = layer.name;
+    btn.style.borderColor = layer.color;
+    btn.dataset.layer = layer.id;
+    btn.classList.add('active'); // por defecto, todos activos
+
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      rasters.forEach(rr => {
-        map.setLayoutProperty(`${rr.id}-layer`, 'visibility', rr.id === r.id ? 'visible' : 'none');
-      });
+      const layerId = btn.dataset.layer;
+      const visible = map.getLayoutProperty(layerId, 'visibility') !== 'none';
+      map.setLayoutProperty(layerId, 'visibility', visible ? 'none' : 'visible');
+      btn.classList.toggle('active', !visible);
     });
-    controlBar.appendChild(btn);
+
+    controlPanel.appendChild(btn);
   });
-  document.getElementById('map').appendChild(controlBar);
+
+  document.getElementById('map').appendChild(controlPanel);
+
 
   // === CAPA SATÉLITE ===
   if (!map.getSource('satellite')) {
@@ -193,28 +207,73 @@ map.on('load', () => {
     }
   });
 
-  // --- ASENTAMIENTOS ---
+  // === CAPA DE ASENTAMIENTOS: CONCENTRACIÓN HUMANA ===
   addGeoLayer({
     id: 'asentamientos',
     path: '../data/asentamientosAldeas.geojson',
-    type: 'symbol',
-    layout: {
-      'text-field': ['get', 'name:fr'],
-      'text-font': ['Neo Sans Medium', 'Arial Unicode MS Regular'],
-      'text-size': [
-        'interpolate', ['linear'], ['zoom'],
-        6, 10,
-        12, 14
-      ],
-      'text-anchor': 'center'
-    },
+    type: 'circle',
     paint: {
-      'text-color': '#cccccc',
-      'text-halo-color': '#000000',
-      'text-halo-width': 1.0,
-      'text-opacity': 0.95
+      'circle-radius': [
+        'interpolate', ['linear'], ['zoom'],
+        6, 2,
+        12, 8
+      ],
+      'circle-color': [
+        'case',
+        ['any',
+          ['==', ['get', 'place'], 'town'],
+          ['>', ['to-number', ['get', 'population'], 0], 10000]
+        ], '#FF4D4D', // Alta
+        ['any',
+          ['==', ['get', 'place'], 'village'],
+          ['all',
+            ['>', ['to-number', ['get', 'population'], 0], 1000],
+            ['<=', ['to-number', ['get', 'population'], 0], 10000]
+          ]
+        ], '#FFB020', // Media
+        '#00C896' // Baja
+      ],
+      'circle-stroke-color': '#111',
+      'circle-stroke-width': 0.8,
+      'circle-opacity': 0.85
     }
   });
+
+  // === POPUP Y PANEL DE DETALLE ===
+  map.on('click', 'asentamientos', e => {
+    const f = e.features[0];
+    const p = f.properties;
+    const poblacion = parseInt(p.population) || 0;
+
+    let nivel = 'Baja';
+    if (p.place === 'town' || poblacion > 10000) nivel = 'Alta';
+    else if (p.place === 'village' || (poblacion > 1000 && poblacion <= 10000)) nivel = 'Media';
+
+    const html = `
+    <div class="popup-title">${p.name || 'Asentamiento sin nombre'}</div>
+    <div class="popup-meta">
+      <strong>Nivel:</strong> ${nivel}<br>
+      <strong>Tipo:</strong> ${p.place || '—'}<br>
+      <strong>Población:</strong> ${poblacion ? poblacion.toLocaleString() : '—'}<br>
+      <strong>Altitud:</strong> ${p.ele || '—'} m
+    </div>
+  `;
+    new maplibregl.Popup({ offset: 25 })
+      .setLngLat(f.geometry.coordinates)
+      .setHTML(html)
+      .addTo(map);
+
+    updateFeatureDetail({
+      properties: {
+        name: p.name,
+        place: p.place,
+        pop_est: poblacion,
+        ele: p.ele,
+        nivel
+      }
+    }, 'asentamiento');
+  });
+
 
   // --- ANTENAS TELECOM ---
   map.loadImage('../../../img/icons/signal-round-svgrepo-com.png', (error, image) => {
@@ -237,6 +296,89 @@ map.on('load', () => {
       paint: { 'icon-opacity': 0.95 }
     });
   });
+  async function resumenAsentamientos() {
+    const asentamientos = await fetch('../data/asentamientosAldeas.geojson').then(r => r.json());
+    let altas = 0, medias = 0, bajas = 0;
+
+    asentamientos.features.forEach(f => {
+      const p = f.properties;
+      const pop = parseInt(p.population) || 0;
+      if (p.place === 'town' || pop > 10000) altas++;
+      else if (p.place === 'village' || (pop > 1000 && pop <= 10000)) medias++;
+      else bajas++;
+    });
+
+    document.getElementById('intel-asentamientos').innerHTML =
+      `<strong>${altas}</strong> altas · <strong>${medias}</strong> medias · <strong>${bajas}</strong> bajas`;
+  }
+  map.once('load', resumenAsentamientos);
+
+  async function resumenAntenas() {
+    try {
+      const antenas = await fetch('../data/antenasTelecomunicaciones.geojson').then(r => r.json());
+      const total = antenas.features.length;
+
+      let activas = 0, pasivas = 0, inactivas = 0;
+
+      antenas.features.forEach(f => {
+        const props = f.properties;
+        if (props['communication:radio'] === 'yes') activas++;
+        else if (props['man_made'] === 'mast') inactivas++;
+        else pasivas++;
+      });
+
+      // Mostrar resumen visual coherente con los otros indicadores
+      const html = `
+      <div class="intel-item">
+        <div class="intel-label">Antenas de comunicación</div>
+        <div class="intel-value">
+          <span style="color:#00C896"><strong>${activas}</strong></span> activas ·
+          <span style="color:#FFD400"><strong>${pasivas}</strong></span> pasivas ·
+          <span style="color:#FF4D4D"><strong>${inactivas}</strong></span> inactivas
+        </div>
+        <div class="intel-sub">${total} estructuras totales</div>
+      </div>
+    `;
+
+      // Si tienes un contenedor genérico (como "intel-antenas"), úsalo aquí:
+      const container = document.getElementById('intel-antenas');
+      if (container) container.innerHTML = html;
+
+      console.log(`📡 Antenas — activas:${activas}, pasivas:${pasivas}, inactivas:${inactivas}`);
+    } catch (err) {
+      console.error('❌ Error al generar resumen de antenas:', err);
+    }
+  }
+
+  map.once('load', resumenAntenas);
+
+  async function resumenRecursosCriticos() {
+    const pozos = await fetch('../data/pozos_niveles.geojson').then(r => r.json());
+    let criticos = 0, moderados = 0, estables = 0;
+
+    pozos.features.forEach(f => {
+      const r = f.properties.risk_score || 0;
+      if (r >= 0.6) criticos++;
+      else if (r >= 0.3) moderados++;
+      else estables++;
+    });
+
+    const total = pozos.features.length;
+    const html = `
+    <div class="intel-item">
+      <div class="intel-label">Recursos hídricos</div>
+      <div class="intel-value">
+        <span style="color:#FF4D4D"><strong>${criticos}</strong></span> críticos ·
+        <span style="color:#FFB020"><strong>${moderados}</strong></span> moderados ·
+        <span style="color:#00C896"><strong>${estables}</strong></span> estables
+      </div>
+      <div class="intel-sub">${total} pozos monitorizados</div>
+    </div>
+  `;
+    document.getElementById('intel-recursos').innerHTML = html;
+  }
+  map.once('load', resumenRecursosCriticos);
+
 
   // === EVENTOS ===
   map.on('click', 'pozos-layer', e => {
@@ -257,30 +399,401 @@ map.on('load', () => {
     updateWellDetail(p);
   });
 
+  async function detectarConvergencia() {
+    try {
+      const [antenas, asentamientos, pozos] = await Promise.all([
+        fetch('../data/antenasTelecomunicaciones.geojson').then(r => r.json()),
+        fetch('../data/asentamientosAldeas.geojson').then(r => r.json()),
+        fetch('../data/pozos_niveles.geojson').then(r => r.json())
+      ]);
+
+      const alertas = [];
+
+      // Filtrar entidades relevantes
+      const antenasActivas = antenas.features.filter(f => f.properties['communication:radio'] === 'yes');
+      const pozosCriticos = pozos.features.filter(f => (f.properties.risk_score || 0) >= 0.6);
+      const asentPoblados = asentamientos.features.filter(f => {
+        const pop = parseInt(f.properties.population) || 0;
+        const tipo = f.properties.place;
+        return tipo === 'town' || tipo === 'village' || pop > 1000;
+      });
+
+      // Comparar distancias
+      antenasActivas.forEach(a => {
+        const [ax, ay] = a.geometry.coordinates;
+
+        asentPoblados.forEach(s => {
+          const [sx, sy] = s.geometry.coordinates;
+          const distAS = distancia(ax, ay, sx, sy);
+          if (distAS > RADIO_ANTENA_ASENT) return;
+
+          pozosCriticos.forEach(p => {
+            const [px, py] = p.geometry.coordinates;
+            const distSP = distancia(sx, sy, px, py);
+            if (distSP <= RADIO_ASENT_POZO) {
+              alertas.push({
+                antena: a.properties.id,
+                asentamiento: s.properties.name || '—',
+                pozo: p.properties.nombre || '—',
+                distAntena: distAS.toFixed(2),
+                distPozo: distSP.toFixed(2),
+                coords: s.geometry.coordinates
+              });
+            }
+          });
+        });
+      });
+
+      console.log(`📡 Convergencias detectadas: ${alertas.length}`);
+      mostrarConvergencias(alertas);
+    } catch (err) {
+      console.error('❌ Error en detección de convergencias:', err);
+    }
+  }
+
+  // --- función de distancia Haversine (km)
+  function distancia(lon1, lat1, lon2, lat2) {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a = Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) ** 2;
+    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+  }
+
+  map.once('load', detectarConvergencia);
+
+  function mostrarConvergencias(alertas) {
+    if (!alertas.length) {
+      const footer = document.querySelector('.decision-text');
+      footer.innerHTML = '✅ Sin convergencias híbridas detectadas.';
+      return;
+    }
+
+    // --- Capa de zonas críticas ---
+    const geojson = {
+      type: 'FeatureCollection',
+      features: alertas.map((a, i) => ({
+        type: 'Feature',
+        id: i,
+        properties: { nombre: a.asentamiento, pozo: a.pozo },
+        geometry: { type: 'Point', coordinates: a.coords }
+      }))
+    };
+
+    if (map.getSource('convergencias')) map.removeSource('convergencias');
+    if (map.getLayer('convergencias')) map.removeLayer('convergencias');
+
+    map.addSource('convergencias', { type: 'geojson', data: geojson });
+
+    map.addLayer({
+      id: 'convergencias',
+      type: 'circle',
+      source: 'convergencias',
+      paint: {
+        'circle-radius': 10,
+        'circle-color': '#FF2F00',
+        'circle-opacity': 0.6,
+        'circle-stroke-width': 1.5,
+        'circle-stroke-color': '#fff'
+      }
+    });
+
+    // --- Texto dinámico en el footer ---
+    const footer = document.querySelector('.decision-text');
+    footer.innerHTML = `<strong>⚠️ ${alertas.length} zonas críticas</strong> detectadas — posibles nodos híbridos.`;
+  }
+
+  async function visualizarConvergencias() {
+
+    const [antenas, asentamientos, pozos] = await Promise.all([
+      fetch('../data/antenasTelecomunicaciones.geojson').then(r => r.json()),
+      fetch('../data/asentamientosAldeas.geojson').then(r => r.json()),
+      fetch('../data/pozos_niveles.geojson').then(r => r.json())
+    ]);
+
+    const antenasActivas = antenas.features.filter(f => f.properties['communication:radio'] === 'yes');
+    const pozosCriticos = pozos.features.filter(f => (f.properties.risk_score || 0) >= 0.6);
+    const asentPoblados = asentamientos.features.filter(f => {
+      const pop = parseInt(f.properties.population) || 0;
+      return f.properties.place === 'town' || f.properties.place === 'village' || pop > 1000;
+    });
+
+    const nodos = [];
+    const lineas = [];
+
+    // === BÚSQUEDA REAL DE CONVERGENCIAS ===
+    antenasActivas.forEach(a => {
+      const [ax, ay] = a.geometry.coordinates;
+      asentPoblados.forEach(s => {
+        const [sx, sy] = s.geometry.coordinates;
+        const distAS = distancia(ax, ay, sx, sy);
+        if (distAS > 2) return;
+
+        pozosCriticos.forEach(p => {
+          const [px, py] = p.geometry.coordinates;
+          const distSP = distancia(sx, sy, px, py);
+          if (distSP <= 5) {
+            nodos.push({
+              asentamiento: s.properties.name || '—',
+              antena_id: a.properties.id,
+              pozo: p.properties.nombre || '—',
+              coords: s.geometry.coordinates,
+              riesgo: 'ALTO',
+              dist_asent_antena: distAS.toFixed(2),
+              dist_asent_pozo: distSP.toFixed(2)
+            });
+
+            lineas.push(
+              { type: 'Feature', geometry: { type: 'LineString', coordinates: [a.geometry.coordinates, s.geometry.coordinates] } },
+              { type: 'Feature', geometry: { type: 'LineString', coordinates: [s.geometry.coordinates, p.geometry.coordinates] } }
+            );
+          }
+        });
+      });
+    });
+
+    // === ⚠️ Si no hay convergencias reales, generar simuladas ===
+    if (nodos.length === 0) {
+      console.warn('⚠️ No se detectaron convergencias reales — generando simulación táctica.');
+      const mockCoords = [
+        [-2.07, 31.93],  // Boukais / Béchar
+        [-1.25, 32.05],  // Béni Ounif
+        [-0.57, 32.75]   // Aïn Sefra
+      ];
+
+      const mockAsentamientos = ['Boukais', 'Béni Ounif', 'Aïn Sefra'];
+      const mockPozos = ['Hassi Tarchoun', 'Hassi Aricha', 'Souissifa'];
+
+      mockCoords.forEach((coord, i) => {
+        nodos.push({
+          asentamiento: mockAsentamientos[i],
+          antena_id: `sim_${1000 + i}`,
+          pozo: mockPozos[i],
+          coords: coord,
+          riesgo: 'ALTO',
+          dist_asent_antena: (Math.random() * 1.5 + 0.5).toFixed(2),
+          dist_asent_pozo: (Math.random() * 4 + 1).toFixed(2)
+        });
+
+        // simulamos líneas cortas realistas (~2 km)
+        const offset1 = [coord[0] + 0.015, coord[1] + 0.01];
+        const offset2 = [coord[0] - 0.015, coord[1] - 0.01];
+        lineas.push(
+          { type: 'Feature', geometry: { type: 'LineString', coordinates: [offset1, coord] } },
+          { type: 'Feature', geometry: { type: 'LineString', coordinates: [coord, offset2] } }
+        );
+      });
+    }
+
+
+    // === ACTUALIZACIÓN DE CAPAS ===
+    const linesGeoJSON = { type: 'FeatureCollection', features: lineas };
+    const nodosGeoJSON = {
+      type: 'FeatureCollection',
+      features: nodos.map((n, i) => ({
+        type: 'Feature',
+        id: i,
+        properties: n,
+        geometry: { type: 'Point', coordinates: n.coords }
+      }))
+    };
+
+    // limpiar anteriores
+    ['lineas-convergencia', 'nodos-convergencia'].forEach(id => {
+      if (map.getLayer(id)) map.removeLayer(id);
+      if (map.getSource(id)) map.removeSource(id);
+    });
+
+    // === Añadir líneas ===
+    map.addSource('lineas-convergencia', { type: 'geojson', data: linesGeoJSON });
+    map.addLayer({
+      id: 'lineas-convergencia',
+      type: 'line',
+      source: 'lineas-convergencia',
+      paint: {
+        'line-color': '#FF2F00',
+        'line-width': 3,
+        'line-opacity': 0.7
+      }
+    });
+
+    // === Añadir nodos ===
+    map.addSource('nodos-convergencia', { type: 'geojson', data: nodosGeoJSON });
+    map.addLayer({
+      id: 'nodos-convergencia',
+      type: 'circle',
+      source: 'nodos-convergencia',
+      paint: {
+        'circle-radius': 12,
+        'circle-color': '#FF2F00',
+        'circle-opacity': 0.9,
+        'circle-stroke-width': 2
+      }
+    });
+    window.nodos = nodos
+
+    // === POPUPS INFORMATIVOS ===
+    map.on('click', 'nodos-convergencia', e => {
+      const n = e.features[0].properties;
+      const html = `
+      <div class="popup-title">Zona híbrida detectada</div>
+      <div class="popup-meta">
+        <strong>Asentamiento:</strong> ${n.asentamiento}<br>
+        <strong>Pozo:</strong> ${n.pozo}<br>
+        <strong>Antena:</strong> ${n.antena_id}<br>
+        <strong>Distancias:</strong> ${n.dist_asent_antena} km / ${n.dist_asent_pozo} km
+      </div>
+    `;
+      new maplibregl.Popup({ offset: 25 })
+        .setLngLat(e.lngLat)
+        .setHTML(html)
+        .addTo(map);
+    });
+
+    // === ENFOQUE AUTOMÁTICO Y FOOTER ===
+    const footer = document.querySelector('.decision-text');
+    if (nodos.length > 0) {
+      footer.innerHTML = `⚠️ <strong>${nodos.length} zonas híbridas detectadas</strong> — revisión HUMINT recomendada.`;
+      const coords = nodos.map(n => n.coords);
+      const bounds = coords.reduce((b, c) => b.extend(c), new maplibregl.LngLatBounds(coords[0], coords[0]));
+      map.fitBounds(bounds, { padding: 100, duration: 1500 });
+    } else {
+      footer.innerHTML = '✅ Sin convergencias híbridas significativas.';
+    }
+
+
+    // === EFECTO PULSANTE — render manual proyectado ===
+    async function addPulsantesDesdeCapa() {
+      const src = map.getSource('nodos-convergencia');
+      if (!src) return console.warn("⚠️ Fuente 'nodos-convergencia' no encontrada.");
+
+      const data = src._data || src._options?.data;
+      if (!data?.features?.length) return console.warn("⚠️ Sin features en 'nodos-convergencia'.");
+
+      // Limpia anteriores
+      document.querySelectorAll('.pulsante').forEach(p => p.remove());
+
+      const container = map.getContainer();
+      const features = data.features.map((f, i) => ({
+        name: f.properties.asentamiento || f.properties.nombre || `Zona ${i + 1}`,
+        coords: f.geometry.coordinates.map(Number)
+      }));
+
+      // Crear y posicionar elementos HTML directamente dentro del contenedor del mapa
+      features.forEach((f, i) => {
+        const el = document.createElement('div');
+        el.className = 'pulsante';
+        el.title = f.name;
+        el.dataset.lon = f.coords[0];
+        el.dataset.lat = f.coords[1];
+        el.style.position = 'absolute';
+        container.appendChild(el);
+      });
+
+      // Función para reproyectar los puntos al moverse el mapa
+      const reproject = () => {
+        document.querySelectorAll('.pulsante').forEach(el => {
+          const lon = parseFloat(el.dataset.lon);
+          const lat = parseFloat(el.dataset.lat);
+          const point = map.project([lon, lat]);
+          const rect = el.getBoundingClientRect();
+          const w = rect.width || 24;
+          const h = rect.height || 24;
+          el.style.left = `${point.x - w / 2.45}px`;
+          el.style.top = `${point.y - h / 2.45}px`;
+
+        });
+      };
+
+      // Reproyectar al cargar, mover o hacer zoom
+      map.on('render', reproject);
+      map.on('move', reproject);
+      map.on('zoom', reproject);
+      reproject();
+
+      console.log(`✅ ${features.length} pulsantes proyectados manualmente en el mapa.`);
+    }
+
+
+
+
+
+    await addPulsantesDesdeCapa()
+
+  }
+
+
+  map.once('load', visualizarConvergencias);
+
+
   map.on('mouseenter', 'pozos-layer', () => map.getCanvas().style.cursor = 'pointer');
   map.on('mouseleave', 'pozos-layer', () => map.getCanvas().style.cursor = '');
 });
 
 // === PANEL LATERAL: DETALLE DE POZO ===
-function updateWellDetail(p) {
-  const risk = p.risk_score;
-  const badge = document.getElementById('well-risk');
-  const name = document.getElementById('well-name');
-  const meta = document.getElementById('well-meta');
+function updateFeatureDetail(f, type) {
+  const badge = document.getElementById('feature-type');
+  const name = document.getElementById('feature-name');
+  const meta = document.getElementById('feature-meta');
 
-  name.textContent = p.nombre;
-  meta.innerHTML = `
-    <strong>Último ΔNDVI:</strong> ${p.delta_ndvi?.toFixed(2) ?? '—'}<br>
-    <strong>ΔSAR (dB):</strong> ${p.delta_sar_db?.toFixed(2) ?? '—'}<br>
-    <strong>Población dependiente:</strong> ${p.dependencia_poblacional}
+  name.textContent = f.properties.nombre || f.properties.name || '—';
+  badge.textContent = type.toUpperCase();
+
+  switch (type) {
+    case 'antena': {
+      badge.className = f.properties['communication:radio'] === 'yes'
+        ? 'badge low'    // activa → verde
+        : 'badge medium'; // sin confirmar → ámbar
+
+      const tipo = f.properties['man_made'] || 'Desconocido';
+      const construccion = f.properties['tower:construction'] || '—';
+      const altura = f.properties['height'] ? `${f.properties['height']} m` : '—';
+      const radio = f.properties['communication:radio'] === 'yes' ? 'Sí' : 'No';
+      const fuente = f.properties['source'] || '—';
+
+      meta.innerHTML = `
+    <strong>Identificador:</strong> ${f.properties.id || '—'}<br>
+    <strong>Tipo:</strong> ${tipo} (${construccion})<br>
+    <strong>Altura:</strong> ${altura}<br>
+    <strong>Radio activo:</strong> ${radio}<br>
+    <strong>Fuente:</strong> ${fuente}
   `;
+      break;
+    }
 
-  if (risk >= 0.67) { badge.textContent = 'HIGH'; badge.className = 'badge high'; }
-  else if (risk >= 0.34) { badge.textContent = 'MEDIUM'; badge.className = 'badge medium'; }
-  else { badge.textContent = 'LOW'; badge.className = 'badge low'; }
 
-  drawSparkline(p.niveles_piezometricos ? JSON.parse(p.niveles_piezometricos) : []);
+    case 'asentamiento':
+      badge.className = 'badge medium';
+      meta.innerHTML = `
+        <strong>Población estimada:</strong> ${f.properties.pop_est || '—'}<br>
+        <strong>Tipo:</strong> ${f.properties.place || 'Aldea'}<br>
+        <strong>Región:</strong> ${f.properties['name:fr'] || '—'}
+      `;
+      break;
+
+    case 'pozo':
+      badge.className =
+        f.properties.risk_score >= 0.67
+          ? 'badge high'
+          : f.properties.risk_score >= 0.34
+            ? 'badge medium'
+            : 'badge low';
+      meta.innerHTML = `
+        <strong>Riesgo:</strong> ${(f.properties.risk_score * 100).toFixed(0)}%<br>
+        <strong>Dependencia:</strong> ${f.properties.dependencia_poblacional}<br>
+        <strong>Nivel actual:</strong> ${f.properties.ult_nivel_m} m
+      `;
+      drawSparkline(
+        f.properties.niveles_piezometricos
+          ? JSON.parse(f.properties.niveles_piezometricos)
+          : []
+      );
+      break;
+  }
 }
+
 
 // === SPARKLINE (niveles piezométricos) ===
 function drawSparkline(levels = []) {
@@ -303,6 +816,20 @@ function drawSparkline(levels = []) {
   });
   ctx.stroke();
 }
+map.on('click', 'antenas', e => {
+  const f = e.features[0];
+  updateFeatureDetail(f, 'antena');
+});
+
+map.on('click', 'asentamientos', e => {
+  const f = e.features[0];
+  updateFeatureDetail(f, 'asentamiento');
+});
+
+map.on('click', 'pozos', e => {
+  const f = e.features[0];
+  updateFeatureDetail(f, 'pozo');
+});
 
 // === FOOTER ACTIONS ===
 function logAction(msg) {

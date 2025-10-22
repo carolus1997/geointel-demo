@@ -43,14 +43,23 @@ body {
   min-width: 100px;
 }
 
-.kpi-card.red { border: 1px solid #ff4d4d; }
-.kpi-card.amber { border: 1px solid #ffb020; }
-.kpi-card.cyan { border: 1px solid #00ffc6; }
+.kpi-card.red {
+  border: 1px solid #ff4d4d;
+}
+
+.kpi-card.amber {
+  border: 1px solid #ffb020;
+}
+
+.kpi-card.cyan {
+  border: 1px solid #00ffc6;
+}
 
 .kpi-title {
   font-size: 0.75em;
   color: #888;
 }
+
 .kpi-value {
   font-size: 1.2em;
   font-weight: bold;
@@ -79,9 +88,17 @@ body {
   border-radius: 4px;
 }
 
-.intel-card.green { border-color: #00c896; }
-.intel-card.amber { border-color: #ffb020; }
-.intel-card.red { border-color: #ff4d4d; }
+.intel-card.green {
+  border-color: #00c896;
+}
+
+.intel-card.amber {
+  border-color: #ffb020;
+}
+
+.intel-card.red {
+  border-color: #ff4d4d;
+}
 
 .well-detail {
   background: #1d1e21;
@@ -101,9 +118,18 @@ body {
   border-radius: 4px;
   font-size: 0.8em;
 }
-.badge.low { background: #00c896; }
-.badge.medium { background: #ffb020; }
-.badge.high { background: #ff4d4d; }
+
+.badge.low {
+  background: #00c896;
+}
+
+.badge.medium {
+  background: #ffb020;
+}
+
+.badge.high {
+  background: #ff4d4d;
+}
 
 /* === MAPA === */
 .map-panel {
@@ -152,17 +178,41 @@ body {
   border-radius: 4px;
   transition: all 0.2s ease;
 }
+
 .btn:hover {
   background: #00ffc6;
   color: #000;
 }
 
-.btn.green { border-color: #00c896; color: #00c896; }
-.btn.green:hover { background: #00c896; color: #000; }
-.btn.amber { border-color: #ffb020; color: #ffb020; }
-.btn.amber:hover { background: #ffb020; color: #000; }
-.btn.red { border-color: #ff4d4d; color: #ff4d4d; }
-.btn.red:hover { background: #ff4d4d; color: #000; }
+.btn.green {
+  border-color: #00c896;
+  color: #00c896;
+}
+
+.btn.green:hover {
+  background: #00c896;
+  color: #000;
+}
+
+.btn.amber {
+  border-color: #ffb020;
+  color: #ffb020;
+}
+
+.btn.amber:hover {
+  background: #ffb020;
+  color: #000;
+}
+
+.btn.red {
+  border-color: #ff4d4d;
+  color: #ff4d4d;
+}
+
+.btn.red:hover {
+  background: #ff4d4d;
+  color: #000;
+}
 
 /* === ALERTA DE DECISIÓN === */
 .decision-panel.alerting {
@@ -248,3 +298,82 @@ body {
 .popup-meta span {
   color: #00C896;
 }
+
+@keyframes pulso {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.4);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+.maplibregl-canvas+.maplibregl-popup-content .popup-title {
+  font-weight: bold;
+  color: #ff2f00;
+}
+
+.intel-control {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2000;
+}
+
+.layer-toggle {
+  background: rgba(20, 20, 20, 0.9);
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.layer-toggle:hover {
+  background: #00C896;
+  color: #111;
+}
+
+.layer-toggle.active {
+  background: #00c8962c;
+  color: #ffffff;
+}
+
+.pulsante {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 47, 0, 0.8);
+  box-shadow: 0 0 12px 4px rgba(255, 47, 0, 0.5);
+  animation: pulse 1.5s infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.8);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+

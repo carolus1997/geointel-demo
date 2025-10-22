@@ -28,19 +28,20 @@
             </div>
 
             <div class="kpi-strip">
-                <div class="kpi-card red">
-                    <span class="kpi-title">Pozos HIGH</span>
-                    <span id="kpi-high" class="kpi-value">—</span>
+                <div class="kpi-card cyan">
+                    <span class="kpi-title">Antenas activas</span>
+                    <span id="kpi-antenas" class="kpi-value">—</span>
                 </div>
                 <div class="kpi-card amber">
-                    <span class="kpi-title">EWI Activas</span>
-                    <span id="kpi-ewi" class="kpi-value">—</span>
+                    <span class="kpi-title">Aglomeraciones</span>
+                    <span id="kpi-asentamientos" class="kpi-value">—</span>
                 </div>
-                <div class="kpi-card cyan">
-                    <span class="kpi-title">Pob. afectada</span>
-                    <span id="kpi-pop" class="kpi-value">—</span>
+                <div class="kpi-card red">
+                    <span class="kpi-title">Pozos críticos</span>
+                    <span id="kpi-pozos" class="kpi-value">—</span>
                 </div>
             </div>
+
 
             <div class="mission-actions">
                 <button id="btn-back" class="btn">
@@ -53,30 +54,35 @@
         <main class="dashboard-main">
             <!-- PANEL LATERAL -->
             <aside class="intel-panel">
-                <h2>Indicadores Clave</h2>
-                <div class="intel-card green">
-                    <h3>ΔNDVI</h3>
-                    <p id="ndvi-summary">—</p>
-                </div>
-                <div class="intel-card amber">
-                    <h3>ΔSAR</h3>
-                    <p id="sar-summary">—</p>
-                </div>
-                <div class="intel-card red">
-                    <h3>InfoOps</h3>
-                    <p id="infoops-summary">—</p>
+                <h2>Indicadores de Convergencia</h2>
+
+                <div class="intel-card cyan">
+                    <h3>Infraestructura Comunicaciones</h3>
+                    <p id="intel-antenas" class="intel-card">Análisis en curso...</p>
                 </div>
 
-                <h2>Detalle Pozo</h2>
+                <div class="intel-card amber">
+                    <h3>Concentración Humana</h3>
+                    <p id="intel-asentamientos">Análisis en curso...</p>
+                </div>
+
+                <div class="intel-card red">
+                    <h3>Recursos Críticos</h3>
+                    <p id="intel-recursos" class="intel-card">Análisis en curso...</p>
+                </div>
+
+                <h2>Detalle de Elemento</h2>
                 <div class="well-detail">
                     <div class="well-header">
-                        <span id="well-name">—</span>
-                        <span id="well-risk" class="badge">—</span>
+                        <span id="feature-name">Selecciona un elemento</span>
+                        <span id="feature-type" class="badge">—</span>
                     </div>
                     <canvas id="sparkline" width="280" height="60"></canvas>
-                    <div id="well-meta" class="well-meta">Selecciona un pozo en el mapa.</div>
+                    <div id="feature-meta" class="well-meta">Haz clic en una antena, asentamiento o pozo para ver
+                        detalles.</div>
                 </div>
             </aside>
+
 
             <!-- MAPA CENTRAL -->
             <section class="map-panel">
