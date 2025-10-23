@@ -1164,3 +1164,37 @@ button.btn-activa {
 .risk-grid-wrapper::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
+
+
+.layers-panel {
+  position: absolute;
+  top: 100px;
+  right: 15px;
+  background: rgba(10,10,10,0.85);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  z-index: 2000;
+  width: 190px;
+  backdrop-filter: blur(3px);
+}
+.layers-panel h3 {
+  font-size: 14px;
+  margin-top: 0;
+  border-bottom: 1px solid #333;
+  padding-bottom: 4px;
+}
+.layer-item {
+  margin: 6px 0;
+}
+.layer-item label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.layer-item input {
+  margin-right: 8px;
+  accent-color: #00ffc6;
+}

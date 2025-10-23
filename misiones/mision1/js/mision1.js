@@ -1,4 +1,5 @@
 import { renderZonasRiesgo } from './puntosRiesgo.js';
+import { initLayersControl } from './layersControl.js';
 
 const MAPTILER_KEY = 'rk78lPIZURCYo6I9QQdi';
 
@@ -25,28 +26,67 @@ map.on('load', () => {
     map.triggerRepaint();
   });
 
+
+  // === CARGA DE CAPAS GEOJSON ===
+  const dataPath = './data/';
+
+  // === Dentro de mision1.js ===
+  async function addGeoJSONLayer(id, file, type, paint, visible = false) {
+    const res = await fetch(`${dataPath}${file}`);
+    if (!res.ok) return console.warn(`⚠️ No se pudo cargar ${file}`);
+    const data = await res.json();
+
+    map.addSource(id, { type: 'geojson', data });
+    const layer = { id, type, source: id, paint, layout: { visibility: visible ? 'visible' : 'none' } };
+
+    // 🟢 Añadir encima de todo
+    const lastLayer = map.getStyle().layers.at(-1).id;
+    map.addLayer(layer, lastLayer);
+
+    console.log(`✅ Capa añadida: ${id}`);
+  }
+
+  // === CARGA DE TODAS LAS CAPAS ===
+  (async () => {
+  const capas = [
+    ['barrios', 'barrios.geojson', 'fill', { 'fill-color': '#f2ca50', 'fill-opacity': 0.4 }],
+    ['comisarias', 'comisarias.geojson', 'circle', { 'circle-color': '#00C896', 'circle-radius': 6 }],
+    ['Mezquitas', 'Mezquitas.geojson', 'circle', { 'circle-color': '#00E5FF', 'circle-radius': 6 }],
+    ['Parques', 'Parques.geojson', 'fill', { 'fill-color': '#00FF88', 'fill-opacity': 0.4 }],
+    ['Fuentes', 'FuentesAguaParques.geojson', 'circle', { 'circle-color': '#00BFFF', 'circle-radius': 4 }],
+    ['BancosParques', 'BancosParques.geojson', 'circle', { 'circle-color': '#FF8C00', 'circle-radius': 4 }],
+    ['EstacionesMetro', 'EstacionesMetro.geojson', 'circle', { 'circle-color': '#FFD700', 'circle-radius': 6 }],
+    ['bufferMetro', '200mMetro.geojson', 'fill', { 'fill-color': '#8A2BE2', 'fill-opacity': 0.3 }],
+    ['SSCCDemografia', 'SSCCDemografia.geojson', 'fill', { 'fill-color': '#C71585', 'fill-opacity': 0.3 }]
+  ];
+
+  // 1️⃣ Añadir todas las capas y esperar
+  for (const [id, file, type, paint] of capas) {
+    await addGeoJSONLayer(id, file, type, paint, id === 'barrios');
+  }
+
+  // 2️⃣ Esperar un frame para que se registren
+  await new Promise(r => setTimeout(r, 200));
+
+  // 3️⃣ Crear el panel solo cuando existan las capas
+  initLayersControl(map, [
+    { id: 'barrios', name: 'Barrios', visible: true },
+    { id: 'comisarias', name: 'Comisarías', visible: false },
+    { id: 'Mezquitas', name: 'Mezquitas', visible: false },
+    { id: 'Parques', name: 'Parques', visible: false },
+    { id: 'Fuentes', name: 'Fuentes de agua', visible: false },
+    { id: 'BancosParques', name: 'Bancos de parques', visible: false },
+    { id: 'EstacionesMetro', name: 'Estaciones de metro', visible: false },
+    { id: 'bufferMetro', name: 'Área 200 m de metro', visible: false },
+    { id: 'SSCCDemografia', name: 'Demografía (SSCC)', visible: false }
+  ]);
+ 
+
+})();
+
+ map.triggerRepaint();
+
   // === CAPAS BASE: RELIEVE Y SATÉLITE ===
-  const firstLayerId = map.getStyle().layers[0].id;
-
-  map.addSource('hillshade', {
-    type: 'raster',
-    tiles: [`https://api.maptiler.com/tiles/hillshade/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`],
-    tileSize: 256,
-    attribution: '&copy; MapTiler'
-  });
-
-  map.addLayer({
-    id: 'hillshade-layer',
-    type: 'raster',
-    source: 'hillshade',
-    paint: {
-      'raster-opacity': 0.45,
-      'raster-contrast': 0.25,
-      'raster-brightness-min': 0.7,
-      'raster-brightness-max': 1.0
-    },
-    layout: { visibility: 'visible' }
-  }, firstLayerId);
 
   map.addSource('satellite', {
     type: 'raster',
@@ -153,6 +193,8 @@ map.on('load', () => {
   } catch (err) {
     console.error("❌ Error al inicializar Toolbox o Draw:", err);
   }
+
+
 
 });
 
