@@ -1177,7 +1177,7 @@ button.btn-activa {
   border-radius: 10px;
   font-size: 13px;
   z-index: 2000;
-  width: 190px;
+  width: 200px;
   backdrop-filter: blur(3px);
 }
 .layers-panel h3 {
@@ -1187,14 +1187,26 @@ button.btn-activa {
   padding-bottom: 4px;
 }
 .layer-item {
-  margin: 6px 0;
-}
-.layer-item label {
-  cursor: pointer;
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: grab;
 }
-.layer-item input {
-  margin-right: 8px;
-  accent-color: #00ffc6;
+
+.layer-item.dragging {
+  opacity: 0.4;
+  background: rgba(0,255,198,0.1);
+}
+.layer-name {
+  margin-left: 6px;
+}
+.drag-handle {
+  cursor: grab;
+  font-size: 14px;
+  opacity: 0.5;
+}
+.drag-handle:hover {
+  opacity: 1;
 }
