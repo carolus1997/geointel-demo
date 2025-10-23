@@ -54,52 +54,80 @@ map.on('load', () => {
     const data = await res.json();
 
     map.addSource(id, { type: 'geojson', data });
+
+    // 🧹 Eliminar propiedades no soportadas por MapLibre
+    if (type === 'fill') {
+      delete paint['fill-outline-width'];
+    }
+
     const layer = { id, type, source: id, paint, layout: { visibility: visible ? 'visible' : 'none' } };
 
-    // 🟢 Añadir encima de todo
     const lastLayer = map.getStyle().layers.at(-1).id;
     map.addLayer(layer, lastLayer);
 
     console.log(`✅ Capa añadida: ${id}`);
   }
 
+
   // === CARGA DE TODAS LAS CAPAS ===
   (async () => {
+    const styles = await (await fetch('./data/estilos/data/styles.json')).json();
+
     const capas = [
-      ['barrios', 'barrios.geojson', 'fill', { 'fill-color': '#f2ca50', 'fill-opacity': 0.4 }],
-      ['comisarias', 'comisarias.geojson', 'circle', { 'circle-color': '#00C896', 'circle-radius': 6 }],
-      ['Mezquitas', 'Mezquitas.geojson', 'circle', { 'circle-color': '#00E5FF', 'circle-radius': 6 }],
-      ['Parques', 'Parques.geojson', 'fill', { 'fill-color': '#00FF88', 'fill-opacity': 0.4 }],
-      ['Fuentes', 'FuentesAguaParques.geojson', 'circle', { 'circle-color': '#00BFFF', 'circle-radius': 4 }],
-      ['BancosParques', 'BancosParques.geojson', 'circle', { 'circle-color': '#FF8C00', 'circle-radius': 4 }],
-      ['EstacionesMetro', 'EstacionesMetro.geojson', 'circle', { 'circle-color': '#FFD700', 'circle-radius': 6 }],
-      ['bufferMetro', '200mMetro.geojson', 'fill', { 'fill-color': '#8A2BE2', 'fill-opacity': 0.3 }],
-      ['SSCCDemografia', 'SSCCDemografia.geojson', 'fill', { 'fill-color': '#C71585', 'fill-opacity': 0.3 }]
+      ['barrios', 'barrios.geojson', 'fill', { 'fill-opacity': 0 }],
+      ['Comisarias', 'comisarias.geojson', 'circle', styles.Comisarias],
+      ['Mezquitas', 'Mezquitas.geojson', 'circle', styles.Mezquitas],
+      ['Parques', 'Parques.geojson', 'fill', styles.Parques],
+      ['FuentesAgua', 'FuentesAguaParques.geojson', 'circle', styles.FuentesAgua],
+      ['BancosParques', 'BancosParques.geojson', 'circle', styles.BancosParques],
+      ['EstacionesMetro', 'EstacionesMetro.geojson', 'circle', styles.EstacionesMetro],
+      ['bufferMetro', '200mMetro.geojson', 'fill', styles['200mMetro']],
+      ['SSCCDemografia', 'SSCCDemografia.geojson', 'fill', styles.SSCC]
     ];
 
-    // 1️⃣ Añadir todas las capas y esperar
+    // Añadir capas
     for (const [id, file, type, paint] of capas) {
       await addGeoJSONLayer(id, file, type, paint, id === 'barrios');
     }
 
-    // 2️⃣ Esperar un frame para que se registren
+    // Esperar un poco
     await new Promise(r => setTimeout(r, 200));
 
-    // 3️⃣ Crear el panel solo cuando existan las capas
+    // Añadir etiquetas de barrios
+    map.addLayer({
+      id: 'barrios-labels',
+      type: 'symbol',
+      source: 'barrios',
+      layout: {
+        'text-field': ['get', 'NOMBRE'],
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-size': 12,
+        'text-allow-overlap': false,
+        'text-offset': [0, 0.8],
+        'text-anchor': 'top'
+      },
+      paint: {
+        'text-color': '#ffffff',
+        'text-halo-color': '#000000',
+        'text-halo-width': 1.2
+      }
+    });
+
+    // Crear panel de capas (sin barrios)
     initLayersControl(map, [
-      { id: 'barrios', name: 'Barrios', visible: true },
-      { id: 'comisarias', name: 'Comisarías', visible: false },
+      { id: 'barrios-labels', name: 'Barrios', visible: true },
+      { id: 'Comisarias', name: 'Comisarías', visible: false },
       { id: 'Mezquitas', name: 'Mezquitas', visible: false },
       { id: 'Parques', name: 'Parques', visible: false },
-      { id: 'Fuentes', name: 'Fuentes de agua', visible: false },
+      { id: 'FuentesAgua', name: 'Fuentes de agua', visible: false },
       { id: 'BancosParques', name: 'Bancos de parques', visible: false },
       { id: 'EstacionesMetro', name: 'Estaciones de metro', visible: false },
       { id: 'bufferMetro', name: 'Área 200 m de metro', visible: false },
       { id: 'SSCCDemografia', name: 'Demografía (SSCC)', visible: false }
     ]);
-
-
   })();
+
+
 
   map.triggerRepaint();
 

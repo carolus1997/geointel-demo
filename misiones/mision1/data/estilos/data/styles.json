@@ -1,0 +1,45 @@
+{
+  "200mMetro": {
+    "fill-color": "#e5b636",
+    "fill-opacity": 0.42,
+    "fill-outline-color": "#232323",
+    "fill-outline-width": 0.5
+  },
+  "BancosParques": {
+    "circle-color": "#8d5a00",
+    "circle-opacity": 1,
+    "circle-radius": 2
+  },
+  "Comisarias": {
+    "circle-color": "#18a2ff",
+    "circle-opacity": 1,
+    "circle-radius": 9.666666666666666
+  },
+  "EstacionesMetro": {
+    "circle-color": "#e8718d",
+    "circle-opacity": 1,
+    "circle-radius": 4.666666666666667
+  },
+  "FuentesAgua": {
+    "circle-color": "#18a2ff",
+    "circle-opacity": 1,
+    "circle-radius": 2
+  },
+  "Mezquitas": {
+    "circle-color": "#33a02c",
+    "circle-opacity": 1,
+    "circle-radius": 3.6666666666666665
+  },
+  "Parques": {
+    "fill-color": "#94d180",
+    "fill-opacity": 0.4,
+    "fill-outline-color": "#000000",
+    "fill-outline-width": 0.5
+  },
+  "SSCC": {
+    "fill-color": "#2b83ba",
+    "fill-opacity": 0.45,
+    "fill-outline-color": "#232323",
+    "fill-outline-width": 1
+  }
+}
