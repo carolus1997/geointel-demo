@@ -40,13 +40,13 @@ window.TacticoModule = (() => {
     const check = () => {
       const dist = getDistanceKm(bam.getLngLat(), narco.getLngLat());
       if (dist <= DETECTION_RADIUS_KM && !detectionTriggered) {
-        console.log(`🎯 Contacto detectado a ${dist.toFixed(2)} km`);
+        console.log(`Contacto detectado a ${dist.toFixed(2)} km`);
         detectionTriggered = true;
         RadarModule.setAlertMode(true);
         triggerDetection(bam._map || map, narcoId);
 
       } else if (!detectionTriggered && dist < DETECTION_RADIUS_KM + 5) {
-        console.log(`📡 Distancia actual: ${dist.toFixed(2)} km`);
+        console.log(`Distancia actual: ${dist.toFixed(2)} km`);
       }
       requestAnimationFrame(check);
     };
@@ -58,7 +58,7 @@ window.TacticoModule = (() => {
   // === Efecto visual + respuesta táctica ===
   async function triggerDetection(mapInstance, targetId = 'narcolancha') {
     if (!window.MovimientoModule || !window.CoordUtils) {
-      console.warn('⏳ Esperando a que los módulos estén listos...');
+      console.warn('Esperando a que los módulos estén listos...');
       setTimeout(() => triggerDetection(mapInstance, targetId), 500);
       return;
     }
@@ -79,7 +79,7 @@ window.TacticoModule = (() => {
       .addTo(mapInstance);
     setTimeout(() => popup.remove(), 5000);
 
-    console.log('🎯 Detección confirmada:', targetId);
+    console.log('Detección confirmada:', targetId);
 
     setTimeout(async () => {
       const heliSpeed = 70; // m/s
@@ -125,11 +125,19 @@ window.TacticoModule = (() => {
       HelicopterModule.deploy(interceptPointLonLat, {
         speed: 120,
         onArrival: () => {
-          console.log('🌀 Helicóptero llegó al punto de intercepción, inicia persecución');
+          console.log('Helicóptero llegó al punto de intercepción, inicia persecución');
           HelicopterModule.followUnit('narcolancha', {
             heliSpeedMps: 120,
             leadSeconds: 6
           });
+
+          if (window.GuardiaCivilModule?.notifyComandancias) {
+            GuardiaCivilModule.notifyComandancias({
+              message: 'Interceptación confirmada en el Estrecho',
+              source: 'BAM',
+              level: 'alerta'
+            });
+          }
         }
       });
     }, 3000);

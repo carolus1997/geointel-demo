@@ -237,7 +237,13 @@ map.on('load', async () => {
 
 
   // === 5) Esperar a que los módulos globales estén listos ===
-  await waitForModules(['MovimientoModule', 'RadarModule', 'HelicopterModule']);
+  await waitForModules([
+    'MovimientoModule',
+    'RadarModule',
+    'HelicopterModule',
+    'GuardiaCivilModule',
+    'PulseModule'
+  ]);
 
   // === 6) Lanzar misión principal ===
   if (typeof startMision2 === 'function') {
@@ -279,10 +285,26 @@ async function startMision2() {
   try {
     console.log('🚀 Iniciando Misión 2...');
 
+
+    // 🔹 Función segura para obtener coordenadas (Point o Polygon)
+    function getCoords(geom) {
+      if (!geom) return null;
+      if (geom.type === "Point") return geom.coordinates;
+      if (Array.isArray(geom.coordinates?.[0])) return geom.coordinates[0];
+      return geom.coordinates;
+    }
+
+
     // 1️⃣ Cargar unidades principales
     await MovimientoModule.init(map, '../../data/unidades_maritimas.geojson');
     await waitForModules(['MovimientoModule', 'RadarModule', 'HelicopterModule']);
-    ;
+
+
+    if (window.PulseModule?.init) PulseModule.init(map);
+    console.log("🧩 svgRoot en PulseModule:", document.querySelector(".pulse-svg-overlay"));
+
+
+
     if (window.HelicopterRadar?.init) HelicopterRadar.init(map);
 
 
@@ -303,6 +325,85 @@ async function startMision2() {
     const NARCO_SPEED = 20;
     if (bamRoute) MovimientoModule.animateUnit('bam', bamRoute, BAM_SPEED);
     if (narcoRoute) MovimientoModule.animateUnit('narcolancha', narcoRoute, NARCO_SPEED);
+
+    // ⬇️ Coloca esto tras las animaciones del BAM y la narcolancha
+    startInterceptionWatcher();
+
+    function startInterceptionWatcher() {
+      let fired = false;
+      const THRESH_KM = 1.0;
+
+      function tick() {
+        const heli = MovimientoModule.getPosition("helicoptero");
+        const narco = MovimientoModule.getPosition("narcolancha");
+        if (!heli || !narco) return requestAnimationFrame(tick);
+
+        const d = turf.distance(turf.point(heli), turf.point(narco), {
+          units: "kilometers"
+        });
+
+        if (!fired && d <= THRESH_KM) {
+          fired = true;
+          console.log("🚨 Interceptación confirmada por NH90");
+
+          // === 1️⃣ ACTIVAR PULSO AMARILLO (Helicóptero ↔ BAM)
+          console.log("🟡 Activando enlace directo Helicóptero ↔ BAM");
+          PulseModule.link(
+            "heli-bam",
+            () => MovimientoModule.getPosition("helicoptero"),
+            () => MovimientoModule.getPosition("bam"),
+            { color: "#FFD000", frequency: 1, speed: 0.7 }
+          );
+
+          // === 2️⃣ ACTIVAR PULSOS VERDES (Comandancias ↔ Cuarteles)
+          console.log("🟩 Activando red terrestre de Guardia Civil...");
+          const { asignaciones } =
+            GuardiaCivilModule.assignCuartelesToNearestComandancia?.() || {};
+
+          asignaciones?.forEach((cuarteles, cmdNombre) => {
+            const cmd = GuardiaCivilModule._gcComandancias.find(
+              c => c.properties.nombre === cmdNombre
+            );
+            if (!cmd) return;
+
+            cuarteles.forEach((cuartel, j) => {
+              console.log(`🟩 Enlace ${cmdNombre} → ${cuartel.properties.nombre}`);
+              PulseModule.link(
+                `cmd-${cmdNombre}-${j}`,
+                () => getCoords(cmd.geometry),
+                () => getCoords(cuartel.geometry),
+                { color: "#00FF90", frequency: 0.4, speed: 0.4 }
+              );
+
+            });
+          });
+
+          // === 3️⃣ Notificar a las comandancias y propagar alerta
+          window.GuardiaCivilModule?.notifyComandancias({
+            message: "Interceptación confirmada por helicóptero NH90.",
+            source: "Helicóptero",
+            level: "alerta"
+          });
+
+          setTimeout(() => {
+            window.GuardiaCivilModule?.propagateAlertNearest?.();
+          }, 900);
+
+          return; // 🔚 Detener watcher tras interceptar
+        }
+
+
+        if (!fired) requestAnimationFrame(tick);
+
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+
+
+
+
 
     // 4️⃣ BIS) Desplegar Guardia Civil (cuarteles fijos)
     try {
@@ -343,9 +444,40 @@ async function startMision2() {
       }
 
       console.log(`✅ ${data.features.length} cuarteles de la Guardia Civil desplegados`);
+
+      // === Enlaces dinámicos de comunicación ===
+      console.log("⚡ Activando enlaces de comunicación táctica...");
+
+
+
+      // 🟦 y 🟩 se activan cuando Guardia Civil esté lista
+      window.addEventListener("GC_READY", () => {
+        console.log("🟩 Guardia Civil lista — creando enlaces a comandancias y cuarteles");
+
+        // 🟦 BAM → Comandancias
+        window.GuardiaCivilModule._gcComandancias?.forEach((cmd, i) => {
+          console.log(`🟦 Enlace BAM → ${cmd.properties.nombre}`);
+          const bamMarker = MovimientoModule.getMarker("bam");
+          const bamPos = bamMarker?.getLngLat();
+          const cmdCoords = getCoords(cmd.geometry);
+          if (!bamPos || !cmdCoords) return;
+
+          PulseModule.link(
+            `bam-${cmd.properties.nombre.replace(/\s+/g, '_')}`,
+            () => MovimientoModule.getPosition("bam"),
+            () => getCoords(cmd.geometry),
+            { color: "#00fbffff", frequency: 1.0, speed: 0.8 }
+          );
+
+        });
+
+
+      });
+
     } catch (err) {
       console.error('❌ Error al cargar cuarteles de la Guardia Civil:', err);
     }
+
     // === POPUPS tácticos estilizados ===
     map.on('click', 'guardia_civil_layer', (e) => {
       const props = e.features[0].properties;
@@ -400,6 +532,11 @@ async function startMision2() {
     console.error('❌ Error en startMision2:', err);
   }
 }
+
+map.on("render", () => {
+  if (window.PulseModule?.update) PulseModule.update();
+  if (window.GuardiaCivilModule?.updateConnections) GuardiaCivilModule.updateConnections();
+});
 
 
 // ————————————————————————————————

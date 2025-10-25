@@ -29,6 +29,15 @@ window.HelicopterRadar = (() => {
         }
       });
     }
+
+    map.on("move", () => {
+      const src = map.getSource(radarId);
+      if (src && HelicopterModule?.getPosition) {
+        const pos = MovimientoModule.getPosition("helicoptero");
+        if (pos) update(pos);
+      }
+    });
+
   }
 
   // 🔄 Actualiza posición y animación (cada ~250ms)

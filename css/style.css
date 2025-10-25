@@ -609,33 +609,55 @@ button.btn-activa {
 }
 
 /* Popup táctico MapLibre */
-.maplibregl-popup.popup-tactico .maplibregl-popup-content{
-  background: rgba(15,20,25,0.95) !important;
+.maplibregl-popup.popup-tactico .maplibregl-popup-content {
+  background: rgba(15, 20, 25, 0.95) !important;
   border: 1px solid #00C896;
   border-radius: 10px;
-  box-shadow: 0 0 14px rgba(0,200,150,0.35);
+  box-shadow: 0 0 14px rgba(0, 200, 150, 0.35);
   color: #cfe9e9;
   padding: 10px 12px;
   font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 /* Punta del globo (triángulo) con el mismo color del fondo */
-.maplibregl-popup.popup-tactico .maplibregl-popup-tip { border-top-color: rgba(15,20,25,0.95); }
-.maplibregl-popup.popup-tactico.maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: rgba(15,20,25,0.95); }
-.maplibregl-popup.popup-tactico.maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: rgba(15,20,25,0.95); }
-.maplibregl-popup.popup-tactico.maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: rgba(15,20,25,0.95); }
+.maplibregl-popup.popup-tactico .maplibregl-popup-tip {
+  border-top-color: rgba(15, 20, 25, 0.95);
+}
+
+.maplibregl-popup.popup-tactico.maplibregl-popup-anchor-top .maplibregl-popup-tip {
+  border-bottom-color: rgba(15, 20, 25, 0.95);
+}
+
+.maplibregl-popup.popup-tactico.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: rgba(15, 20, 25, 0.95);
+}
+
+.maplibregl-popup.popup-tactico.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: rgba(15, 20, 25, 0.95);
+}
 
 /* Cerrar */
-.maplibregl-popup.popup-tactico .maplibregl-popup-close-button{
-  color:#00E5FF; opacity:0.9;
+.maplibregl-popup.popup-tactico .maplibregl-popup-close-button {
+  color: #00E5FF;
+  opacity: 0.9;
 }
-.maplibregl-popup.popup-tactico .maplibregl-popup-close-button:hover{
-  color:#fff; opacity:1;
+
+.maplibregl-popup.popup-tactico .maplibregl-popup-close-button:hover {
+  color: #fff;
+  opacity: 1;
 }
 
 /* Título y meta (reutilizando tus estilos) */
-.popup-title{ color:#00E5FF; font-weight:700; margin-bottom:6px; }
-.popup-meta span{ color:#00C896; font-size:0.9rem; }
+.popup-title {
+  color: #00E5FF;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.popup-meta span {
+  color: #00C896;
+  font-size: 0.9rem;
+}
 
 
 /* =============================
@@ -1061,27 +1083,209 @@ button.btn-activa {
   justify-content: flex-start;
 }
 
-.gc-icon {
-  position: relative;
-  z-index: 9999 !important;
+
+.gc-glow {
+  filter: drop-shadow(0 0 3px #00c96b55) drop-shadow(0 0 6px #00c96b55) drop-shadow(0 0 9px #00c96b33);
+  animation: gcPulse 2.4s ease-in-out infinite;
 }
 
-.gc-icon:hover {
-  transform: translate(-50%, -50%) scale(1.3);
-  filter: drop-shadow(0 0 5px #00E5FF);
+@keyframes gcPulse {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px #00c96b55);
+  }
+
+  50% {
+    filter: drop-shadow(0 0 7px #00ff9055);
+  }
+}
+
+.popup-alert {
+  background: rgba(10, 20, 12, 0.92);
+  color: #cde8d1;
+  border: 1px solid #0b6d46;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  box-shadow: 0 0 6px rgba(0, 128, 80, 0.25);
+  animation: gcAlertPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes gcAlertPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 6px rgba(0, 128, 80, 0.25);
+  }
+
+  50% {
+    box-shadow: 0 0 10px rgba(0, 128, 80, 0.45);
+  }
+}
+
+.pulse {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--pulse-color, #00e5ff) 0%, transparent 70%);
+  opacity: 0.9;
+  pointer-events: none;
+  animation: pulseTrail 1.5s linear forwards;
+  filter: drop-shadow(0 0 6px var(--pulse-color, #00e5ff));
+  box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.5);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+@keyframes pulseTrail {
+  0% {
+    transform: scale(0.4);
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseTrail {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+    filter: blur(1px);
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+    filter: blur(2px);
+  }
+
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+    filter: blur(3px);
+  }
 }
 
 
-.gc-marker {
-  width: 26px;
-  height: 26px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+.gc-ping {
+  animation: gcPing 1.2s ease-out;
+  box-shadow: 0 0 16px 8px rgba(0, 255, 144, 0.75);
 }
 
-.gc-marker:hover {
-  transform: scale(1.3);
-  filter: drop-shadow(0 0 5px #00E5FF);
+@keyframes gcPing {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.pulse-svg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* === Efecto de cola dinámica en líneas SVG === */
+.pulse-line {
+  stroke-dasharray: 40 120;
+  /* longitud del patrón (cola corta, hueco largo) */
+  animation: pulse-flow 2s linear infinite;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+/* Variación más suave (por ejemplo para enlaces verdes) */
+.pulse-line.slow {
+  stroke-dasharray: 25 150;
+  animation-duration: 4s;
+}
+
+/* Animación: el gradiente se desplaza a lo largo del trazo */
+@keyframes pulse-flow {
+  0% {
+    stroke-dashoffset: 0;
+    opacity: 0.9;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: -160;
+    opacity: 0.8;
+  }
+}
+
+
+/* Panel lateral del log táctico */
+#log-tactico {
+  position: absolute;
+  right: 16px;
+  bottom: 20px;
+  width: 260px;
+  max-height: 35vh;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.55);
+  color: #bdf8c9;
+  font-size: 0.82rem;
+  padding: 8px 10px;
+  border-left: 2px solid #00a060;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+#log-tactico .log-entry {
+  margin-bottom: 4px;
+  animation: fadeIn .5s ease-in;
+}
+
+#log-tactico .hora {
+  color: #00ff9d;
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efecto de ping en los cuarteles alertados */
+.gc-ping {
+  filter: drop-shadow(0 0 5px #00ff9d) drop-shadow(0 0 10px #00ff9d) drop-shadow(0 0 15px #00ff9d);
+  transition: filter 0.3s ease-in-out;
 }
 
 
@@ -1201,7 +1405,7 @@ button.btn-activa {
   position: absolute;
   top: 100px;
   right: 15px;
-  background: rgba(10,10,10,0.85);
+  background: rgba(10, 10, 10, 0.85);
   color: #fff;
   padding: 10px 14px;
   border-radius: 10px;
@@ -1210,64 +1414,38 @@ button.btn-activa {
   width: 200px;
   backdrop-filter: blur(3px);
 }
+
 .layers-panel h3 {
   font-size: 14px;
   margin-top: 0;
   border-bottom: 1px solid #333;
   padding-bottom: 4px;
 }
+
 .layer-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 3px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   cursor: grab;
 }
 
 .layer-item.dragging {
   opacity: 0.4;
-  background: rgba(0,255,198,0.1);
+  background: rgba(0, 255, 198, 0.1);
 }
+
 .layer-name {
   margin-left: 6px;
 }
+
 .drag-handle {
   cursor: grab;
   font-size: 14px;
   opacity: 0.5;
 }
+
 .drag-handle:hover {
   opacity: 1;
 }
-
-
-
-
-/* === 💚 Halo pulsante Guardia Civil === */
-/* 💚 Brillo tenue Guardia Civil (versión discreta) */
-.gc-glow {
-  animation: gcPulse 3s ease-in-out infinite;
-  filter: drop-shadow(0 0 3px #00a85a)
-          drop-shadow(0 0 10px #007b3d)
-          brightness(1.05);
-  opacity: 0.85;
-}
-
-@keyframes gcPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 3px #00a85a)
-            drop-shadow(0 0 10px #007b3d)
-            brightness(1.05);
-    opacity: 0.85;
-  }
-  50% {
-    filter: drop-shadow(0 0 5px #00c06a)
-            drop-shadow(0 0 10px #00994e)
-            brightness(1.15);
-    opacity: 1;
-  }
-}
-
-
-
