@@ -132,37 +132,9 @@ map.on('load', async () => {
 
 
   function getBasePath() {
-  return window.location.origin + '/misiones/mision2/';
-}
-  // === 🌬️ Capa de viento local (tileado con gdal2tiles) ===
-  try {
-    console.log('🌬️ Añadiendo capa de viento local (tiles XYZ)...');
-
-    map.addSource('wind-local', {
-      type: 'raster',
-      tiles: [`${getBasePath()}tiles/WindMap/{z}/{x}/{y}.png`],
-      tileSize: 256,
-      attribution: '© WindMap local — Carlos M.P.'
-    });
-
-    map.addLayer({
-      id: 'wind-local-layer',
-      type: 'raster',
-      source: 'wind-local',
-      paint: {
-        'raster-opacity': 0.85,
-        'raster-brightness-min': 0.8,
-        'raster-brightness-max': 1.0,
-        'raster-contrast': 0.15
-      },
-      layout: { visibility: 'visible' }
-    });
-
-    console.log('✅ Capa de viento local añadida correctamente.');
-  } catch (err) {
-    console.error('❌ Error al añadir capa de viento local:', err);
+    return window.location.origin + '/misiones/mision2/';
   }
-
+  // === 🌬️ Capa de viento local (tileado con gdal2tiles) ===
 
 
 
@@ -310,6 +282,7 @@ async function startMision2() {
     // 1️⃣ Cargar unidades principales
     await MovimientoModule.init(map, '../../data/unidades_maritimas.geojson');
     await waitForModules(['MovimientoModule', 'RadarModule', 'HelicopterModule']);
+    ;
     if (window.HelicopterRadar?.init) HelicopterRadar.init(map);
 
 
@@ -330,6 +303,90 @@ async function startMision2() {
     const NARCO_SPEED = 20;
     if (bamRoute) MovimientoModule.animateUnit('bam', bamRoute, BAM_SPEED);
     if (narcoRoute) MovimientoModule.animateUnit('narcolancha', narcoRoute, NARCO_SPEED);
+
+    // 4️⃣ BIS) Desplegar Guardia Civil (cuarteles fijos)
+    try {
+      console.log('🟩 Desplegando cuarteles de la Guardia Civil...');
+
+      const res = await fetch('./guadiaCivil4326.geojson');
+      const data = await res.json();
+
+      // Registrar el icono si no está cargado
+      if (!map.hasImage('icon_guardia_civil')) {
+        const img = await new Promise((resolve, reject) => {
+          const image = new Image();
+          image.src = '../../img/icons/icon_guardia_civil.png';
+          image.onload = () => resolve(image);
+          image.onerror = reject;
+        });
+        map.addImage('icon_guardia_civil', img);
+      }
+
+      // Crear la fuente GeoJSON
+      if (!map.getSource('guardia_civil')) {
+        map.addSource('guardia_civil', { type: 'geojson', data });
+      }
+
+      // Añadir la capa de símbolos
+      if (!map.getLayer('guardia_civil_layer')) {
+        map.addLayer({
+          id: 'guardia_civil_layer',
+          type: 'symbol',
+          source: 'guardia_civil',
+          layout: {
+            'icon-image': 'icon_guardia_civil',
+            'icon-size': 0.1,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true
+          }
+        });
+      }
+
+      console.log(`✅ ${data.features.length} cuarteles de la Guardia Civil desplegados`);
+    } catch (err) {
+      console.error('❌ Error al cargar cuarteles de la Guardia Civil:', err);
+    }
+    // === POPUPS tácticos estilizados ===
+    map.on('click', 'guardia_civil_layer', (e) => {
+      const props = e.features[0].properties;
+
+      const popupHTML = `
+    <div class="popup-title">${props.nombre}</div>
+    <div class="popup-meta">
+      <span> ${props.localidad}</span><br>
+      ${props.direccion ? `<span>${props.direccion}</span><br>` : ''}
+      <span>${props.provincia}</span>
+    </div>
+    <div style="margin-top:0.6rem; display:flex; gap:6px;">
+      <button class="btn green" onclick="alert('Enviar helicóptero a ${props.localidad}')">Enviar helicóptero</button>
+      <button class="btn amber" onclick="alert('Marcar ${props.localidad} en alerta')">Alerta</button>
+    </div>
+  `;
+
+      new maplibregl.Popup({
+        offset: 18,
+        closeButton: true,
+        closeOnClick: true,
+        className: 'popup-tactico'
+      })
+        .setLngLat(e.lngLat)
+        .setHTML(popupHTML)
+        .addTo(map);
+    });
+
+    // 🧭 Cambia el cursor al pasar sobre los iconos
+    map.on('mouseenter', 'guardia_civil_layer', () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', 'guardia_civil_layer', () => {
+      map.getCanvas().style.cursor = '';
+    });
+
+    // 4️⃣ BIS+) Inicializar módulo de Guardia Civil con líneas a comandancias
+    if (window.GuardiaCivilModule?.init) {
+      await GuardiaCivilModule.init(map, './guadiaCivil4326.geojson');
+    }
+
 
     // 5️⃣ Radar + detección
     setTimeout(() => {

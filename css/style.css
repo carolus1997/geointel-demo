@@ -608,6 +608,36 @@ button.btn-activa {
   color: #00C896;
 }
 
+/* Popup táctico MapLibre */
+.maplibregl-popup.popup-tactico .maplibregl-popup-content{
+  background: rgba(15,20,25,0.95) !important;
+  border: 1px solid #00C896;
+  border-radius: 10px;
+  box-shadow: 0 0 14px rgba(0,200,150,0.35);
+  color: #cfe9e9;
+  padding: 10px 12px;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* Punta del globo (triángulo) con el mismo color del fondo */
+.maplibregl-popup.popup-tactico .maplibregl-popup-tip { border-top-color: rgba(15,20,25,0.95); }
+.maplibregl-popup.popup-tactico.maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: rgba(15,20,25,0.95); }
+.maplibregl-popup.popup-tactico.maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: rgba(15,20,25,0.95); }
+.maplibregl-popup.popup-tactico.maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: rgba(15,20,25,0.95); }
+
+/* Cerrar */
+.maplibregl-popup.popup-tactico .maplibregl-popup-close-button{
+  color:#00E5FF; opacity:0.9;
+}
+.maplibregl-popup.popup-tactico .maplibregl-popup-close-button:hover{
+  color:#fff; opacity:1;
+}
+
+/* Título y meta (reutilizando tus estilos) */
+.popup-title{ color:#00E5FF; font-weight:700; margin-bottom:6px; }
+.popup-meta span{ color:#00C896; font-size:0.9rem; }
+
+
 /* =============================
    🔹 SECCION DE DOCUMENTOS
 ============================= */
@@ -1210,3 +1240,34 @@ button.btn-activa {
 .drag-handle:hover {
   opacity: 1;
 }
+
+
+
+
+/* === 💚 Halo pulsante Guardia Civil === */
+/* 💚 Brillo tenue Guardia Civil (versión discreta) */
+.gc-glow {
+  animation: gcPulse 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 3px #00a85a)
+          drop-shadow(0 0 10px #007b3d)
+          brightness(1.05);
+  opacity: 0.85;
+}
+
+@keyframes gcPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px #00a85a)
+            drop-shadow(0 0 10px #007b3d)
+            brightness(1.05);
+    opacity: 0.85;
+  }
+  50% {
+    filter: drop-shadow(0 0 5px #00c06a)
+            drop-shadow(0 0 10px #00994e)
+            brightness(1.15);
+    opacity: 1;
+  }
+}
+
+
+

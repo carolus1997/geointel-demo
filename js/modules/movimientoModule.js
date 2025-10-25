@@ -24,7 +24,7 @@ window.MovimientoModule = (() => {
             el.onerror = () => console.warn(`⚠️ Icono no encontrado para tipo: ${tipo}`);
 
             // === Crear marcador con el elemento IMG ===
-            const marker = new maplibregl.Marker({ element: el,anchor: 'center'})
+            const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
                 .setLngLat(coords)
                 .addTo(map);
 
@@ -54,7 +54,7 @@ window.MovimientoModule = (() => {
             const [ex, ey] = window.CoordUtils.lonLatToMerc(end[0], end[1]);
             const segDist = Math.hypot(ex - sx, ey - sy);
 
-        
+
             if (window.SIMULATION_PAUSED) return requestAnimationFrame(step);
             const stepMeters = speedMps * (1 / 60) * (window.SIMULATION_SPEED || 1);
 
@@ -69,6 +69,10 @@ window.MovimientoModule = (() => {
             const lon = start[0] + (end[0] - start[0]) * t;
             const lat = start[1] + (end[1] - start[1]) * t;
             marker.setLngLat([lon, lat]);
+            if (id === "bam" && window.GuardiaCivilModule?.updateConnections) {
+                window.GuardiaCivilModule.updateConnections();
+            }
+
             requestAnimationFrame(step);
         }
 
