@@ -16,8 +16,8 @@
 
   <!-- === LIBRERÍAS JS EXTERNAS === -->
   <!-- MapLibre -->
-<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-<link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
 
 
   <!-- Mapbox Draw y otras dependencias -->
@@ -64,6 +64,13 @@
           <button id="btn-play" class="doc-card play-btn">
             <i class="fa-solid fa-play"></i><span>Iniciar misión</span>
           </button>
+
+
+          <!-- 🧭 LOG TÁCTICO -->
+          <h3>Log táctico</h3>
+          <div id="log-tactico-panel" class="log-tactico-panel">
+            <div class="log-entry system">Sistema listo. Esperando inicio de misión.</div>
+          </div>
         </div>
 
 
@@ -72,7 +79,6 @@
       <!-- MAPA -->
       <section id="map-container">
         <div id="map"></div>
-        <div id="log-tactico"></div>
         <div id="basemap-controls">
           <button id="toggle-hillshade" class="active">Relieve</button>
           <button id="toggle-sat">Satélite</button>
