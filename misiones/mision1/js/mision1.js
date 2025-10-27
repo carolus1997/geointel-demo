@@ -28,7 +28,7 @@ map.on('load', () => {
     map.triggerRepaint();
   });
 
-  // === CAPAS BASE: RELIEVE Y SATÉLITE ===
+  // === CAPAS BASE: SATÉLITE ===
 
   map.addSource('satellite', {
     type: 'raster',
@@ -44,10 +44,131 @@ map.on('load', () => {
     paint: { 'raster-opacity': 1.0 },
     layout: { visibility: 'none' }
   });
-  // === CARGA DE CAPAS GEOJSON ===
+
+
+  // 🟢 =====================================================
+  // 🟢 FUNCIÓN PARA MARCADORES SVG + POPUPS TÁCTICOS
+  // 🟢 =====================================================
+  function addSvgMarkers(geojsonUrl, svgPath, sizePx = 28, groupName = null) {
+    fetch(geojsonUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (!window._svgMarkers) window._svgMarkers = {};
+        if (groupName && !window._svgMarkers[groupName]) {
+          window._svgMarkers[groupName] = [];
+        }
+
+        data.features.forEach(f => {
+          const coords = f.geometry.coordinates;
+          const props = f.properties || {};
+
+          // === Crear elemento SVG ===
+          const el = document.createElement('div');
+          el.innerHTML = `
+          <img src="${svgPath}" 
+               style="width:${sizePx}px;
+                      height:auto;
+                      aspect-ratio:1/1;
+                      object-fit:contain;
+                      display:block;
+                      cursor:pointer;
+                      transition:transform 0.2s ease;
+                      filter:drop-shadow(0 0 2px #000);
+                      transform-origin:center;">`;
+
+          const img = el.firstElementChild;
+
+          // === Efecto hover ===
+          img.addEventListener('mouseenter', () => (img.style.transform = 'scale(1.25)'));
+          img.addEventListener('mouseleave', () => (img.style.transform = 'scale(1)'));
+
+          // === Popup táctico según grupo ===
+          let popupHtml = "";
+
+          switch (groupName) {
+            case "Comisarías":
+              popupHtml = `
+              <div class="popup-tactico">
+                <div class="popup-title"> ${props["NOMBRE"] || "Comisaría"}</div>
+                <div class="popup-meta">
+                  <div><span>Distrito:</span> ${props["DISTRITO"] || "-"}</div>
+                  <div><span>Barrio:</span> ${props["BARRIO"] || "-"}</div>
+                  <div><span>Dirección:</span> ${props["NOMBRE-VIA"] || ""} ${props["NUM"] || ""}</div>
+                  <div><span>Horario:</span> ${props["HORARIO"] || "-"}</div>
+                  <div><span>Teléfono:</span> ${props["TELEFONO"] || "-"}</div>
+                  <div><span>Transporte:</span> ${props["TRANSPORTE"] || "-"}</div>
+                </div>
+              </div>`;
+              break;
+
+            case "Mezquitas":
+              popupHtml = `
+              <div class="popup-tactico">
+                <div class="popup-title"> ${props["name"] || "Mezquita"}</div>
+                <div class="popup-meta">
+                  <div><span>Dirección:</span> ${props["addr_stree"] || ""} ${props["addr_house"] || ""}</div>
+                  <div><span>Ciudad:</span> ${props["addr_city"] || "-"}</div>
+                  <div><span>Denominación:</span> ${props["denominati"] || "-"}</div>
+                  <div><span>Operador:</span> ${props["operator"] || "-"}</div>
+                  <div><span>Teléfono:</span> ${props["phone"] || "-"}</div>
+                </div>
+              </div>`;
+              break;
+
+            case "Parques":
+              popupHtml = `
+              <div class="popup-tactico">
+                <div class="popup-title"> ${props["name"] || "Parque"}</div>
+                <div class="popup-meta">
+                  <div><span>Dirección:</span> ${props["addr:street"] || ""}, ${props["addr:city"] || ""}</div>
+                  <div><span>Horario:</span> ${props["opening_hours"] || "-"}</div>
+                  <div><span>Operador:</span> ${props["operator"] || "-"}</div>
+                  <div><span>Teléfono:</span> ${props["phone"] || "-"}</div>
+                  <div><span>Acceso:</span> ${props["access"] || "-"}</div>
+                </div>
+              </div>`;
+              break;
+
+            case "Estaciones de metro":
+              popupHtml = `
+              <div class="popup-tactico">
+                <div class="popup-title"> ${props["DENOMINACI"] || "Estación de Metro"}</div>
+                <div class="popup-meta">
+                  <div><span>Línea:</span> ${props["LINEAS"] || "-"}</div>
+                  <div><span>Dirección:</span> ${props["NOMBREVIA"] || ""} ${props["NUMEROPORT"] || ""}</div>
+                  <div><span>Distrito:</span> ${props["DISTRITO"] || "-"}</div>
+                  <div><span>Accesibilidad:</span> ${props["GRADOACCES"] || "-"}</div>
+                  <div><span>Zona tarifaria:</span> ${props["CORONATARI"] || "-"}</div>
+                </div>
+              </div>`;
+              break;
+          }
+
+          // === Crear popup y vincular ===
+          const popup = new maplibregl.Popup({ offset: 25, closeButton: false, className: "popup-tactico" })
+            .setHTML(popupHtml);
+
+          // === Crear marcador y vincular popup ===
+          const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
+            .setLngLat(coords)
+            .setPopup(popup)
+            .addTo(map);
+
+          if (groupName) window._svgMarkers[groupName].push(marker);
+        });
+
+        console.log(`✅ Marcadores SVG + popups añadidos desde ${geojsonUrl}`);
+      })
+      .catch(err => console.error(`❌ Error cargando ${geojsonUrl}:`, err));
+  }
+
+
+
+  // ======================================================
+  // CARGA DE CAPAS GEOJSON (solo las que necesitan capas reales)
+  // ======================================================
   const dataPath = './data/';
 
-  // === Dentro de mision1.js ===
   async function addGeoJSONLayer(id, file, type, paint, visible = false) {
     const res = await fetch(`${dataPath}${file}`);
     if (!res.ok) return console.warn(`⚠️ No se pudo cargar ${file}`);
@@ -56,44 +177,121 @@ map.on('load', () => {
     map.addSource(id, { type: 'geojson', data });
 
     // 🧹 Eliminar propiedades no soportadas por MapLibre
-    if (type === 'fill') {
-      delete paint['fill-outline-width'];
-    }
+    if (type === 'fill') delete paint['fill-outline-width'];
 
-    const layer = { id, type, source: id, paint, layout: { visibility: visible ? 'visible' : 'none' } };
+    const layer = {
+      id,
+      type,
+      source: id,
+      layout: { visibility: visible ? 'visible' : 'none' },
+      paint
+    };
 
     const lastLayer = map.getStyle().layers.at(-1).id;
     map.addLayer(layer, lastLayer);
 
+    // 🧠 Si la capa es "SSCCDemografia", aplicamos popup y cursor táctico
+    if (id === "SSCCDemografia") {
+      map.on("click", id, e => {
+        const f = e.features[0];
+        const p = f.properties;
+
+        // Clasificación textual del nivel de riesgo
+        let nivel = "Bajo";
+        if (p.IRC >= 0.50) nivel = "Alto";
+        else if (p.IRC >= 0.34) nivel = "Medio-Alto";
+        else if (p.IRC >= 0.20) nivel = "Medio-Bajo";
+
+        const popupHtml = `
+      <div class="popup-tactico">
+        <div class="popup-title">Sección ${p["COD_SECCIO"] || ""}</div>
+        <div class="popup-meta">
+          <div><span>Distrito:</span> ${p["NOM_DIS"] || "-"}</div>
+          <div><span>Barrio:</span> ${p["NOM_BAR"] || "-"}</div>
+          <div><span>IRC:</span> ${(p["IRC"] * 100).toFixed(1)} / 100 (${nivel})</div>
+          <div><span>IVU:</span> ${(p["IVU"] * 100).toFixed(1) || "-"} / 100</div>
+          <div><span>Densidad:</span> ${(p["Densidad"] ? (p["Densidad"] * 10000).toFixed(1) : "-")} hab/km²</div>
+          <div><span>Paro:</span> ${(p["Paro"] ? (p["Paro"] * 100).toFixed(1) + "%" : "-")}</div>
+          <div><span>Renta inversa:</span> ${(p["RentInv"] ? (p["RentInv"] * 100).toFixed(1) + "%" : "-")}</div>
+          <div><span>Inmigración:</span> ${(p["PropImmExt"] ? (p["PropImmExt"] * 100).toFixed(1) + "%" : "-")}</div>
+          <div><span>Índice de juventud:</span> ${p["IndJuventud"]?.toFixed(2) || "-"}</div>
+        </div>
+      </div>`;
+
+        new maplibregl.Popup({ closeButton: false, offset: 20, className: "popup-tactico" })
+          .setLngLat(e.lngLat)
+          .setHTML(popupHtml)
+          .addTo(map);
+      });
+
+      // Cambiar cursor
+      map.on("mouseenter", id, () => (map.getCanvas().style.cursor = "pointer"));
+      map.on("mouseleave", id, () => (map.getCanvas().style.cursor = ""));
+    }
+
+
+
     console.log(`✅ Capa añadida: ${id}`);
   }
 
-
-  // === CARGA DE TODAS LAS CAPAS ===
+  // ======================================================
+  // CARGA DE TODAS LAS CAPAS (combinando SVG + capas normales)
+  // ======================================================
   (async () => {
     const styles = await (await fetch('./data/estilos/data/styles.json')).json();
 
+    // === Capas normales ===
     const capas = [
       ['barrios', 'barrios.geojson', 'fill', { 'fill-opacity': 0 }],
-      ['Comisarias', 'comisarias.geojson', 'circle', styles.Comisarias],
-      ['Mezquitas', 'Mezquitas.geojson', 'circle', styles.Mezquitas],
       ['Parques', 'Parques.geojson', 'fill', styles.Parques],
       ['FuentesAgua', 'FuentesAguaParques.geojson', 'circle', styles.FuentesAgua],
       ['BancosParques', 'BancosParques.geojson', 'circle', styles.BancosParques],
-      ['EstacionesMetro', 'EstacionesMetro.geojson', 'circle', styles.EstacionesMetro],
       ['bufferMetro', '200mMetro.geojson', 'fill', styles['200mMetro']],
-      ['SSCCDemografia', 'SSCCDemografia.geojson', 'fill', styles.SSCC]
+      ['SSCCDemografia', 'SSCCDemografia.geojson', 'fill', styles.SSCCDemografia]
+
     ];
 
-    // Añadir capas
     for (const [id, file, type, paint] of capas) {
       await addGeoJSONLayer(id, file, type, paint, id === 'barrios');
     }
+    // === Popups tácticos para Parques (capa fill) ===
+    map.on('click', 'Parques', e => {
+      const f = e.features[0];
+      const props = f.properties || {};
 
-    // Esperar un poco
-    await new Promise(r => setTimeout(r, 200));
+      const popupHtml = `
+    <div class="popup-tactico">
+      <div class="popup-title">${props["name"] || "Parque"}</div>
+      <div class="popup-meta">
+        <div><span>Dirección:</span> ${props["addr:street"] || ""}, ${props["addr:city"] || ""}</div>
+        <div><span>Horario:</span> ${props["opening_hours"] || "-"}</div>
+        <div><span>Operador:</span> ${props["operator"] || "-"}</div>
+        <div><span>Acceso:</span> ${props["access"] || "-"}</div>
+        <div><span>Superficie:</span> ${props["area"] || "-"} m²</div>
+      </div>
+    </div>
+  `;
 
-    // Añadir etiquetas de barrios
+      new maplibregl.Popup({
+        closeButton: false,
+        offset: 20,
+        className: 'popup-tactico'
+      })
+        .setLngLat(e.lngLat)
+        .setHTML(popupHtml)
+        .addTo(map);
+    });
+
+    // 🖱️ Cambiar cursor al pasar sobre parques
+    map.on('mouseenter', 'Parques', () => (map.getCanvas().style.cursor = 'pointer'));
+    map.on('mouseleave', 'Parques', () => (map.getCanvas().style.cursor = ''));
+
+    // === Capas con iconos SVG personalizados ===
+    addSvgMarkers(`${dataPath}comisarias.geojson`, '../../img/logos/logoCNP.svg', 26, 'Comisarías');
+    addSvgMarkers(`${dataPath}Mezquitas.geojson`, '../../img/logos/mezquita.svg', 22, 'Mezquitas');
+    addSvgMarkers(`${dataPath}EstacionesMetro.geojson`, '../../img/logos/MetroMadridLogo.svg', 24, 'Estaciones de metro');
+
+    // === Etiquetas de barrios ===
     map.addLayer({
       id: 'barrios-labels',
       type: 'symbol',
@@ -113,21 +311,34 @@ map.on('load', () => {
       }
     });
 
-    // Crear panel de capas (sin barrios)
+    // === Panel de capas (añadimos también los grupos SVG) ===
     initLayersControl(map, [
       { id: 'barrios-labels', name: 'Barrios', visible: true },
-      { id: 'Comisarias', name: 'Comisarías', visible: false },
+
+      // 🟢 NUEVOS GRUPOS SVG
+      { id: 'Comisarías', name: 'Comisarías', visible: false },
       { id: 'Mezquitas', name: 'Mezquitas', visible: false },
+      { id: 'Estaciones de metro', name: 'Estaciones de metro', visible: false },
       { id: 'Parques', name: 'Parques', visible: false },
       { id: 'FuentesAgua', name: 'Fuentes de agua', visible: false },
       { id: 'BancosParques', name: 'Bancos de parques', visible: false },
-      { id: 'EstacionesMetro', name: 'Estaciones de metro', visible: false },
       { id: 'bufferMetro', name: 'Área 200 m de metro', visible: false },
       { id: 'SSCCDemografia', name: 'Demografía (SSCC)', visible: false }
     ]);
+
+    // === LEYENDA IRC ===
+    const legend = document.createElement('div');
+    legend.className = 'irc-legend';
+    legend.innerHTML = `
+  <h4>Índice de Riesgo Compuesto (IRC)</h4>
+  <div><span style="background:#2ECC71"></span>Bajo</div>
+  <div><span style="background:#F1C40F"></span>Medio-Bajo</div>
+  <div><span style="background:#E67E22"></span>Medio-Alto</div>
+  <div><span style="background:#C0392B"></span>Alto</div>
+`;
+    document.body.appendChild(legend);
+
   })();
-
-
 
   map.triggerRepaint();
 

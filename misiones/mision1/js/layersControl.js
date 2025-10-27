@@ -1,5 +1,5 @@
 // === layersControl.js ===
-// Control de capas con drag & drop — Misión 1
+// Control de capas con drag & drop + soporte para marcadores SVG personalizados
 
 export function initLayersControl(map, capas) {
   const panel = document.createElement('div');
@@ -30,8 +30,18 @@ export function initLayersControl(map, capas) {
     if (!e.target.matches('input[type="checkbox"]')) return;
     const id = e.target.dataset.id;
     const visible = e.target.checked;
-    if (!map.getLayer(id)) return;
-    map.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
+
+    // 🟢 Si es una capa normal del mapa
+    if (map.getLayer(id)) {
+      map.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
+    }
+
+    // 🟢 Si es un grupo SVG personalizado
+    if (window._svgMarkers && window._svgMarkers[id]) {
+      window._svgMarkers[id].forEach(marker => {
+        marker.getElement().style.display = visible ? 'block' : 'none';
+      });
+    }
   });
 
   // === Eventos drag & drop ===
@@ -64,23 +74,28 @@ export function initLayersControl(map, capas) {
     const items = Array.from(panel.querySelectorAll('.layer-item'));
     const newOrder = items.map(i => i.dataset.id);
 
-    // 🧭 Invertir el orden lógico para que lo visible arriba del panel se pinte arriba del mapa
+    // 🧭 Invertir orden lógico
     const reversedOrder = [...newOrder].reverse();
 
-    // 🟢 Aplicar nuevo orden de dibujo
     for (let i = 0; i < reversedOrder.length; i++) {
       const id = reversedOrder[i];
       const beforeId = reversedOrder[i + 1];
+
+      // Solo mover si ambos son capas reales del mapa
       if (map.getLayer(id)) {
-        map.moveLayer(id, beforeId);
+        if (beforeId && map.getLayer(beforeId)) {
+          map.moveLayer(id, beforeId);
+        } else {
+          map.moveLayer(id);
+        }
       }
     }
+
 
     capas.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
     dragSrcEl?.classList.remove('dragging');
     console.log("🧭 Nuevo orden (panel arriba = mapa arriba):", reversedOrder);
   });
-
 
   panel.addEventListener('dragend', e => {
     e.target.classList.remove('dragging');

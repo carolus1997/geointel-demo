@@ -36,10 +36,30 @@
     "fill-outline-color": "#000000",
     "fill-outline-width": 0.5
   },
-  "SSCC": {
-    "fill-color": "#2b83ba",
-    "fill-opacity": 0.45,
-    "fill-outline-color": "#232323",
-    "fill-outline-width": 1
+  "SSCCDemografia": {
+    "fill-color": [
+      "interpolate",
+      [
+        "linear"
+      ],
+      [
+        "coalesce",
+        [
+          "get",
+          "IRC"
+        ],
+        0
+      ],
+      0.0,
+      "#2ECC71",
+      0.20,
+      "#F1C40F",
+      0.34,
+      "#E67E22",
+      0.50,
+      "#C0392B"
+    ],
+    "fill-opacity": 0.5,
+    "fill-outline-color": "rgba(0,0,0,0.15)"
   }
 }
