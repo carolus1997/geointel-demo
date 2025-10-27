@@ -96,7 +96,28 @@ window.ToolsNotes = (() => {
       outline: "none",
       background: "transparent",
       paddingRight: "16px",
+      userSelect: "text"          // ⬅️ permite seleccionar/escribir
     });
+    // ⬇️ evita que el mapa capture eventos y desactiva drag/zoom mientras editas
+    input.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+    });
+    input.addEventListener("pointerdown", (e) => {
+      e.stopPropagation();
+    });
+    input.addEventListener("click", (e) => {
+      e.stopPropagation();
+      input.focus();
+    });
+    input.addEventListener("focus", () => {
+      map?.dragPan?.disable?.();
+      map?.scrollZoom?.disable?.();
+    });
+    input.addEventListener("blur", () => {
+      map?.dragPan?.enable?.();
+      map?.scrollZoom?.enable?.();
+    });
+
     note.appendChild(input);
 
     // === Piquito táctico ===
@@ -143,10 +164,16 @@ window.ToolsNotes = (() => {
 
     // === Añadir al mapa ===
     container.appendChild(note);
-    notes.set(id, { el: note, lngLat });
-    notes.get(id).marker = new maplibregl.Marker({ element: note })
+    const marker = new maplibregl.Marker({ element: note })
       .setLngLat(lngLat)
       .addTo(map);
+
+    // ⬅️ muy importante: permitir interacción del contentEditable
+    if (note.parentElement) {
+      note.parentElement.style.pointerEvents = "auto";
+    }
+
+    notes.set(id, { el: note, lngLat, marker });
     makeDraggable(note, id);
 
   }
@@ -158,21 +185,32 @@ window.ToolsNotes = (() => {
     for (const [id] of notes) updatePosition(id, scale);
   }
 
-  function updatePosition(id) {
+  function updatePosition(id, scale = 1) {
     const data = notes.get(id);
     if (!data) return;
 
-    // Si no tiene marker todavía, lo creamos.
-    if (!data.marker) {
+    // Actualizamos la posición del marcador si existe
+    if (data.marker) {
+      data.marker.setLngLat(data.lngLat);
+    } else {
+      // Seguridad: si por alguna razón no tiene marker, lo reconstruimos
       const marker = new maplibregl.Marker({ element: data.el })
         .setLngLat(data.lngLat)
         .addTo(map);
+
+      // 💡 Permitir interacción con el contenido editable
+      if (data.el.parentElement) {
+        data.el.parentElement.style.pointerEvents = "auto";
+      }
+
       data.marker = marker;
       notes.set(id, data);
-    } else {
-      data.marker.setLngLat(data.lngLat);
     }
+
+    // Ajuste visual de escala según zoom
+    data.el.style.transform = `translate(-50%, -100%) scale(${scale})`;
   }
+
 
   // ======================================================
   function makeDraggable(el, id) {

@@ -106,6 +106,37 @@ map.on('load', async () => {
     console.warn('⚠️ No se pudieron añadir capas base:', e);
   }
 
+  // === 🌬️ Capa de viento (OpenWeatherMap wind_new - free tile service) ===
+  try {
+    const OWM_KEY = '192ba88ae3bb8c31ff216d8bb4df16c0';
+    const OWM_LAYER_ID = 'wind-layer';
+    const OWM_URL = `https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`;
+
+    if (!map.getSource('wind')) {
+      map.addSource('wind', {
+        type: 'raster',
+        tiles: [OWM_URL],
+        tileSize: 256,
+        attribution:
+          '&copy; <a href="https://openweathermap.org/">OpenWeatherMap</a> (Wind Layer)'
+      });
+    }
+
+    if (!map.getLayer(OWM_LAYER_ID)) {
+      map.addLayer({
+        id: OWM_LAYER_ID,
+        type: 'raster',
+        source: 'wind',
+        paint: { 'raster-opacity': 0.7 },
+        layout: { visibility: 'none' } // empieza oculta
+      });
+    }
+
+    console.log('🌬️ Capa de viento (wind_new) añadida correctamente.');
+  } catch (e) {
+    console.warn('⚠️ No se pudo añadir la capa de viento:', e);
+  }
+
 
 
 
@@ -176,21 +207,18 @@ map.on('load', async () => {
 
   if (toggleWindLocal) {
     toggleWindLocal.addEventListener('click', () => {
-      if (!map.getLayer('wind-local-layer')) {
-        console.warn('⚠️ La capa de viento todavía no está disponible.');
+      const layerId = 'wind-layer';
+      if (!map.getLayer(layerId)) {
+        console.warn('⚠️ La capa de viento no está cargada todavía.');
         return;
       }
 
-      const currentVis = map.getLayoutProperty('wind-local-layer', 'visibility');
+      const currentVis = map.getLayoutProperty(layerId, 'visibility');
       const newVis = currentVis === 'none' ? 'visible' : 'none';
-      map.setLayoutProperty('wind-local-layer', 'visibility', newVis);
+      map.setLayoutProperty(layerId, 'visibility', newVis);
       toggleWindLocal.classList.toggle('active', newVis === 'visible');
     });
   }
-
-
-
-
 
   // === 4) Dibujo (Draw) + Toolbox flotante ===
   try {
