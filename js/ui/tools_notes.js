@@ -30,9 +30,13 @@ window.ToolsNotes = (() => {
     });
 
     // Actualización sincronizada con render
-    map.on("render", () => {
-      if (map.loaded()) updatePositions();
+    // 🔄 Actualiza la posición de las notas en todos los eventos de movimiento del mapa
+    ["move", "zoom", "resize", "pitch", "rotate"].forEach(ev => {
+      map.on(ev, () => {
+        if (map.loaded()) updatePositions();
+      });
     });
+
   }
 
   // ======================================================
@@ -140,8 +144,11 @@ window.ToolsNotes = (() => {
     // === Añadir al mapa ===
     container.appendChild(note);
     notes.set(id, { el: note, lngLat });
-    updatePosition(id);
+    notes.get(id).marker = new maplibregl.Marker({ element: note })
+      .setLngLat(lngLat)
+      .addTo(map);
     makeDraggable(note, id);
+
   }
 
   // ======================================================
@@ -151,14 +158,20 @@ window.ToolsNotes = (() => {
     for (const [id] of notes) updatePosition(id, scale);
   }
 
-  function updatePosition(id, scale = 1) {
+  function updatePosition(id) {
     const data = notes.get(id);
     if (!data) return;
-    const pos = map.project(data.lngLat);
-    if (!pos || isNaN(pos.x) || isNaN(pos.y)) return;
-    data.el.style.left = `${pos.x}px`;
-    data.el.style.top = `${pos.y}px`;
-    data.el.style.transform = `translate(-50%, -100%) scale(${scale})`;
+
+    // Si no tiene marker todavía, lo creamos.
+    if (!data.marker) {
+      const marker = new maplibregl.Marker({ element: data.el })
+        .setLngLat(data.lngLat)
+        .addTo(map);
+      data.marker = marker;
+      notes.set(id, data);
+    } else {
+      data.marker.setLngLat(data.lngLat);
+    }
   }
 
   // ======================================================
