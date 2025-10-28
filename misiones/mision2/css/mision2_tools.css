@@ -205,3 +205,5 @@
 .map-note::after {
   border-top: 6px solid var(--note-color, rgba(0, 229, 255, 0.6));
 }
+
+

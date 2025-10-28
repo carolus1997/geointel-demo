@@ -1242,57 +1242,7 @@ button.btn-activa {
 }
 
 
-/* Panel lateral del log táctico */
-.log-tactico-panel {
-  background: #0a0a0a;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 10px;
-  max-height: 220px;
-  overflow-y: auto;
-  font-family: 'Consolas', monospace;
-  font-size: 13px;
-  color: #e0e0e0;
-  margin-top: 8px;
-}
 
-.log-entry {
-  margin-bottom: 6px;
-  line-height: 1.3;
-  padding-left: 4px;
-  border-left: 3px solid #007bff33;
-}
-
-.log-entry.system {
-  color: #00e5ff;
-  border-color: #00e5ff44;
-}
-
-.log-entry.alert {
-  color: #ff5757;
-  border-color: #ff000044;
-}
-
-.log-entry.action {
-  color: #ffd400;
-  border-color: #ffd40044;
-}
-
-.log-entry.success {
-  color: #00c896;
-  border-color: #00c89655;
-}
-
-.log-entry.intel {
-  color: #8ecaff;
-  border-color: #8ecaff44;
-}
-
-.log-entry.time {
-  font-size: 11px;
-  opacity: 0.6;
-  margin-left: 4px;
-}
 
 
 /* Efecto de ping en los cuarteles alertados */

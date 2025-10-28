@@ -187,6 +187,8 @@ window.GuardiaCivilModule = (() => {
         });
 
         console.log(`📡 ${gcComandancias.length} comandancias notificadas:`, message);
+        LogModule.add(' Guardia Civil informada — alerta activada en comandancias.', 'success');
+
     }
 
     // ======================================================

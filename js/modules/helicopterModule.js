@@ -61,7 +61,7 @@ window.HelicopterModule = (() => {
         console.log(`🚁 Helicóptero posicionado sobre BAM (${bamPos.lng.toFixed(4)}, ${bamPos.lat.toFixed(4)})`);
       }
 
-      console.log('🚁 Helicóptero preparado (oculto).');
+      console.log('Helicóptero preparado (oculto).');
     }, 500);
   }
 
@@ -78,7 +78,9 @@ window.HelicopterModule = (() => {
     // 🚁 Posición inicial = posición actual del BAM
     const start = bamMarker.getLngLat();
     heliMarker.setLngLat([start.lng, start.lat]);
-    console.log(`🚁 Despegando desde BAM en ${start.lng.toFixed(4)}, ${start.lat.toFixed(4)}`);
+    console.log(`Despegando desde BAM en ${start.lng.toFixed(4)}, ${start.lat.toFixed(4)}`);
+    
+
 
     // Mostrar helicóptero
     const el = heliMarker.getElement();
@@ -134,6 +136,8 @@ window.HelicopterModule = (() => {
       // Si ya está lo suficientemente cerca → cambiar a seguimiento directo
       if (distKm < approachThresholdKm) {
         console.log(`🎯 Interceptación lograda (distancia ${distKm.toFixed(2)} km). Cambiando a followUnit()`);
+
+
         if (onArrival) onArrival();
         console.log('🚁 Iniciando patrulla dinámica post-intercepción...');
         HelicopterModule.startDynamicPatrol(targetId, {

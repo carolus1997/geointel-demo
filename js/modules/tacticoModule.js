@@ -80,6 +80,8 @@ window.TacticoModule = (() => {
     setTimeout(() => popup.remove(), 5000);
 
     console.log('Detección confirmada:', targetId);
+    
+
 
     setTimeout(async () => {
       const heliSpeed = 70; // m/s

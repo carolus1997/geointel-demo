@@ -41,6 +41,7 @@ function addLayer(srcId, dataPath, color) {
 // === ARRANQUE CUANDO EL MAPA ESTÁ LISTO ===
 map.on('load', async () => {
   console.log('🗺️ MapLibre listo');
+  
 
   // Fade-in del canvas
   map.once('idle', () => {
@@ -373,6 +374,8 @@ async function startMision2() {
         if (!fired && d <= THRESH_KM) {
           fired = true;
           console.log("🚨 Interceptación confirmada por NH90");
+          
+
 
           // === 1️⃣ ACTIVAR PULSO AMARILLO (Helicóptero ↔ BAM)
           console.log("🟡 Activando enlace directo Helicóptero ↔ BAM");
